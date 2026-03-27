@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,96 +16,73 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { EnvironmentProviders, inject, Injectable, provideAppInitializer } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AppStore, getRuleContext } from '@alfresco/aca-shared/store';
 import {
+  SelectionState,
+  NavigationState,
+  ExtensionConfig,
+  RuleEvaluator,
   ContentActionRef,
   ContentActionType,
-  DocumentListPresetRef,
-  ExtensionConfig,
   ExtensionLoaderService,
-  ExtensionRef,
-  ExtensionService,
-  IconRef,
-  mergeArrays,
-  mergeObjects,
-  NavBarGroupRef,
-  NavigationState,
-  ProfileState,
-  reduceEmptyMenus,
-  reduceSeparators,
-  RuleContext,
-  RuleEvaluator,
-  SelectionState,
   SidebarTabRef,
-  sortByOrder
+  NavBarGroupRef,
+  sortByOrder,
+  reduceSeparators,
+  reduceEmptyMenus,
+  ExtensionService,
+  ProfileState,
+  mergeObjects,
+  ExtensionRef,
+  RuleContext,
+  DocumentListPresetRef,
+  IconRef,
+  mergeArrays
 } from '@alfresco/adf-extensions';
 import { AppConfigService, AuthenticationService, LogService } from '@alfresco/adf-core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { NodeEntry, RepositoryInfo } from '@alfresco/js-api';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { RepositoryInfo, NodeEntry } from '@alfresco/js-api';
 import { ViewerRules } from '../models/viewer.rules';
-import { Badge, UserProfileSection } from '../models/types';
+import { SettingsGroupRef } from '../models/types';
 import { NodePermissionService } from '../services/node-permission.service';
-import { map } from 'rxjs/operators';
-import { SearchCategory } from '@alfresco/adf-content-services';
-
-export function provideContentAppExtensions(): EnvironmentProviders[] {
-  return [
-    provideAppInitializer(() => {
-      const service = inject(AppExtensionService);
-      return service.load();
-    })
-  ];
-}
+import { filter, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppExtensionService implements RuleContext {
-  readonly auth = inject(AuthenticationService);
-  protected readonly store = inject<Store<AppStore>>(Store);
-  protected readonly loader = inject(ExtensionLoaderService);
-  protected readonly extensions = inject(ExtensionService);
-  readonly permissions = inject(NodePermissionService);
-  readonly appConfig = inject(AppConfigService);
-  protected readonly matIconRegistry = inject(MatIconRegistry);
-  protected readonly sanitizer = inject(DomSanitizer);
-  protected readonly logger = inject(LogService);
-
-  private readonly _references = new BehaviorSubject<ExtensionRef[]>([]);
-  bulkActionExecuted$ = new Subject<void>();
+  private _references = new BehaviorSubject<ExtensionRef[]>([]);
 
   navbar: Array<NavBarGroupRef> = [];
   sidebarTabs: Array<SidebarTabRef> = [];
   contentMetadata: any;
   search: any;
   viewerRules: ViewerRules = {};
+  settingGroups: Array<SettingsGroupRef> = [];
 
-  private readonly _headerActions = new BehaviorSubject<Array<ContentActionRef>>([]);
-  private readonly _toolbarActions = new BehaviorSubject<Array<ContentActionRef>>([]);
-  private readonly _viewerToolbarActions = new BehaviorSubject<Array<ContentActionRef>>([]);
-  private readonly _sharedLinkViewerToolbarActions = new BehaviorSubject<Array<ContentActionRef>>([]);
-  private readonly _contextMenuActions = new BehaviorSubject<Array<ContentActionRef>>([]);
-  private readonly _openWithActions = new BehaviorSubject<Array<ContentActionRef>>([]);
-  private readonly _createActions = new BehaviorSubject<Array<ContentActionRef>>([]);
-  private readonly _sidebarActions = new BehaviorSubject<Array<ContentActionRef>>([]);
-  private readonly _badges = new BehaviorSubject<Array<Badge>>([]);
-  private readonly _filesDocumentListPreset = new BehaviorSubject<Array<DocumentListPresetRef>>([]);
-  private readonly _customMetadataPanels = new BehaviorSubject<Array<ContentActionRef>>([]);
-  private readonly _bulkActions = new BehaviorSubject<Array<ContentActionRef>>([]);
-  private readonly _userProfileSections = new BehaviorSubject<Array<UserProfileSection>>([]);
+  private _headerActions = new BehaviorSubject<Array<ContentActionRef>>([]);
+  private _toolbarActions = new BehaviorSubject<Array<ContentActionRef>>([]);
+  private _viewerToolbarActions = new BehaviorSubject<Array<ContentActionRef>>([]);
+  private _sharedLinkViewerToolbarActions = new BehaviorSubject<Array<ContentActionRef>>([]);
+  private _contextMenuActions = new BehaviorSubject<Array<ContentActionRef>>([]);
+  private _openWithActions = new BehaviorSubject<Array<ContentActionRef>>([]);
+  private _createActions = new BehaviorSubject<Array<ContentActionRef>>([]);
+  private _mainActions = new BehaviorSubject<ContentActionRef>(null);
+  private _sidebarActions = new BehaviorSubject<Array<ContentActionRef>>([]);
 
   documentListPresets: {
+    files: Array<DocumentListPresetRef>;
     libraries: Array<DocumentListPresetRef>;
     favoriteLibraries: Array<DocumentListPresetRef>;
     shared: Array<DocumentListPresetRef>;
@@ -112,16 +90,15 @@ export class AppExtensionService implements RuleContext {
     favorites: Array<DocumentListPresetRef>;
     trashcan: Array<DocumentListPresetRef>;
     searchLibraries: Array<DocumentListPresetRef>;
-    searchResults: Array<DocumentListPresetRef>;
   } = {
+    files: [],
     libraries: [],
     favoriteLibraries: [],
     shared: [],
     recent: [],
     favorites: [],
     trashcan: [],
-    searchLibraries: [],
-    searchResults: []
+    searchLibraries: []
   };
 
   selection: SelectionState;
@@ -131,11 +108,20 @@ export class AppExtensionService implements RuleContext {
   withCredentials: boolean;
 
   references$: Observable<ExtensionRef[]>;
-  filesDocumentListPreset$: Observable<DocumentListPresetRef[]> = this._filesDocumentListPreset.asObservable();
 
   config: ExtensionConfig;
 
-  constructor() {
+  constructor(
+    public auth: AuthenticationService,
+    protected store: Store<AppStore>,
+    protected loader: ExtensionLoaderService,
+    protected extensions: ExtensionService,
+    public permissions: NodePermissionService,
+    public appConfig: AppConfigService,
+    protected matIconRegistry: MatIconRegistry,
+    protected sanitizer: DomSanitizer,
+    protected logger: LogService
+  ) {
     this.references$ = this._references.asObservable();
 
     this.store.select(getRuleContext).subscribe((result) => {
@@ -161,6 +147,8 @@ export class AppExtensionService implements RuleContext {
       return;
     }
 
+    this.settingGroups = this.loader.getElements<SettingsGroupRef>(config, 'settings');
+
     this._headerActions.next(this.loader.getContentActions(config, 'features.header'));
     this._sidebarActions.next(this.loader.getContentActions(config, 'features.sidebar.toolbar'));
     this._toolbarActions.next(this.loader.getContentActions(config, 'features.toolbar'));
@@ -169,34 +157,27 @@ export class AppExtensionService implements RuleContext {
     this._contextMenuActions.next(this.loader.getContentActions(config, 'features.contextMenu'));
     this._openWithActions.next(this.loader.getContentActions(config, 'features.viewer.openWith'));
     this._createActions.next(this.loader.getElements<ContentActionRef>(config, 'features.create'));
-    this._badges.next(this.loader.getElements<Badge>(config, 'features.badges'));
-    this._userProfileSections.next(this.loader.getElements<UserProfileSection>(config, 'features.userProfileSections'));
-    this._filesDocumentListPreset.next(this.getDocumentListPreset(config, 'files'));
-    this._customMetadataPanels.next(this.loader.getElements<ContentActionRef>(config, 'features.customMetadataPanels'));
-    this._bulkActions.next(this.loader.getElements<ContentActionRef>(config, 'features.bulk-actions'));
+    this._mainActions.next(this.loader.getFeatures(config).mainAction);
 
     this.navbar = this.loadNavBar(config);
     this.sidebarTabs = this.loader.getElements<SidebarTabRef>(config, 'features.sidebar.tabs');
     this.contentMetadata = this.loadContentMetadata(config);
     this.search = this.loadSearchForms(config);
-    this.search?.forEach((searchSet) => {
-      searchSet.categories = searchSet.categories?.filter((category) => this.filterVisible(category));
-    });
 
     this.documentListPresets = {
+      files: this.getDocumentListPreset(config, 'files'),
       libraries: this.getDocumentListPreset(config, 'libraries'),
       favoriteLibraries: this.getDocumentListPreset(config, 'favoriteLibraries'),
       shared: this.getDocumentListPreset(config, 'shared'),
       recent: this.getDocumentListPreset(config, 'recent'),
       favorites: this.getDocumentListPreset(config, 'favorites'),
       trashcan: this.getDocumentListPreset(config, 'trashcan'),
-      searchLibraries: this.getDocumentListPreset(config, 'search-libraries'),
-      searchResults: this.getDocumentListPreset(config, 'search-results')
+      searchLibraries: this.getDocumentListPreset(config, 'search-libraries')
     };
 
     this.withCredentials = this.appConfig.get<boolean>('auth.withCredentials', false);
 
-    if (config.features?.viewer) {
+    if (config.features && config.features.viewer) {
       this.viewerRules = (config.features.viewer['rules'] as ViewerRules) || {};
     }
 
@@ -214,9 +195,9 @@ export class AppExtensionService implements RuleContext {
       const value = icon.value;
 
       if (!value) {
-        this.logger.warn(`Missing icon value for "${icon.id}".`);
+        console.warn(`Missing icon value for "${icon.id}".`);
       } else if (!ns || !id) {
-        this.logger.warn(`Incorrect icon id format.`);
+        console.warn(`Incorrect icon id format: "${icon.id}".`);
       } else {
         this.matIconRegistry.addSvgIconInNamespace(ns, id, this.sanitizer.bypassSecurityTrustResourceUrl(value));
       }
@@ -232,10 +213,6 @@ export class AppExtensionService implements RuleContext {
       .getElements<DocumentListPresetRef>(config, `features.documentList.${key}`)
       .filter((group) => this.filterVisible(group))
       .filter((entry) => !entry.disabled)
-      .map((entry) => {
-        entry.resizable = entry.resizable ?? true;
-        return entry;
-      })
       .sort(sortByOrder);
   }
 
@@ -312,10 +289,12 @@ export class AppExtensionService implements RuleContext {
     let presets = {};
     presets = this.filterDisabled(mergeObjects(presets, ...elements));
 
-    const metadata = this.appConfig.config['content-metadata'] || {};
-    metadata.presets = presets;
+    try {
+      this.appConfig.config['content-metadata'].presets = presets;
+    } catch (error) {
+      this.logger.error(error, '- could not change content-metadata presets from app.config -');
+    }
 
-    this.appConfig.config['content-metadata'] = metadata;
     return { presets };
   }
 
@@ -330,7 +309,11 @@ export class AppExtensionService implements RuleContext {
       .filter((entry) => this.filterVisible(entry))
       .sort(sortByOrder);
 
-    this.appConfig.config['search'] = search;
+    try {
+      this.appConfig.config['search'] = search;
+    } catch (error) {
+      this.logger.error(error, '- could not change search from app.config -');
+    }
     return search;
   }
 
@@ -349,6 +332,10 @@ export class AppExtensionService implements RuleContext {
     }
   }
 
+  getNavigationGroups(): Array<NavBarGroupRef> {
+    return this.navbar;
+  }
+
   getSidebarTabs(): Array<SidebarTabRef> {
     return this.sidebarTabs.filter((action) => this.filterVisible(action));
   }
@@ -356,7 +343,7 @@ export class AppExtensionService implements RuleContext {
   private setActionDisabledFromRule(action: ContentActionRef) {
     let disabled = false;
 
-    if (action?.rules?.enabled) {
+    if (action && action.rules && action.rules.enabled) {
       disabled = !this.extensions.evaluateRule(action.rules.enabled, this);
     }
 
@@ -364,10 +351,6 @@ export class AppExtensionService implements RuleContext {
       ...action,
       disabled
     };
-  }
-
-  updateSidebarActions() {
-    this._sidebarActions.next(this.loader.getContentActions(this.config, 'features.sidebar.toolbar'));
   }
 
   getCreateActions(): Observable<Array<ContentActionRef>> {
@@ -382,16 +365,15 @@ export class AppExtensionService implements RuleContext {
     );
   }
 
-  getBadges(node: NodeEntry): Observable<Array<Badge>> {
-    return this._badges.pipe(map((badges) => badges.filter((badge) => this.evaluateRule(badge.rules.visible, node))));
-  }
-
-  getUserProfileSections(): Observable<Array<UserProfileSection>> {
-    return this._userProfileSections.pipe(map((sections) => sections.filter((section) => this.evaluateRule(section.rules.visible))));
-  }
-
-  getCustomMetadataPanels(node: NodeEntry): Observable<Array<ContentActionRef>> {
-    return this._customMetadataPanels.pipe(map((panels) => panels.filter((panel) => this.evaluateRule(panel.rules.visible, node))));
+  getMainAction(): Observable<ContentActionRef> {
+    return this._mainActions.pipe(
+      filter((mainAction) => mainAction && this.filterVisible(mainAction)),
+      map((mainAction) => {
+        let actionCopy = this.copyAction(mainAction);
+        actionCopy = this.setActionDisabledFromRule(actionCopy);
+        return actionCopy;
+      })
+    );
   }
 
   private buildMenu(actionRef: ContentActionRef): ContentActionRef {
@@ -442,10 +424,6 @@ export class AppExtensionService implements RuleContext {
     return this._viewerToolbarActions.pipe(map((viewerToolbarActions) => this.getAllowedActions(viewerToolbarActions)));
   }
 
-  getBulkActions(): Observable<Array<ContentActionRef>> {
-    return this._bulkActions.pipe(map((bulkActions) => this.getAllowedActions(bulkActions)));
-  }
-
   getOpenWithActions(): Observable<Array<ContentActionRef>> {
     return this._openWithActions.pipe(map((openWithActions) => this.getAllowedActions(openWithActions)));
   }
@@ -488,6 +466,10 @@ export class AppExtensionService implements RuleContext {
     return this._contextMenuActions.pipe(map((contextMenuActions) => (!this.selection.isEmpty ? this.getAllowedActions(contextMenuActions) : [])));
   }
 
+  getSettingsGroups(): Array<SettingsGroupRef> {
+    return this.settingGroups.filter((group) => this.filterVisible(group));
+  }
+
   copyAction(action: ContentActionRef): ContentActionRef {
     return {
       ...action,
@@ -495,11 +477,8 @@ export class AppExtensionService implements RuleContext {
     };
   }
 
-  filterVisible(action: ContentActionRef | SidebarTabRef | DocumentListPresetRef | SearchCategory): boolean {
-    if (action?.rules?.visible) {
-      if (Array.isArray(action.rules.visible)) {
-        return action.rules.visible.every((rule) => this.extensions.evaluateRule(rule, this));
-      }
+  filterVisible(action: ContentActionRef | SettingsGroupRef | SidebarTabRef | DocumentListPresetRef): boolean {
+    if (action && action.rules && action.rules.visible) {
       return this.extensions.evaluateRule(action.rules.visible, this);
     }
     return true;
@@ -511,7 +490,7 @@ export class AppExtensionService implements RuleContext {
         return true;
       }
 
-      if (extension.rules?.disabled) {
+      if (extension.rules && extension.rules.disabled) {
         return this.extensions.evaluateRule(extension.rules.disabled, this);
       }
     }
@@ -519,7 +498,7 @@ export class AppExtensionService implements RuleContext {
     return false;
   }
 
-  runActionById(id: string, additionalPayload?: any) {
+  runActionById(id: string) {
     const action = this.extensions.getActionById(id);
     if (action) {
       const { type, payload } = action;
@@ -528,16 +507,9 @@ export class AppExtensionService implements RuleContext {
       };
       const expression = this.extensions.runExpression(payload, context);
 
-      this.store.dispatch({
-        type,
-        payload: expression,
-        configuration: additionalPayload
-      });
+      this.store.dispatch({ type, payload: expression });
     } else {
-      this.store.dispatch({
-        type: id,
-        configuration: additionalPayload
-      });
+      this.store.dispatch({ type: id });
     }
   }
 
@@ -547,18 +519,11 @@ export class AppExtensionService implements RuleContext {
   }
 
   // todo: move to ADF/RuleService
-  evaluateRule(ruleId: string | string[], ...args: any[]): boolean {
-    let evaluatorList: RuleEvaluator[] = [];
-    if (Array.isArray(ruleId)) {
-      evaluatorList = ruleId.filter((rule) => !!this.getEvaluator(rule)).map((rule) => this.getEvaluator(rule));
-    } else {
-      const evaluator = this.getEvaluator(ruleId);
-      if (evaluator) {
-        evaluatorList.push(evaluator);
-      }
-    }
-    if (evaluatorList?.length > 0) {
-      return evaluatorList.every((evaluator) => evaluator(this, ...args));
+  evaluateRule(ruleId: string, ...args: any[]): boolean {
+    const evaluator = this.getEvaluator(ruleId);
+
+    if (evaluator) {
+      return evaluator(this, ...args);
     }
 
     return false;
@@ -593,13 +558,5 @@ export class AppExtensionService implements RuleContext {
     }
 
     return true;
-  }
-
-  bulkActionExecuted(): void {
-    this.bulkActionExecuted$.next();
-  }
-
-  isFeatureSupported(feature: string): boolean {
-    return this.extensions.evaluateRule(feature, this);
   }
 }

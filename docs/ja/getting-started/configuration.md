@@ -84,7 +84,29 @@ Alfresco コンテンツアプリケーションの左上隅に表示される�
 ```json
 {
     "application": {
-        "logo": "/assets/images/updated-alfresco-logo.svg"
+        "logo": "/assets/images/alfresco-logo-white.svg"
+    }
+}
+```
+
+### ヘッダーの背景色
+
+"headerColor" キーの色コードを指定することにより、ヘッダーの背景色を変更できます:
+
+```json
+{
+    "headerColor": "#ffffff"
+}
+```
+
+### ヘッダーの背景画像
+
+ヘッダーの背景画像を変更するには、対応するリソースへのパスを指定します:
+
+```json
+{
+    "application": {
+      "headerImagePath": "assets/images/mastHead-bg-shapesPattern.svg"
     }
 }
 ```

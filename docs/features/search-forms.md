@@ -20,12 +20,12 @@ In order to configure multiple search form you have to add your search configura
 | name | `string` | "" | Display title of the form |
 | order | `string` |  | Visualization order in the dropdown  |
 | default | `boolean` |  | if the search has to be used as default search  |
-| app:fields| `string[]`| | list of aspects property to add in the query and search in the value for the given text. The property will be concatenated in AND|
+| aca:fields| `string[]`| | list of aspects property to add in the query and search in the value for the given text. The property will be concatenated in AND|
 
 ### Search configuration properties
 
 In order to learn more about :
 -The search UI configuration possibilities refer to the [ADF Search configuration documentation](https://github.com/Alfresco/alfresco-ng2-components/blob/develop/docs/user-guide/search-configuration-guide.md)
--The search Query configuration possibilities refer to the [Full text search reference documentation](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference)
+-The search Query configuration possibilities refer to the [Full text search reference documentation](https://docs.alfresco.com/search-services/latest/using/)
 
 

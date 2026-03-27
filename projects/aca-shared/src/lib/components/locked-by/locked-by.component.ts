@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,25 +16,22 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { NodeEntry } from '@alfresco/js-api';
-import { TranslatePipe } from '@ngx-translate/core';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  imports: [TranslatePipe, MatIconModule],
   selector: 'aca-locked-by',
   template: `
-    <mat-icon class="aca-locked-by--icon">lock</mat-icon>
-    <span class="aca-locked-by--label">{{ 'APP.LOCKED_BY' | translate }}</span>
-    <span class="aca-locked-by--name">{{ text }}</span>
+    <mat-icon class="locked_by--icon">lock</mat-icon>
+    <span class="locked_by--label">{{ 'APP.LOCKED_BY' | translate }}</span>
+    <span class="locked_by--name">{{ text }}</span>
   `,
   styleUrls: ['./locked-by.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,13 +40,13 @@ import { MatIconModule } from '@angular/material/icon';
     class: 'aca-locked-by'
   }
 })
-export class LockedByComponent implements OnInit {
+export class LockedByComponent {
   @Input()
   node: NodeEntry;
 
-  public text: string;
-
-  ngOnInit(): void {
-    this.text = this.node?.entry?.properties?.['cm:lockOwner']?.displayName;
+  get text(): string {
+    return (
+      this.node && this.node.entry.properties && this.node.entry.properties['cm:lockOwner'] && this.node.entry.properties['cm:lockOwner'].displayName
+    );
   }
 }

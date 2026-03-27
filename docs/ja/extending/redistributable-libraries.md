@@ -20,7 +20,7 @@ nav: ja
 最初に、ワークスペース内で新しいプロジェクトを生成します:
 
 ```sh
-nx generate library my-extension
+ng generate library my-extension
 ```
 
 `projects/my-extensions` フォルダに新しいプロジェクトを取得します。
@@ -33,10 +33,10 @@ nx generate library my-extension
 次に、次のコマンドでプロジェクトをビルドします:
 
 ```sh
-nx build my-extension
+ng build my-extension
 ```
 
-NX は、プロジェクトの Typescript パスマッピングを自動的に構成するため、ライブラリをリンクするための追加手順は必要ありません。
+Angular CLI は、プロジェクトの Typescript パスマッピングを自動的に構成するため、ライブラリをリンクするための追加手順は必要ありません。
 
 ### 動的コンポーネントを登録する
 
@@ -102,7 +102,7 @@ JSON 定義で `my-extension.main.component` 識別子を使用できるよう�
 {
     "scripts": {
         "build:my-extension":
-            "nx build my-extension && npx cpr projects/my-extension/assets dist/my-extension/assets --deleteFirst"
+            "ng build my-extension && npx cpr projects/my-extension/assets dist/my-extension/assets --deleteFirst"
     }
 }
 ```

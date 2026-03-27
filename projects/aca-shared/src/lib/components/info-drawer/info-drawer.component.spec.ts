@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,11 +16,11 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { ContentActionRef, SidebarTabRef } from '@alfresco/adf-extensions';
@@ -27,19 +28,17 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
 import { SetInfoDrawerStateAction, ToggleInfoDrawerAction } from '@alfresco/aca-shared/store';
-import { EMPTY, of, Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { InfoDrawerComponent } from './info-drawer.component';
 import { LibTestingModule } from '../../testing/lib-testing-module';
 import { AppExtensionService } from '../../services/app.extension.service';
 import { ContentApiService } from '../../services/content-api.service';
-import { ContentService } from '@alfresco/adf-content-services';
-import { RedirectAuthService } from '@alfresco/adf-core';
+import { SharedToolbarModule } from '../tool-bar/shared-toolbar.module';
 
 describe('InfoDrawerComponent', () => {
   let fixture: ComponentFixture<InfoDrawerComponent>;
   let component: InfoDrawerComponent;
   let contentApiService: ContentApiService;
-  let contentService: ContentService;
   let tab: SidebarTabRef;
   let appExtensionService: AppExtensionService;
   const mockStream = new Subject();
@@ -62,11 +61,11 @@ describe('InfoDrawerComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [LibTestingModule, InfoDrawerComponent],
+      imports: [LibTestingModule, SharedToolbarModule],
+      declarations: [InfoDrawerComponent],
       providers: [
         { provide: AppExtensionService, useValue: extensionServiceMock },
-        { provide: Store, useValue: storeMock },
-        { provide: RedirectAuthService, useValue: { onLogin: EMPTY, onTokenReceived: EMPTY } }
+        { provide: Store, useValue: storeMock }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
@@ -75,7 +74,7 @@ describe('InfoDrawerComponent', () => {
     component = fixture.componentInstance;
     appExtensionService = TestBed.inject(AppExtensionService);
     contentApiService = TestBed.inject(ContentApiService);
-    contentService = TestBed.inject(ContentService);
+
     tab = { title: 'tab1', id: 'tab1', component: '' };
     spyOn(appExtensionService, 'getSidebarTabs').and.returnValue([tab]);
   });
@@ -144,7 +143,6 @@ describe('InfoDrawerComponent', () => {
   it('should call getNodeInfo() when node is a recent file', () => {
     const response: any = { entry: { id: 'nodeId' } };
     spyOn(contentApiService, 'getNodeInfo').and.returnValue(of(response));
-
     const nodeMock: any = {
       entry: {
         id: 'nodeId',
@@ -158,7 +156,6 @@ describe('InfoDrawerComponent', () => {
     component.ngOnChanges();
 
     expect(component.displayNode).toBe(response);
-    expect(component.node.entry).toBe(response);
     expect(contentApiService.getNodeInfo).toHaveBeenCalled();
   });
 
@@ -178,7 +175,7 @@ describe('InfoDrawerComponent', () => {
 
   it('should show the icons from extension', () => {
     fixture.detectChanges();
-    mockStream.next({});
+    mockStream.next();
     expect(component.actions).toEqual([
       {
         id: 'app.sidebar.close',
@@ -187,24 +184,5 @@ describe('InfoDrawerComponent', () => {
         icon: 'highlight_off'
       } as ContentActionRef
     ]);
-  });
-
-  it('should get node icon for documents', () => {
-    const expectedIcon = 'assets/images/ft_ic_folder';
-    const response: any = { entry: { id: 'nodeId' } };
-    spyOn(contentApiService, 'getNodeInfo').and.returnValue(of(response));
-    spyOn(contentService, 'getNodeIcon').and.returnValue(expectedIcon);
-    const nodeMock: any = {
-      entry: { id: 'nodeId', guid: 'guidId' },
-      isFolder: true
-    };
-    component.node = nodeMock;
-
-    fixture.detectChanges();
-    component.ngOnChanges();
-
-    expect(contentService.getNodeIcon).toHaveBeenCalledWith(response);
-    expect(component.icon).toBe(expectedIcon);
-    expect(contentApiService.getNodeInfo).toHaveBeenCalled();
   });
 });

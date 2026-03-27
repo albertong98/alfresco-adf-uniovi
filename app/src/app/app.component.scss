@@ -1,8 +1,8 @@
-app-root {
+:host {
   display: flex;
   flex: 1;
 
-  .aca-sr-only {
+  .sr-only {
     position: absolute;
     width: 1px;
     height: 1px;

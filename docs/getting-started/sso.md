@@ -7,7 +7,7 @@ Title: Single Sign-On
 Besides Basic Authentication, you can use Content Application with:
 
 - [Keycloak](https://www.keycloak.org/)
-- [Identity Service](https://support.hyland.com/r/Alfresco/Alfresco-Process-Services/24.3/Alfresco-Process-Services/Configure/Authentication/Identity-Service)
+- [Identity Service](https://docs.alfresco.com/identity1.0/concepts/identity-overview.html)
 - Kerberos
 
 The application contains reasonable defaults for Single Sign-On (aka SSO) setup.
@@ -21,8 +21,8 @@ You can find the settings in the `app.config.json` file, and they look similar t
     "host": "http://localhost:4200/auth/realms/alfresco",
     "clientId": "alfresco",
     "scope": "openid",
-    "implicitFlow": false,
-    "codeFlow": true,
+    "secret": "",
+    "implicitFlow": true,
     "silentLogin": true,
     "redirectSilentIframeUri": "./assets/silent-refresh.html",
     "redirectUri": "/",

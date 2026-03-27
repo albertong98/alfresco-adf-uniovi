@@ -26,4 +26,3 @@ This application simplifies the complexity of Content Management and provides co
 - [Search results](/features/search-results)
 - [Search forms](/features/search-forms)
 - [Application Hook](/extending/application-hook)
-- [Context Menu actions](context-menu-actions)

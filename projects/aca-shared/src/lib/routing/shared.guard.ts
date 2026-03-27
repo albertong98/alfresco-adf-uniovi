@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,20 +16,34 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CanActivateFn } from '@angular/router';
-import { inject } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { CanActivate, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppStore, isQuickShareEnabled } from '@alfresco/aca-shared/store';
 
-export const AppSharedRuleGuard: CanActivateFn = (): Observable<boolean> => {
-  const store = inject(Store<AppStore>);
-  return store.select(isQuickShareEnabled);
-};
+@Injectable({
+  providedIn: 'root'
+})
+export class AppSharedRuleGuard implements CanActivate {
+  isQuickShareEnabled$: Observable<boolean>;
+
+  constructor(store: Store<AppStore>) {
+    this.isQuickShareEnabled$ = store.select(isQuickShareEnabled);
+  }
+
+  canActivate(_: ActivatedRouteSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    return this.isQuickShareEnabled$;
+  }
+
+  canActivateChild(route: ActivatedRouteSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    return this.canActivate(route);
+  }
+}

@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,31 +16,36 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Injectable, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { NoopTranslateModule } from '@alfresco/adf-core';
-import { AlfrescoApiService, AlfrescoApiServiceMock } from '@alfresco/adf-content-services';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  AlfrescoApiService,
+  AlfrescoApiServiceMock,
+  PipeModule,
+  TranslateLoaderService,
+  TranslationMock,
+  TranslationService
+} from '@alfresco/adf-core';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
-import { provideEffects } from '@ngrx/effects';
-import { provideStore } from '@ngrx/store';
-import { MatIconTestingModule } from '@angular/material/icon/testing';
-import { OverlayModule } from '@angular/cdk/overlay';
-import { RepositoryInfo, VersionInfo } from '@alfresco/js-api';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { DocumentBasePageService } from '../../public-api';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { CommonModule } from '@angular/common';
 
 export const initialState = {
   app: {
     appName: 'Alfresco Content Application',
-    logoPath: 'assets/images/updated-alfresco-logo.svg',
+    headerColor: '#ffffff',
+    logoPath: 'assets/images/alfresco-logo-white.svg',
+    headerImagePath: 'assets/images/mastHead-bg-shapesPattern.svg',
     sharedUrl: '',
     user: {
       isAdmin: null,
@@ -59,6 +65,7 @@ export const initialState = {
     infoDrawerOpened: false,
     infoDrawerMetadataAspect: '',
     showFacetFilter: true,
+    documentDisplayMode: 'list',
     repository: {
       status: {
         isQuickShareEnabled: true
@@ -67,45 +74,25 @@ export const initialState = {
   }
 };
 
-export const discoveryApiServiceMockValue = {
-  ecmProductInfo$: new BehaviorSubject<RepositoryInfo | null>(null),
-  getEcmProductInfo: (): Observable<RepositoryInfo> =>
-    of(
-      new RepositoryInfo({
-        version: {
-          major: '10.0.0'
-        } as VersionInfo
-      })
-    )
-};
-
-@Injectable()
-export class DocumentBasePageServiceMock extends DocumentBasePageService {
-  canUpdateNode(): boolean {
-    return true;
-  }
-
-  canUploadContent(): boolean {
-    return true;
-  }
-}
-
 @NgModule({
-  imports: [NoopAnimationsModule, NoopTranslateModule, RouterTestingModule, MatIconTestingModule, OverlayModule],
-  providers: [
-    provideStore(
-      { app: null },
-      {
-        initialState,
-        runtimeChecks: {
-          strictStateImmutability: false,
-          strictActionImmutability: false
-        }
+  imports: [
+    NoopAnimationsModule,
+    CommonModule,
+    HttpClientModule,
+    RouterTestingModule,
+    StoreModule,
+    EffectsModule.forRoot([]),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useClass: TranslateLoaderService
       }
-    ),
-    provideEffects([]),
+    }),
+    PipeModule
+  ],
+  providers: [
     { provide: AlfrescoApiService, useClass: AlfrescoApiServiceMock },
-    provideHttpClient(withInterceptorsFromDi())
+    { provide: TranslationService, useClass: TranslationMock }
   ]
 })
 export class LibTestingModule {}

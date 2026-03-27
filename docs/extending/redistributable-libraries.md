@@ -19,7 +19,7 @@ See also
 First, generate a new project within the workspace:
 
 ```sh
-nx generate library my-extension
+ng generate library my-extension
 ```
 
 You will get a new project in the `projects/my-extensions` folder.
@@ -32,10 +32,10 @@ By default, the project contains at least the following content:
 Next, build the project with the following command:
 
 ```sh
-nx build my-extension
+ng build my-extension
 ```
 
-NX automatically configures Typescript path mappings for the project, so that you do not need any additional steps to link the library.
+Angular CLI automatically configures Typescript path mappings for the project, so that you do not need any additional steps to link the library.
 
 ### Register dynamic components
 
@@ -104,7 +104,7 @@ Update the root `package.json` file and append the following entry to the `scrip
 {
     "scripts": {
         "build:my-extension":
-            "nx build my-extension && npx cpr projects/my-extension/assets dist/my-extension/assets --deleteFirst"
+            "ng build my-extension && npx cpr projects/my-extension/assets dist/my-extension/assets --deleteFirst"
     }
 }
 ```

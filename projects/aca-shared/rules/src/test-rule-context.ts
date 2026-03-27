@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,26 +16,22 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NavigationState, NodePermissions, ProfileState, RuleEvaluator, SelectionState } from '@alfresco/adf-extensions';
+import { NavigationState, NodePermissions, ProfileState, RuleContext, RuleEvaluator, SelectionState } from '@alfresco/adf-extensions';
 import { RepositoryInfo } from '@alfresco/js-api';
-import { AcaRuleContext } from './app.rules';
-import { AppConfigService } from '@alfresco/adf-core';
 
-export class TestRuleContext implements AcaRuleContext {
+export class TestRuleContext implements RuleContext {
   auth: any;
   navigation: NavigationState = {};
   permissions: NodePermissions;
   profile: ProfileState;
   repository: RepositoryInfo;
-  withCredentials: boolean;
-  appConfig: AppConfigService;
 
   selection: SelectionState = {
     count: 0,
@@ -43,7 +40,7 @@ export class TestRuleContext implements AcaRuleContext {
     isEmpty: true
   };
 
-  getEvaluator(): RuleEvaluator {
+  getEvaluator(_key: string): RuleEvaluator {
     return undefined;
   }
 }

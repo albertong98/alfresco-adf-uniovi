@@ -7,67 +7,75 @@ The purpose of this tutorial is to describe how to develop a “hello world” e
 # Prerequisites
 
 The starting point for this tutorial is the availability of the full repository of the [Alfresco Content Application (aka ACA)](https://github.com/Alfresco/alfresco-content-app "https://github.com/Alfresco/alfresco-content-app") on your development environment (your laptop as an example). This tutorial has been written with the following versions of the software:
--   ACA version 5.3.0,
--   ACS 23.4,
--   NodeJs version 18.20.3
+-   ACA version 2.2.0,
+-   ACS 7.0.0-M3,
+-   NodeJs version 14.15.2,
+-   Chrome Version 87.0.4280.88.
 
 # Creating the ACA extension
 
-First create a folder where you would like to place the extensions. i.e. `/extensions`.
+As described [here](https://github.com/Alfresco/alfresco-digital-workspace-app/blob/develop/docs/extending.md "https://github.com/Alfresco/alfresco-digital-workspace-app/blob/develop/docs/extending.md"), the creation of an ADW extension is straightforward following the [Nx Workspace](https://nx.dev/angular "https://nx.dev/angular") dev tools for monorepos.
 
-Then run the `@nx/angular` library generator using the following command as a template:
-```console
-npx nx generate @nx/angular:library --name=@myorg/my-extension --buildable=true --directory=extensions/myextension --publishable=true --importPath=@myorg/my-extension --projectNameAndRootFormat=as-provided --no-interactive
-```
+From the root folder of the ACA project, launch the command below from a terminal. As you can see, with the command below you are going to create a new extension named `my-extension`.
 
-where `name` is the name of the library, `directory` is a directory where the library is placed and `importPath` is the library name used for the import, like `@myorg/my-awesome-lib`. This must be a valid npm package name.
+    ng generate library my-extension
 
-See the official [Nx Angular library](https://nx.dev/nx-api/angular/generators/library) documentation for more details.
+In case of errors, add the following line to the `tsconfig.json` file.  
 
-Next to validate the changed verify the following:
+    "compilerOptions": { "baseUrl": ".", "rootDir": "." }
 
-- Check in `tsconfig.base.json` that an import path exists and points to the correct entry point:
-- 
-```json
-{
-  "paths" : {
-    "@myorg/my-extension": [
-      "extensions/my-extension/src/index.ts"
-    ]
-  }
-}
-```
+Once done, in the `projects/my-extension` path you will find the following structure:
 
-- Test if npm i is working:
+-   `src` folder containing all the typescript source code. Very important is the `public-api.ts` file defining all the inclusions of the extension and the `lib/my-extension.module.ts` file defining the module class for the extension.
+    
+-   README.md file for documentation purposes as well as other files used for testing and configuration.
+
+To complete the creation, build the extension launching the following command.
+
+    ng build my-extension
 
 # Developing the basics of the ACA extension
 
-Now that the `my-extension` is created, let's add the proper configuration to the extension module.
-For this purpose, edit the `extensions/my-extension/src/lib/my-extension.module.ts` file changing what is described below:
+Now that the `my-extension` is created, let's add the proper configuration to the extension module. For this purpose, edit the `projects/my-extension/src/lib/my-extension.module.ts` file changing what is described below.
 
 ```typescript
+import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { ExtensionService, provideExtensionConfig } from '@alfresco/adf-extensions';
-import { provideTranslations } from '@alfresco/adf-core';
+import { CoreModule, MaterialModule, TRANSLATION_PROVIDER } from '@alfresco/adf-core';
 
 import { MyExtensionComponent } from './my-extension.component';
 import { MyExtensionService } from './my-extension.service';
 
+export function components() {
+    return [MyExtensionComponent];
+}
+
 @NgModule({
-  imports: [MyExtensionComponent],
-  providers: [
-    provideTranslations('my-extension', 'assets/my-extension'),
-    MyExtensionService,
-    provideExtensionConfig(['my-extension.json']),
-  ]
+    imports: [CoreModule, BrowserModule, FormsModule, MaterialModule],
+    providers: [
+        {
+            provide: TRANSLATION_PROVIDER,
+            multi: true,
+            useValue: {
+                name: 'adf-my-extension',
+                source: 'assets/adf-my-extension',
+            },
+        },
+        MyExtensionService,
+        provideExtensionConfig(['my-extension.json']),
+    ],
+    declarations: components(),
+    exports: components(),
 })
 export class MyExtensionModule {
-  constructor(extensions: ExtensionService) {
-    extensions.setComponents({
-      'my-extension.main.component': MyExtensionComponent,
-    });
-  }
+    constructor(extensions: ExtensionService) {
+        extensions.setComponents({
+          'my-extension.main.component' : MyExtensionComponent,
+        });
+    }
 }
 ```
 
@@ -75,20 +83,17 @@ It's now time for the configuration of the brand new extension. For this purpose
 
 To create the proper configuration, create the folder below in the described path.
 
-    extensions/my-extension/assets
+    projects/my-extension/assets
 
-Once done, create the descriptor file `extensions/my-extension/assets/my-extension.json` file with the following content.
-Please keep in mind that:
- - The file name must be unique inside the application.
- - Choose a name that does not conflict with other extensions.
- - The descriptor file follows the schema in `extension.schema.json`
+Once done, create the file `projects/my-extension/assets/my-extension.json` file with the following content.
 
 ```json
     {
-      "$id": "my-extension-id",
+      "$schema": "../../../extension.schema.json",
+      "$id": "my-extension",
       "$version": "1.0.0",
       "$vendor": "Your name or company name",
-      "$name": "your plugin name",
+      "$name": "plugin1",
       "$description": "demo plugin",
       "$license": "MIT",
       
@@ -126,13 +131,16 @@ This is a very basic example, adding a “My Extension” item to the existing l
 Now that the ACA extension is developed in its initial version, let's add the extension module to the list of the ones used by the application. To complete the task, edit the `src/app/extensions.module.ts` file as described below.
 
 ```typescript
-// Add the following import to the page.
-import { MyExtensionModule } from 'my-extension';
-
-@NgModule({
-  imports: [MyExtensionModule]
-})
-export class AppExtensionsModule {}
+    // Add the following import to the page.
+    import { MyExtensionModule } from 'my-extension';
+    
+    @NgModule({
+      imports: [
+        ...,
+        MyExtensionModule
+    ]
+  })
+  export class AppExtensionsModule {}
 ```
 
 In addition, edit the `src/assets/app.extensions.json` file on the `$references` array. Below how it should look like.
@@ -155,7 +163,7 @@ Last but not least, edit the package.json file to allow the build of the extensi
     { ...
       "scripts": {
         ...,
-        "build:my-extension": "nx build my-extension && npx cpr extensions/my-extension/assets dist/my-extension/assets --deleteFirst"
+        "build:my-extension": "ng build my-extension && npx cpr projects/my-extension/assets dist/my-extension/assets --deleteFirst"
     }, ...
   }
 

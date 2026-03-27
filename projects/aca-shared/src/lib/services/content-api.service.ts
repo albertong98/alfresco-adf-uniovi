@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,18 +16,18 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Injectable, inject } from '@angular/core';
-import { UserPreferencesService } from '@alfresco/adf-core';
-import { AlfrescoApiService } from '@alfresco/adf-content-services';
+import { Injectable } from '@angular/core';
+import { AlfrescoApiService, UserPreferencesService } from '@alfresco/adf-core';
 import { Observable, from } from 'rxjs';
 import {
+  MinimalNodeEntity,
   NodePaging,
   Node,
   DeletedNodesPaging,
@@ -37,9 +38,9 @@ import {
   SharedLinkPaging,
   SearchRequest,
   ResultSetPaging,
-  SiteBodyCreate,
+  SiteBody,
   SiteEntry,
-  FavoriteBodyCreate,
+  FavoriteBody,
   FavoriteEntry,
   NodesApi,
   TrashcanApi,
@@ -52,8 +53,7 @@ import {
   PeopleApi,
   VersionsApi,
   DirectAccessUrlEntry,
-  VersionPaging,
-  LazyApi
+  VersionPaging
 } from '@alfresco/js-api';
 import { map } from 'rxjs/operators';
 
@@ -61,38 +61,66 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ContentApiService {
-  private readonly api = inject(AlfrescoApiService);
-  private readonly preferences = inject(UserPreferencesService);
+  _nodesApi: NodesApi;
+  get nodesApi(): NodesApi {
+    this._nodesApi = this._nodesApi ?? new NodesApi(this.api.getInstance());
+    return this._nodesApi;
+  }
 
-  @LazyApi((self: ContentApiService) => new NodesApi(self.api.getInstance()))
-  declare nodesApi: NodesApi;
+  _trashcanApi: TrashcanApi;
+  get trashcanApi(): TrashcanApi {
+    this._trashcanApi = this._trashcanApi ?? new TrashcanApi(this.api.getInstance());
+    return this._trashcanApi;
+  }
 
-  @LazyApi((self: ContentApiService) => new TrashcanApi(self.api.getInstance()))
-  declare trashcanApi: TrashcanApi;
+  _sharedLinksApi: SharedlinksApi;
+  get sharedLinksApi(): SharedlinksApi {
+    this._sharedLinksApi = this._sharedLinksApi ?? new SharedlinksApi(this.api.getInstance());
+    return this._sharedLinksApi;
+  }
 
-  @LazyApi((self: ContentApiService) => new SharedlinksApi(self.api.getInstance()))
-  declare sharedLinksApi: SharedlinksApi;
+  _discoveryApi: DiscoveryApi;
+  get discoveryApi(): DiscoveryApi {
+    this._discoveryApi = this._discoveryApi ?? new DiscoveryApi(this.api.getInstance());
+    return this._discoveryApi;
+  }
 
-  @LazyApi((self: ContentApiService) => new DiscoveryApi(self.api.getInstance()))
-  declare discoveryApi: DiscoveryApi;
+  _favoritesApi: FavoritesApi;
+  get favoritesApi(): FavoritesApi {
+    this._favoritesApi = this._favoritesApi ?? new FavoritesApi(this.api.getInstance());
+    return this._favoritesApi;
+  }
 
-  @LazyApi((self: ContentApiService) => new FavoritesApi(self.api.getInstance()))
-  declare favoritesApi: FavoritesApi;
+  _contentApi: ContentApi;
+  get contentApi(): ContentApi {
+    this._contentApi = this._contentApi ?? new ContentApi(this.api.getInstance());
+    return this._contentApi;
+  }
 
-  @LazyApi((self: ContentApiService) => new ContentApi(self.api.getInstance()))
-  declare contentApi: ContentApi;
+  _sitesApi: SitesApi;
+  get sitesApi(): SitesApi {
+    this._sitesApi = this._sitesApi ?? new SitesApi(this.api.getInstance());
+    return this._sitesApi;
+  }
 
-  @LazyApi((self: ContentApiService) => new SitesApi(self.api.getInstance()))
-  declare sitesApi: SitesApi;
+  _searchApi: SearchApi;
+  get searchApi(): SearchApi {
+    this._searchApi = this._searchApi ?? new SearchApi(this.api.getInstance());
+    return this._searchApi;
+  }
 
-  @LazyApi((self: ContentApiService) => new SearchApi(self.api.getInstance()))
-  declare searchApi: SearchApi;
+  _peopleApi: PeopleApi;
+  get peopleApi(): PeopleApi {
+    this._peopleApi = this._peopleApi ?? new PeopleApi(this.api.getInstance());
+    return this._peopleApi;
+  }
 
-  @LazyApi((self: ContentApiService) => new PeopleApi(self.api.getInstance()))
-  declare peopleApi: PeopleApi;
-
-  @LazyApi((self: ContentApiService) => new VersionsApi(self.api.getInstance()))
-  declare versionsApi: VersionsApi;
+  _versionsApi: VersionsApi;
+  get versionsApi(): VersionsApi {
+    this._versionsApi = this._versionsApi ?? new VersionsApi(this.api.getInstance());
+    return this._versionsApi;
+  }
+  constructor(private api: AlfrescoApiService, private preferences: UserPreferencesService) {}
 
   /**
    * Moves a node to the trashcan.
@@ -112,7 +140,7 @@ export class ContentApiService {
    * @param options Optional parameters supported by JS-API
    * @returns Node information
    */
-  getNode(nodeId: string, options: any = {}): Observable<NodeEntry> {
+  getNode(nodeId: string, options: any = {}): Observable<MinimalNodeEntity> {
     const defaults = {
       include: ['path', 'properties', 'allowableOperations', 'permissions', 'definition']
     };
@@ -127,8 +155,9 @@ export class ContentApiService {
     };
     const queryOptions = Object.assign(defaults, options || {});
 
+    // @ts-ignore
     return from(
-      new Promise<Node>((resolve, reject) => {
+      new Promise((resolve, reject) => {
         this.nodesApi.getNode(nodeId, queryOptions).then(
           (nodeEntry: NodeEntry) => {
             resolve(nodeEntry.entry);
@@ -172,7 +201,7 @@ export class ContentApiService {
     return from(this.trashcanApi.listDeletedNodes(queryOptions));
   }
 
-  restoreNode(nodeId: string): Observable<NodeEntry> {
+  restoreNode(nodeId: string): Observable<MinimalNodeEntity> {
     return from(this.trashcanApi.restoreDeletedNode(nodeId));
   }
 
@@ -272,7 +301,7 @@ export class ContentApiService {
   }
 
   createSite(
-    siteBody: SiteBodyCreate,
+    siteBody: SiteBody,
     opts?: {
       fields?: Array<string>;
       skipConfiguration?: boolean;
@@ -286,12 +315,12 @@ export class ContentApiService {
     return from(this.sitesApi.getSite(siteId, opts));
   }
 
-  updateLibrary(siteId: string, siteBody: SiteBodyCreate): Observable<SiteEntry> {
+  updateLibrary(siteId: string, siteBody: SiteBody): Observable<SiteEntry> {
     return from(this.sitesApi.updateSite(siteId, siteBody));
   }
 
-  addFavorite(nodes: Array<NodeEntry>): Observable<FavoriteEntry> {
-    const payload: FavoriteBodyCreate[] = nodes.map((node) => {
+  addFavorite(nodes: Array<MinimalNodeEntity>): Observable<FavoriteEntry> {
+    const payload: FavoriteBody[] = nodes.map((node) => {
       const { isFolder, nodeId, id } = node.entry as any;
       const siteId = node.entry['guid'];
       const type = siteId ? 'site' : isFolder ? 'folder' : 'file';
@@ -309,7 +338,7 @@ export class ContentApiService {
     return from(this.favoritesApi.createFavorite('-me-', payload as any));
   }
 
-  removeFavorite(nodes: Array<NodeEntry>): Observable<any> {
+  removeFavorite(nodes: Array<MinimalNodeEntity>): Observable<any> {
     return from(
       Promise.all(
         nodes.map((node: any) => {
@@ -320,7 +349,7 @@ export class ContentApiService {
     );
   }
 
-  unlockNode(nodeId: string, opts?: any): Promise<NodeEntry> {
+  unlockNode(nodeId: string, opts?: any): Promise<MinimalNodeEntity> {
     return this.nodesApi.unlockNode(nodeId, opts);
   }
 

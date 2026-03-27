@@ -22,33 +22,33 @@ And also the Info Drawer, Toolbar and Node Selector dialogs for copy and move op
 ## Alfresco Full Text Search
 
 The following table describes current support of the
-[Alfresco Full Text Search](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference) (FTS) syntax
+[Alfresco Full Text Search](http://docs.alfresco.com/6.1/concepts/rm-searchsyntax-intro.html) (FTS) syntax
 in the Content Application when using **Search Input** component.
 
 | Feature                                                          | Full | Partial | N/A | Details                                                                            |
 | ---------------------------------------------------------------- | ---- | ------- | --- | ---------------------------------------------------------------------------------- |
-| Search for a single term                                         | 1.6  |         |     | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-a-single-term)         |
-| Search for a phrase                                              |      | 1.7     |     | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-a-phrase)         |
-| Search for an exact term                                         | 1.7  |         |     | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-an-exact-term)          |
-| Search for term expansion                                        |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-term-expansion)           |
-| Search for conjunctions                                          | 1.7  |         |     | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Enterprise/4.1/Alfresco-Search-Enterprise/Using/Search-query-syntax/Search-for-conjunctions)       |
-| Search for disjunctions                                          | 1.7  |         |     | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-disjunctions)       |
-| Search for negation                                              |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-negation)         |
-| Search for optional, mandatory, and excluded elements of a query |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-optional-mandatory-and-excluded-elements-of-a-query)       |
-| Search in fields                                                 |      | 1.7     |     | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-in-fields)         |
-| Search for wildcards                                             |      | 1.7     |     | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-wildcards)      |
-| Search for ranges                                                |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-ranges)         |
-| Search for fuzzy matching                                        |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-fuzzy-matching)          |
-| Search for proximity                                             |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-proximity)      |
-| Search for boosts                                                |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Query-time-boosts)         |
-| Search for grouping                                              |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-grouping)       |
-| Search for spans and positions                                   |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-spans-and-positions)          |
-| Escaping characters                                              |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Escaping-characters)       |
-| Mixed FTS ID behavior                                            |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Mixed-FTS-ID-behavior)          |
-| Search for operator precedence                                   |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-for-operator-precedence)     |
-| Search query templates                                           |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-query-templates) |
-| Search query literals                                            |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-query-literals)       |
-| Search using date math                                           |      |         | X   | [Docs](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference/Search-using-date-math)      |
+| Search for a single term                                         | 1.6  |         |     | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-single.html)         |
+| Search for a phrase                                              |      | 1.7     |     | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-phrase.html)         |
+| Search for an exact term                                         | 1.7  |         |     | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-exact.html)          |
+| Search for term expansion                                        |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-term.html)           |
+| Search for conjunctions                                          | 1.7  |         |     | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-conjunct.html)       |
+| Search for disjunctions                                          | 1.7  |         |     | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-disjunct.html)       |
+| Search for negation                                              |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-negate.html)         |
+| Search for optional, mandatory, and excluded elements of a query |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-optional.html)       |
+| Search in fields                                                 |      | 1.7     |     | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-fields.html)         |
+| Search for wildcards                                             |      | 1.7     |     | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-wildcards.html)      |
+| Search for ranges                                                |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-ranges.html)         |
+| Search for fuzzy matching                                        |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-fuzzy.html)          |
+| Search for proximity                                             |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-proximity.html)      |
+| Search for boosts                                                |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-boosts.html)         |
+| Search for grouping                                              |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-grouping.html)       |
+| Search for spans and positions                                   |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-spans.html)          |
+| Escaping characters                                              |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-escaping.html)       |
+| Mixed FTS ID behavior                                            |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-ftsid.html)          |
+| Search for operator precedence                                   |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-precedence.html)     |
+| Search query templates                                           |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-querytemplates.html) |
+| Search query literals                                            |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-literals.html)       |
+| Search using date math                                           |      |         | X   | [Docs](https://docs.alfresco.com/6.0/concepts/rm-searchsyntax-datemaths.html)      |
 
 > **Partial** support means the feature supports basic scenarios
 > and there are edge cases that are not yet fully tested and might not work.
@@ -71,25 +71,24 @@ OR ia:whatEvent:"[term]*" OR ia:descriptionEvent:"[term]*" OR lnk:title:"[term]*
 
 ### Key facts
 
-1. If you have entered more than one word into the search input box, then the search query is constructed automatically using an `AND` operation.
+If you have entered more than one word into the search input box, then the search query is constructed automatically using an `AND` operation.
 
-2. If you have entered more than one word encapsulated in quotation marks, then the search query is constructed treated everything as a single string.
+I you have entered more than one word encapsulated in quotation marks, then the search query is constructed treated everything as a single string.
 
-3. If you have entered more than one word separated by `AND`, then the search query is constructed using an `AND` conjunction. Since `AND` is the default operator (see fact 1), the explicit `AND` keywords are removed when the search input value is processed.
+If you have entered more than one word separated by `AND`, then the search query is constructed using an `AND` conjunction.
 
-4. If you have entered more than one word separated by `OR`, then the search query is constructed using an `OR` disjunction. Unlike `AND`, the `OR` operators are preserved when processing the search input value because `OR` is not the default operator.
+If you have entered more than one word separated by `OR`, then the search query is constructed using an `OR` disjunction.
 
-5. If you have entered an `=` symbol before the search term, then the search query is constructed using exact term matching. **Note:** Works only with Solr search. For Elastic Search consider using Search Logical Filter.
+If you have entered an `=` symbol before the search term, then the search query is constructed using exact term matching.
 
 ### Examples
 
-| Search Type | Entered search input value | Expected result                                                                  | Processed search input value |
-| ----------- | -------------------------- | -------------------------------------------------------------------------------- | ---------------------------- |
-| Single Term | banana                     | Nodes that contain the term **banana** in any content                            | banana                       |
-| Conjunction | big yellow banana          | Nodes that contain all of the terms **big**, **yellow**, and **banana**          | big yellow banana            |
-| Phrase      | "big yellow banana"        | Nodes that contain the exact phrase **big yellow banana**                        | "big yellow banana"          |
-| Conjunction | big AND yellow AND banana  | Nodes that contain all of the terms **big**, **yellow**, and **banana**          | big yellow banana            |
-| Disjunction | orange OR banana OR apple  | Nodes that contain at least one of the terms **orange**, **banana** or **apple** | orange OR banana OR apple    |
-| Exact term  | =orange                    | Nodes that contain the exact term **orange** in any content.                     | orange                       |
+| Search Type | Search input | Expected result |
+| --- | --- | --- |
+| Single Term | banana | Nodes that contain the term **banana** in any content | 
+| Conjunction | big yellow banana | Nodes that contain all of the terms **big**, **yellow**, and **banana** |
+| Phrase | "big yellow banana" | Nodes that contain all of the terms **big**, **yellow**, and **banana** |
+| Conjunction | big AND yellow AND banana | Nodes that contain all of the terms **big**, **yellow**, and **banana** |
+| Disjunction | orange OR banana OR apple | Nodes that contain at least one of the terms **orange**, **banana** or **apple** |
+| Exact term | =orange | Nodes that contain the exact term **orange** in any content |
 
-**Important note:** Consider using Search Logical Filter when you need to combine multiple search types. Mixing search types directly in the input may result in wrong query format and incorrect results.

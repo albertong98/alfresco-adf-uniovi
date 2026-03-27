@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,14 +16,14 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Injectable, Type, inject } from '@angular/core';
+import { Injectable, Type } from '@angular/core';
 import { ExtensionService } from '@alfresco/adf-extensions';
 import { ExtensionRoute } from '../models/types';
 import { Router } from '@angular/router';
@@ -31,13 +32,12 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class RouterExtensionService {
-  private readonly router = inject(Router);
-  protected readonly extensions = inject(ExtensionService);
-
   defaults = {
     layout: 'app.layout.main',
-    auth: ['app.auth', 'app.extensions.dataLoaderGuard']
+    auth: ['app.auth']
   };
+
+  constructor(private router: Router, protected extensions: ExtensionService) {}
 
   mapExtensionRoutes() {
     const routesWithoutParent = [];
@@ -62,7 +62,7 @@ export class RouterExtensionService {
 
       return {
         path: route.path,
-        component: this.getComponentById(route.layout ?? this.defaults.layout),
+        component: this.getComponentById(route.layout || this.defaults.layout),
         canActivateChild: guards,
         canActivate: guards,
         parentRoute: route.parentRoute,

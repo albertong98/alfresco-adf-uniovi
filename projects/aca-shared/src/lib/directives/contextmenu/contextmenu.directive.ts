@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,35 +16,30 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DestroyRef, Directive, HostListener, inject, Input, OnInit } from '@angular/core';
-import { debounceTime } from 'rxjs/operators';
+import { Directive, HostListener, Input, OnInit, OnDestroy } from '@angular/core';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { AppStore, ContextMenu, CustomContextMenu } from '@alfresco/aca-shared/store';
-import { ContentActionRef } from '@alfresco/adf-extensions';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AppStore, ContextMenu } from '@alfresco/aca-shared/store';
 
 @Directive({
-  standalone: true,
   selector: '[acaContextActions]',
   exportAs: 'acaContextActions'
 })
-export class ContextActionsDirective implements OnInit {
-  private readonly store = inject<Store<AppStore>>(Store);
+export class ContextActionsDirective implements OnInit, OnDestroy {
+  private execute$: Subject<any> = new Subject();
+  onDestroy$: Subject<boolean> = new Subject<boolean>();
 
   // eslint-disable-next-line
   @Input('acaContextEnable')
   enabled = true;
-
-  @Input()
-  customActions: ContentActionRef[] = [];
 
   @HostListener('contextmenu', ['$event'])
   onContextMenuEvent(event: MouseEvent) {
@@ -59,26 +55,22 @@ export class ContextActionsDirective implements OnInit {
     }
   }
 
-  private readonly execute$: Subject<any> = new Subject();
-
-  private readonly destroyRef = inject(DestroyRef);
+  constructor(private store: Store<AppStore>) {}
 
   ngOnInit() {
-    this.execute$.pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef)).subscribe((event: MouseEvent) => {
-      if (this.customActions?.length) {
-        this.store.dispatch(new CustomContextMenu(event, this.customActions));
-      } else {
-        this.store.dispatch(new ContextMenu(event));
-      }
+    this.execute$.pipe(debounceTime(300), takeUntil(this.onDestroy$)).subscribe((event: MouseEvent) => {
+      this.store.dispatch(new ContextMenu(event));
     });
   }
+
+  ngOnDestroy() {
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
+  }
+
   execute(event: MouseEvent, target: Element) {
     if (!this.isSelected(target)) {
       target.dispatchEvent(new MouseEvent('click'));
-    }
-
-    if (this.isEmptyTable(target)) {
-      return null;
     }
 
     this.execute$.next(event);
@@ -97,14 +89,12 @@ export class ContextActionsDirective implements OnInit {
     return this.findAncestor(target, 'adf-datatable-row').classList.contains('adf-is-selected');
   }
 
-  private isEmptyTable(target: Element): boolean {
-    return this.findAncestor(target, 'adf-datatable-cell').classList.contains('adf-no-content-container');
-  }
-
   private findAncestor(el: Element, className: string): Element {
-    while (el && !el.classList.contains(className)) {
-      el = el.parentElement;
+    if (el.classList.contains(className)) {
+      return el;
     }
+    // eslint-disable-next-line curly
+    while ((el = el.parentElement) && !el.classList.contains(className));
     return el;
   }
 }

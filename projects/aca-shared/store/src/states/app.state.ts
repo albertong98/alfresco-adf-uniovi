@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,47 +16,25 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { SelectionState, ProfileState, NavigationState } from '@alfresco/adf-extensions';
 import { RepositoryInfo, VersionEntry } from '@alfresco/js-api';
 
-export const INITIAL_APP_STATE: AppState = {
-  user: {
-    isAdmin: null,
-    id: null,
-    firstName: '',
-    lastName: ''
-  },
-  selection: {
-    nodes: [],
-    libraries: [],
-    isEmpty: true,
-    count: 0
-  },
-  navigation: {
-    currentFolder: null
-  },
-  currentNodeVersion: null,
-  infoDrawerOpened: false,
-  infoDrawerPreview: false,
-  infoDrawerMetadataAspect: '',
-  fileUploadingDialog: true,
-  showLoader: false,
-  repository: {
-    status: {
-      isQuickShareEnabled: true
-    }
-  } as any,
-  searchItemsTotalCount: null
-};
-
 export interface AppState {
+  appName: string;
+  headerColor: string;
+  headerTextColor: string;
+  logoPath: string;
+  customCssPath: string;
+  webFontPath: string;
+  headerImagePath: string;
+  sharedUrl: string;
   currentNodeVersion: VersionEntry;
   selection: SelectionState;
   user: ProfileState;
@@ -63,10 +42,10 @@ export interface AppState {
   infoDrawerOpened: boolean;
   infoDrawerPreview: boolean;
   infoDrawerMetadataAspect: string;
+  showFacetFilter: boolean;
+  documentDisplayMode: string;
   repository: RepositoryInfo;
   fileUploadingDialog: boolean;
-  showLoader: boolean;
-  searchItemsTotalCount: number;
 }
 
 export interface AppStore {

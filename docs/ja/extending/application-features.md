@@ -33,7 +33,7 @@ ACA は、次の拡張ポイントのセットをサポートします:
     "viewer": {
       "toolbarActions:": [],
       "openWith": [],
-      "extensions": []
+      "content": []
     },
     "sidebar": [],
     "content-metadata-presets": []
@@ -376,7 +376,7 @@ ACA の Viewer コンポーネントは、次の拡張ポイントをサポー�
 
   "features": {
     "viewer": {
-      "extensions": [],
+      "content": [],
       "toolbarActions:": [],
       "openWith": []
     }
@@ -396,7 +396,7 @@ ACA の Viewer コンポーネントは、次の拡張ポイントをサポー�
 
   "features": {
     "viewer": {
-      "extensions": [
+      "content": [
         {
           "id": "app.viewer.pdf",
           "fileExtension": "pdf",

@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,55 +16,45 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { TestBed } from '@angular/core/testing';
 import { initialState, LibTestingModule } from '../testing/lib-testing-module';
 import { AppExtensionService } from './app.extension.service';
-import { Store } from '@ngrx/store';
+import { Store, Action } from '@ngrx/store';
 import { AppStore } from '@alfresco/aca-shared/store';
 import {
   ContentActionType,
-  ExtensionConfig,
-  ExtensionLoaderService,
-  ExtensionService,
-  filterEnabled,
   mergeArrays,
-  NavBarGroupRef,
-  reduceEmptyMenus,
+  sortByOrder,
+  filterEnabled,
   reduceSeparators,
-  sortByOrder
+  reduceEmptyMenus,
+  ExtensionService,
+  ExtensionConfig,
+  NavBarGroupRef
 } from '@alfresco/adf-extensions';
-import { AppConfigService, LogService, provideCoreAuth } from '@alfresco/adf-core';
+import { AppConfigService } from '@alfresco/adf-core';
 import { provideMockStore } from '@ngrx/store/testing';
 import { hasQuickShareEnabled } from '@alfresco/aca-shared/rules';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
-import { NodeEntry } from '@alfresco/js-api';
 
 describe('AppExtensionService', () => {
   let service: AppExtensionService;
   let store: Store<AppStore>;
   let extensions: ExtensionService;
   let appConfigService: AppConfigService;
-  let logService: LogService;
-  let iconRegistry: MatIconRegistry;
-  let sanitizer: DomSanitizer;
-  let loader: ExtensionLoaderService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [LibTestingModule],
-      providers: [provideMockStore({ initialState }), provideCoreAuth()]
+      providers: [provideMockStore({ initialState })]
     });
 
-    iconRegistry = TestBed.inject(MatIconRegistry);
-    sanitizer = TestBed.inject(DomSanitizer);
     appConfigService = TestBed.inject(AppConfigService);
     store = TestBed.inject(Store);
 
@@ -71,8 +62,6 @@ describe('AppExtensionService', () => {
     service.repository.status.isQuickShareEnabled = true;
 
     extensions = TestBed.inject(ExtensionService);
-    logService = TestBed.inject(LogService);
-    loader = TestBed.inject(ExtensionLoaderService);
   });
 
   const applyConfig = (config: ExtensionConfig, selection?: boolean) => {
@@ -88,46 +77,7 @@ describe('AppExtensionService', () => {
     }
   };
 
-  const defaultConfigMock = {
-    $id: 'test',
-    $name: 'test',
-    $version: '1.0.0',
-    $license: 'MIT',
-    $vendor: 'Good company',
-    $runtime: '1.5.0',
-    features: {}
-  } as ExtensionConfig;
-
   describe('configs', () => {
-    it('should log an error during setup', async () => {
-      spyOn(extensions, 'load').and.returnValue(Promise.resolve(null));
-      spyOn(logService, 'error').and.stub();
-
-      await service.load();
-      expect(service.config).toBeNull();
-      expect(logService.error).toHaveBeenCalledWith('Extension configuration not found');
-    });
-
-    it('should load content metadata presets', () => {
-      applyConfig({
-        ...defaultConfigMock,
-        features: {
-          'content-metadata-presets': [
-            {
-              id: 'app.content.metadata.kitten-images',
-              'kitten-images': {
-                id: 'app.content.metadata.kittenAspect',
-                'custom:aspect': '*',
-                'exif:exif': ['exif:pixelXDimension', 'exif:pixelYDimension']
-              }
-            }
-          ]
-        }
-      });
-
-      expect(service.contentMetadata).toBeDefined();
-    });
-
     it('should merge two arrays based on [id] keys', () => {
       const left = [
         {
@@ -183,9 +133,14 @@ describe('AppExtensionService', () => {
       });
     });
 
-    it('should support column orders', (done) => {
+    it('should support column orders', () => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           documentList: {
             files: [
@@ -232,25 +187,26 @@ describe('AppExtensionService', () => {
         }
       });
 
-      const { libraries } = service.documentListPresets;
-      const files = service.filesDocumentListPreset$;
+      const { files, libraries } = service.documentListPresets;
 
-      files.subscribe((columns) => {
-        expect(columns.length).toBe(3);
-        expect(columns[0].id).toBe('app.files.thumbnail');
-        expect(columns[1].id).toBe('app.files.name');
-        expect(columns[2].id).toBe('app.files.securityMarks');
-        done();
-      });
+      expect(files.length).toBe(3);
+      expect(files[0].id).toBe('app.files.thumbnail');
+      expect(files[1].id).toBe('app.files.name');
+      expect(files[2].id).toBe('app.files.securityMarks');
 
       expect(libraries.length).toBe(2);
       expect(libraries[0].id).toBe('app.libraries.name');
       expect(libraries[1].id).toBe('app.libraries.thumbnail');
     });
 
-    it('should ignore column if visibility in rules is false', (done) => {
+    it('should ignore column if visibility in rules is false', () => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           documentList: {
             files: [
@@ -282,21 +238,23 @@ describe('AppExtensionService', () => {
         }
       });
 
-      const files = service.filesDocumentListPreset$;
+      const { files } = service.documentListPresets;
 
-      files.subscribe((columns) => {
-        expect(columns.length).toBe(2);
-        expect(columns[0].id).toBe('app.files.thumbnail');
-        expect(columns[1].id).toBe('app.files.name');
-        done();
-      });
+      expect(files.length).toBe(2);
+      expect(files[0].id).toBe('app.files.thumbnail');
+      expect(files[1].id).toBe('app.files.name');
     });
   });
 
   describe('actions', () => {
     beforeEach(() => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         actions: [
           {
             id: 'aca:actions/create-folder',
@@ -327,13 +285,10 @@ describe('AppExtensionService', () => {
       spyOn(store, 'dispatch').and.stub();
 
       service.runActionById('aca:actions/create-folder');
-      expect(store.dispatch).toHaveBeenCalledWith(
-        jasmine.objectContaining({
-          type: 'CREATE_FOLDER',
-          payload: 'folder-name',
-          configuration: undefined
-        })
-      );
+      expect(store.dispatch).toHaveBeenCalledWith({
+        type: 'CREATE_FOLDER',
+        payload: 'folder-name'
+      } as Action);
     });
 
     it('should still invoke store if action is missing', () => {
@@ -407,7 +362,12 @@ describe('AppExtensionService', () => {
   describe('content actions', () => {
     it('should load content actions from the config', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           toolbar: [
             {
@@ -434,7 +394,12 @@ describe('AppExtensionService', () => {
 
     it('should sort content actions by order', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           toolbar: [
             {
@@ -465,7 +430,12 @@ describe('AppExtensionService', () => {
   describe('open with', () => {
     it('should load [open with] actions for the viewer', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           viewer: {
             openWith: [
@@ -493,7 +463,12 @@ describe('AppExtensionService', () => {
 
     it('should load only enabled [open with] actions for the viewer', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           viewer: {
             openWith: [
@@ -532,7 +507,12 @@ describe('AppExtensionService', () => {
 
     it('should sort [open with] actions by order', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           viewer: {
             openWith: [
@@ -573,7 +553,12 @@ describe('AppExtensionService', () => {
   describe('create', () => {
     it('should load [create] actions from config', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           create: [
             {
@@ -595,7 +580,12 @@ describe('AppExtensionService', () => {
 
     it('should sort [create] actions by order', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           create: [
             {
@@ -833,7 +823,12 @@ describe('AppExtensionService', () => {
 
       applyConfig(
         {
-          ...defaultConfigMock,
+          $id: 'test',
+          $name: 'test',
+          $version: '1.0.0',
+          $license: 'MIT',
+          $vendor: 'Good company',
+          $runtime: '1.5.0',
           features: {
             viewer: {
               shared: {
@@ -857,7 +852,14 @@ describe('AppExtensionService', () => {
       appConfigService.config = {
         auth: { withCredentials: true }
       };
-      applyConfig(defaultConfigMock);
+      applyConfig({
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0'
+      });
 
       expect(service.withCredentials).toBe(true);
     });
@@ -866,14 +868,28 @@ describe('AppExtensionService', () => {
       appConfigService.config = {
         auth: { withCredentials: false }
       };
-      applyConfig(defaultConfigMock);
+      applyConfig({
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0'
+      });
 
       expect(service.withCredentials).toBe(false);
     });
 
     it('should set `withCredentials` to false as default value if no app configuration', () => {
       appConfigService.config = {};
-      applyConfig(defaultConfigMock);
+      applyConfig({
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0'
+      });
 
       expect(service.withCredentials).toBe(false);
     });
@@ -882,7 +898,12 @@ describe('AppExtensionService', () => {
   describe('getHeaderActions', () => {
     it('should load user actions from the config', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           header: [
             {
@@ -907,7 +928,12 @@ describe('AppExtensionService', () => {
 
     it('should sort header actions by order', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           header: [
             {
@@ -934,7 +960,12 @@ describe('AppExtensionService', () => {
 
     it('should sort header menu children actions by order', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           header: [
             {
@@ -968,15 +999,19 @@ describe('AppExtensionService', () => {
   });
 
   describe('search', () => {
-    let config: ExtensionConfig;
-
     beforeEach(() => {
       extensions.setEvaluators({
         visible: () => true,
         notVisible: () => false
       });
-      config = {
-        ...defaultConfigMock,
+
+      applyConfig({
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           search: [
             {
@@ -985,7 +1020,7 @@ describe('AppExtensionService', () => {
               name: 'default',
               default: true,
               filterWithContains: true,
-              'app:fields': ['cm:name', 'cm:title', 'cm:description', 'TEXT', 'TAG'],
+              'aca:fields': ['cm:name', 'cm:title', 'cm:description', 'TEXT', 'TAG'],
               include: ['path', 'allowableOperations', 'properties'],
               categories: [
                 {
@@ -1020,174 +1055,21 @@ describe('AppExtensionService', () => {
             }
           ]
         }
-      };
+      });
     });
 
     it('should load the search extension', () => {
-      applyConfig(config);
       expect(service.search.length).toBe(2);
       expect(service.search[0].id).toBe('app.search');
       expect(service.search[1].id).toBe('app.search-1');
     });
 
     it('should not load the disabled search extension', () => {
-      applyConfig(config);
       expect(service.search.find(({ id }) => id === 'app.search-2')).toBe(undefined, 'disabled configuration shown in the result');
     });
 
     it('should not load the not visible search extension', () => {
-      applyConfig(config);
       expect(service.search.find(({ id }) => id === 'app.search-3')).toBe(undefined, 'not visible configuration shown in the result');
-    });
-
-    it('should contain category if it has no rules field', () => {
-      applyConfig(config);
-      const search = service.search[0];
-      expect(search.categories.length).toBe(1);
-      expect(search.categories[0].id).toBe('size');
-    });
-
-    it('should contain category if it has no visible field in rules', () => {
-      config.features.search[0].categories[0].rules = {};
-
-      applyConfig(config);
-      const search = service.search[0];
-      expect(search.categories.length).toBe(1);
-      expect(search.categories[0].id).toBe('size');
-    });
-
-    it('should contain category if it has visible field and extensions.evaluateRule returns true', () => {
-      spyOn(extensions, 'evaluateRule').and.returnValue(true);
-      const visible = 'test';
-      config.features.search[0].categories[0].rules = { visible };
-
-      applyConfig(config);
-      const search = service.search[0];
-      expect(extensions.evaluateRule).toHaveBeenCalledWith(visible, service);
-      expect(search.categories.length).toBe(1);
-      expect(search.categories[0].id).toBe('size');
-    });
-
-    it('should not contain category if it has visible field and extensions.evaluateRule returns false', () => {
-      spyOn(extensions, 'evaluateRule').and.returnValue(false);
-      const visible = 'test';
-      config.features.search[0].categories[0].rules = { visible };
-
-      applyConfig(config);
-      const search = service.search[0];
-      expect(extensions.evaluateRule).toHaveBeenCalledWith(visible, service);
-      expect(search.categories.length).toBe(0);
-    });
-  });
-
-  describe('rules', () => {
-    it('should evaluate rule', () => {
-      extensions.setEvaluators({
-        rule1: () => true
-      });
-
-      expect(service.evaluateRule('rule1')).toBeTrue();
-    });
-
-    it('should evaluate list of rules', () => {
-      extensions.setEvaluators({
-        rule1: () => true,
-        rule2: () => true,
-        rule3: () => true
-      });
-
-      expect(service.evaluateRule(['rule1', 'rule2', 'rule3'])).toBeTrue();
-    });
-
-    it('should not evaluate missing rule and return [false] by default', () => {
-      expect(service.evaluateRule('missing')).toBeFalse();
-    });
-
-    it('should confirm the rule is defined', () => {
-      extensions.setEvaluators({
-        rule1: () => true
-      });
-
-      expect(service.isRuleDefined('rule1')).toBeTrue();
-    });
-
-    it('should not confirm the rule is defined', () => {
-      expect(service.isRuleDefined(null)).toBeFalse();
-      expect(service.isRuleDefined('')).toBeFalse();
-      expect(service.isRuleDefined('missing')).toBeFalse();
-    });
-
-    it('should allow node preview', () => {
-      extensions.setEvaluators({
-        'app.canPreview': () => true
-      });
-
-      service.viewerRules.canPreview = 'app.canPreview';
-      expect(service.canPreviewNode(null)).toBeTrue();
-    });
-
-    it('should allow node preview with no rules', () => {
-      service.viewerRules = {};
-      expect(service.canPreviewNode(null)).toBeTrue();
-    });
-
-    it('should not allow node preview', () => {
-      extensions.setEvaluators({
-        'app.canPreview': () => false
-      });
-
-      service.viewerRules.canPreview = 'app.canPreview';
-      expect(service.canPreviewNode(null)).toBeFalse();
-    });
-
-    it('should allow viewer navigation', () => {
-      extensions.setEvaluators({
-        'app.allowNavigation': () => true
-      });
-
-      service.viewerRules.showNavigation = 'app.allowNavigation';
-      expect(service.canShowViewerNavigation(null)).toBeTrue();
-    });
-
-    it('should allow viewer navigation with no rules', () => {
-      service.viewerRules.showNavigation = null;
-      expect(service.canShowViewerNavigation(null)).toBeTrue();
-    });
-
-    it('should not allow viewer navigation', () => {
-      extensions.setEvaluators({
-        'app.allowNavigation': () => false
-      });
-
-      service.viewerRules.showNavigation = 'app.allowNavigation';
-      expect(service.canShowViewerNavigation(null)).toBeFalse();
-    });
-
-    it('should confirm the viewer extension is disabled explicitly', () => {
-      const extension = {
-        disabled: true
-      };
-
-      expect(service.isViewerExtensionDisabled(extension)).toBeTrue();
-    });
-
-    it('should confirm the viewer extension is disabled via rules', () => {
-      extensions.setEvaluators({
-        'viewer.disabled': () => true
-      });
-
-      const extension = {
-        disabled: false,
-        rules: {
-          disabled: 'viewer.disabled'
-        }
-      };
-
-      expect(service.isViewerExtensionDisabled(extension)).toBeTrue();
-    });
-
-    it('should confirm viewer extension is not disabled by default', () => {
-      expect(service.isViewerExtensionDisabled({})).toBeFalse();
     });
   });
 
@@ -1282,7 +1164,12 @@ describe('AppExtensionService', () => {
 
     it('should set the action disabled for create actions', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           create: actions
         }
@@ -1296,7 +1183,12 @@ describe('AppExtensionService', () => {
 
     it('should set the action disabled for sidebar actions', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           sidebar: {
             toolbar: actions
@@ -1312,7 +1204,12 @@ describe('AppExtensionService', () => {
 
     it('should set the action disabled for toolbar actions', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           toolbar: actions
         }
@@ -1326,7 +1223,12 @@ describe('AppExtensionService', () => {
 
     it('should set the action disabled for viewer toolbar actions', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           viewer: { toolbarActions: actions }
         }
@@ -1341,7 +1243,12 @@ describe('AppExtensionService', () => {
     it('should set the action disabled for shared link viewer toolbar actions', (done) => {
       applyConfig(
         {
-          ...defaultConfigMock,
+          $id: 'test',
+          $name: 'test',
+          $version: '1.0.0',
+          $license: 'MIT',
+          $vendor: 'Good company',
+          $runtime: '1.5.0',
           features: {
             viewer: {
               shared: {
@@ -1361,7 +1268,12 @@ describe('AppExtensionService', () => {
 
     it('should set the action disabled for header actions', (done) => {
       applyConfig({
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           header: actions
         }
@@ -1373,27 +1285,15 @@ describe('AppExtensionService', () => {
       });
     });
 
-    it('should set the action disabled for bulk actions dropdown actions', (done) => {
-      applyConfig(
-        {
-          ...defaultConfigMock,
-          features: {
-            'bulk-actions': actions
-          }
-        },
-        true
-      );
-
-      service.getBulkActions().subscribe((bulkActions) => {
-        expect(bulkActions).toEqual(expectedActionsWithoutChildren);
-        done();
-      });
-    });
-
     it('should set the action disabled for context menu actions', (done) => {
       applyConfig(
         {
-          ...defaultConfigMock,
+          $id: 'test',
+          $name: 'test',
+          $version: '1.0.0',
+          $license: 'MIT',
+          $vendor: 'Good company',
+          $runtime: '1.5.0',
           features: {
             contextMenu: actions
           }
@@ -1427,7 +1327,12 @@ describe('AppExtensionService', () => {
       ];
 
       config = {
-        ...defaultConfigMock,
+        $id: 'test',
+        $name: 'test',
+        $version: '1.0.0',
+        $license: 'MIT',
+        $vendor: 'Good company',
+        $runtime: '1.5.0',
         features: {
           contextMenu: [...actions],
           toolbar: [...actions],
@@ -1518,224 +1423,5 @@ describe('AppExtensionService', () => {
         done();
       });
     });
-  });
-
-  describe('custom icons', () => {
-    it('should register custom icons', () => {
-      spyOn(iconRegistry, 'addSvgIconInNamespace').and.stub();
-
-      const rawUrl = './assets/images/ft_ic_ms_excel.svg';
-
-      applyConfig({
-        ...defaultConfigMock,
-        features: {
-          icons: [
-            {
-              id: 'adf:excel_thumbnail',
-              value: rawUrl
-            }
-          ]
-        }
-      });
-
-      const url = sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
-      expect(iconRegistry.addSvgIconInNamespace).toHaveBeenCalledWith('adf', 'excel_thumbnail', url);
-    });
-
-    it('should warn if icon has no url path', () => {
-      const warn = spyOn(logService, 'warn').and.stub();
-
-      applyConfig({
-        ...defaultConfigMock,
-        features: {
-          icons: [
-            {
-              id: 'adf:excel_thumbnail'
-            }
-          ]
-        }
-      });
-
-      expect(warn).toHaveBeenCalledWith('Missing icon value for "adf:excel_thumbnail".');
-    });
-
-    it('should warn if icon has incorrect format', () => {
-      const warn = spyOn(logService, 'warn').and.stub();
-
-      applyConfig({
-        ...defaultConfigMock,
-        features: {
-          icons: [
-            {
-              id: 'incorrect.format',
-              value: './assets/images/ft_ic_ms_excel.svg'
-            }
-          ]
-        }
-      });
-
-      expect(warn).toHaveBeenCalledWith(`Incorrect icon id format.`);
-    });
-  });
-
-  it('should get badges from config', (done) => {
-    extensions.setEvaluators({
-      'action.enabled': () => true
-    });
-
-    applyConfig({
-      ...defaultConfigMock,
-      features: {
-        badges: [
-          {
-            id: 'action1-id',
-            icon: 'warning',
-            tooltip: 'test tooltip',
-            type: 'custom',
-            rules: {
-              visible: 'action.enabled'
-            }
-          },
-          {
-            id: 'action2-id',
-            icon: 'settings',
-            tooltip: 'test tooltip2',
-            type: 'custom',
-            rules: {
-              visible: 'action.enabled'
-            }
-          }
-        ]
-      }
-    });
-
-    const node: NodeEntry = {
-      entry: {
-        id: 'testId',
-        name: 'testName',
-        nodeType: 'test',
-        isFile: true,
-        isFolder: false,
-        modifiedAt: undefined,
-        createdAt: undefined,
-        modifiedByUser: undefined,
-        createdByUser: undefined
-      }
-    };
-
-    service.getBadges(node).subscribe((badges) => {
-      expect(badges.length).toBe(2);
-      expect(badges[0].id).toEqual('action1-id');
-      expect(badges[1].id).toEqual('action2-id');
-      done();
-    });
-  });
-
-  it('should get custom metadata panels from config', (done) => {
-    extensions.setEvaluators({
-      'action.enabled': () => true
-    });
-
-    applyConfig({
-      ...defaultConfigMock,
-      features: {
-        customMetadataPanels: [
-          {
-            id: 'panel1-id',
-            title: 'testTitle',
-            component: 'testComponent1',
-            rules: {
-              visible: 'action.enabled'
-            }
-          },
-          {
-            id: 'panel2-id',
-            title: 'testTitle2',
-            component: 'testComponent2',
-            rules: {
-              visible: 'action.enabled'
-            }
-          }
-        ]
-      }
-    });
-
-    const node: NodeEntry = {
-      entry: {
-        id: 'testId',
-        name: 'testName',
-        nodeType: 'test',
-        isFile: true,
-        isFolder: false,
-        modifiedAt: undefined,
-        createdAt: undefined,
-        modifiedByUser: undefined,
-        createdByUser: undefined
-      }
-    };
-
-    service.getCustomMetadataPanels(node).subscribe((panels) => {
-      expect(panels.length).toBe(2);
-      expect(panels[0].id).toEqual('panel1-id');
-      expect(panels[1].id).toEqual('panel2-id');
-      done();
-    });
-  });
-
-  it('should get custom user profile sections from config', (done) => {
-    extensions.setEvaluators({
-      'action.enabled': () => true
-    });
-
-    applyConfig({
-      ...defaultConfigMock,
-      features: {
-        userProfileSections: [
-          {
-            id: 'section1-id',
-            component: 'testComponent1',
-            rules: {
-              visible: 'action.enabled'
-            }
-          },
-          {
-            id: 'section2-id',
-            component: 'testComponent2',
-            rules: {
-              visible: 'action.enabled'
-            }
-          }
-        ]
-      }
-    });
-
-    service.getUserProfileSections().subscribe((sections) => {
-      expect(sections.length).toBe(2);
-      expect(sections[0].id).toEqual('section1-id');
-      expect(sections[1].id).toEqual('section2-id');
-      done();
-    });
-  });
-
-  it('should update sidebar actions correctly', () => {
-    spyOn(loader, 'getContentActions').and.callThrough();
-    service.updateSidebarActions();
-    expect(loader.getContentActions).toHaveBeenCalledWith(service.config, 'features.sidebar.toolbar');
-  });
-
-  it('should emit bulkActionExecuted', (done) => {
-    spyOn(service, 'bulkActionExecuted').and.callThrough();
-    service.bulkActionExecuted$.subscribe(() => {
-      expect(service.bulkActionExecuted).toHaveBeenCalled();
-      done();
-    });
-
-    service.bulkActionExecuted();
-  });
-
-  it('should call evaluateRule on isFeatureSupported', () => {
-    const evaluateRuleSpy = spyOn(extensions, 'evaluateRule').and.returnValue(true);
-    service.isFeatureSupported('someFeature');
-    expect(evaluateRuleSpy).toHaveBeenCalledWith('someFeature', service);
   });
 });

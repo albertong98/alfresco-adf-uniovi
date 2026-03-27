@@ -20,13 +20,13 @@ In this tutorial, we are going to implement the following features:
 | name | `string` | "" | Display title of the form |
 | order | `string` |  | Visualization order in the dropdown  |
 | default | `boolean` |  | if the search has to be used as default search  |
-| app:fields| `string[]`| | list of aspects property to add in the query and search in the value for the given text. The property will be concatenated in AND|
+| aca:fields| `string[]`| | list of aspects property to add in the query and search in the value for the given text. The property will be concatenated in AND|
 
 ### Search configuration properties
 
 In order to learn more about :
 -The search UI configuration possibilities refer to the [ADF Search configuration documentation](https://github.com/Alfresco/alfresco-ng2-components/blob/develop/docs/user-guide/search-configuration-guide.md)
--The search Query configuration possibilities refer to the [Full text search reference documentation](https://support.hyland.com/r/Alfresco/Alfresco-Search-Services/2.0/Alfresco-Search-Services/Using/Full-text-search-reference)
+-The search Query configuration possibilities refer to the [Full text search reference documentation](https://docs.alfresco.com/search-services/latest/using/)
 
 ### Add a new search form
 
@@ -41,7 +41,7 @@ Update `your-app.extensions.json` file, and insert a new entry to the `features.
         "order": 200,
         "name": "APP.SEARCH.MY_CUSTOM_SEARCH",
         "default": false,
-        "app:fields": [ "cm:name", "cm:title", "cm:description", "TEXT", "TAG"],
+        "aca:fields": [ "cm:name", "cm:title", "cm:description", "TEXT", "TAG"],
         "filterQueries": [
           {
             "query": "+ASPECT: 'cm:person'"
@@ -70,7 +70,7 @@ To replace the default search with your configuration set to true the default fi
         "order": 200,
         "name": "APP.SEARCH.MY_CUSTOM_SEARCH",
         "default": true,
-        "app:fields": [ "cm:name", "cm:title", "cm:description", "TEXT", "TAG"],
+        "aca:fields": [ "cm:name", "cm:title", "cm:description", "TEXT", "TAG"],
         "filterQueries": [
           {
             "query": "+ASPECT: 'cm:person'"

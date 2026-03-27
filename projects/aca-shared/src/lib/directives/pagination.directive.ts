@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,32 +16,37 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DestroyRef, Directive, inject, OnInit } from '@angular/core';
-import { AppConfigService, PaginationComponent, PaginationModel, UserPreferencesService } from '@alfresco/adf-core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Directive, OnInit, OnDestroy } from '@angular/core';
+import { PaginationComponent, UserPreferencesService, PaginationModel, AppConfigService } from '@alfresco/adf-core';
+import { Subscription } from 'rxjs';
 
 @Directive({
-  standalone: true,
   selector: '[acaPagination]'
 })
-export class PaginationDirective implements OnInit {
-  private readonly pagination = inject(PaginationComponent);
-  private readonly preferences = inject(UserPreferencesService);
-  private readonly config = inject(AppConfigService);
+export class PaginationDirective implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
 
-  private readonly destroyRef = inject(DestroyRef);
+  constructor(private pagination: PaginationComponent, private preferences: UserPreferencesService, private config: AppConfigService) {}
 
   ngOnInit() {
     this.pagination.supportedPageSizes = this.config.get('pagination.supportedPageSizes');
-    this.pagination.changePageSize.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event: PaginationModel) => {
-      this.preferences.paginationSize = event.maxItems;
-    });
+
+    this.subscriptions.push(
+      this.pagination.changePageSize.subscribe((event: PaginationModel) => {
+        this.preferences.paginationSize = event.maxItems;
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.subscriptions = [];
   }
 }

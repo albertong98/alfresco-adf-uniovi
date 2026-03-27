@@ -115,10 +115,6 @@
           "description": "Element title",
           "type": "string"
         },
-        "tooltip": {
-          "description": "Element tooltip to display on hover",
-          "type": "string"
-        },
         "description": {
           "description": "Element description, used for the tooltips.",
           "type": "string"
@@ -168,19 +164,8 @@
               "type": "string"
             },
             "visible": {
-              "description": "Rule/Set of rules to evaluate the visibility state",
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "minLength": 1
-                }
-              ]
+              "description": "Rule to evaluate the visibility state",
+              "type": "string"
             }
           }
         }
@@ -261,19 +246,8 @@
           "type": "object",
           "properties": {
             "visible": {
-              "description": "Rule/Set of rules to evaluate the visibility state",
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "minLength": 1
-                }
-              ]
+              "description": "Rule to evaluate the visibility state",
+              "type": "string"
             }
           }
         }
@@ -316,19 +290,8 @@
           "type": "object",
           "properties": {
             "visible": {
-              "description": "Rule/Set of rules to evaluate the visibility state",
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "minLength": 1
-                }
-              ]
+              "description": "Rule to evaluate the visibility state",
+              "type": "string"
             }
           }
         }
@@ -367,19 +330,8 @@
           "type": "object",
           "properties": {
             "visible": {
-              "description": "Rule/Set of rules to evaluate the visibility state",
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "minLength": 1
-                }
-              ]
+              "description": "Rule to evaluate the visibility state",
+              "type": "string"
             }
           }
         }
@@ -630,18 +582,6 @@
           "description": "Toggles sortable state of the column",
           "type": "boolean"
         },
-        "resizable": {
-          "description": "Toggles resizable state of the column",
-          "type": "boolean"
-        },
-        "draggable": {
-          "description": "Toggles draggable state of the column",
-          "type": "boolean"
-        },
-        "isHidden": {
-          "description": "Toggles hidden state of the column",
-          "type": "boolean"
-        },
         "template": {
           "description": "Column template id",
           "type": "string"
@@ -649,10 +589,6 @@
         "desktopOnly": {
           "description": "Display column only for large screens",
           "type": "boolean"
-        },
-        "maxTextLength": {
-          "description": "Maximum text length before truncation",
-          "type": "number"
         }
       }
     },
@@ -674,6 +610,62 @@
         }
       }
     },
+    "settingsGroupRef": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier",
+          "type": "string"
+        },
+        "name": {
+          "description": "Category name, can be translation key",
+          "type": "string"
+        },
+        "parameters": {
+          "description": "Settings group parameters",
+          "type": "array",
+          "items": { "$ref": "#/definitions/settingsGroupParameterRef" },
+          "minItems": 1
+        },
+        "rules": {
+          "description": "Element rules",
+          "type": "object",
+          "properties": {
+            "visible": {
+              "description": "Rule to evaluate the visibility state",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "required": ["id", "name", "parameters"]
+    },
+    "settingsGroupParameterRef": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier",
+          "type": "string"
+        },
+        "name": {
+          "description": "Public name, can be a translation key",
+          "type": "string"
+        },
+        "key": {
+          "description": "The key to use when saving to the storage",
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the value",
+          "type": "string"
+        },
+        "value": {
+          "description": "Default value to use for the setting",
+          "type": ["boolean", "string", "number"]
+        }
+      },
+      "required": ["name", "key", "type"]
+    },
     "searchRef": {
       "type": "object",
       "allOf": [
@@ -693,19 +685,8 @@
               "type": "object",
               "properties": {
                 "visible": {
-                  "description": "Rule/Set of rules to evaluate the visibility state",
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "minLength": 1
-                    }
-                  ]
+                  "description": "Rule to evaluate the visibility state",
+                  "type": "string"
                 }
               }
             }
@@ -715,48 +696,6 @@
         "$ref": "node_modules/@alfresco/adf-core/app.config.schema.json#/definitions/search-configuration"
         }
       ]
-    },
-    "customMetadataPanels": {
-      "description": "List of cutom metadata panels to display in metadata card component",
-      "type": "array",
-      "items": { "ref": "#/definitions/contentActionRef" },
-      "minItems": 1
-    },
-    "badge": {
-      "type": "object",
-      "required": ["id", "icon", "tooltip"],
-      "properties": {
-        "id": {
-          "description": "Unique identifier. Must be in the format '[namespace]:[name]'.",
-          "type": "string"
-        },
-        "icon": {
-          "description": "Badge icon to display.",
-          "type": "string"
-        },
-        "tooltip": {
-          "description": "Badge tooltip to display on hover.",
-          "type": "string"
-        },
-        "component": {
-          "description": "Custom component id to display",
-          "type": "string"
-        }
-      }
-    },
-    "userProfileSection": {
-      "type": "object",
-      "required": ["id", "title"],
-      "properties": {
-        "id": {
-          "description": "Unique identifier.",
-          "type": "string"
-        },
-        "component": {
-          "description": "Custom component id to display inside the section",
-          "type": "string"
-        }
-      }
     }
   },
 
@@ -827,6 +766,12 @@
       "items": { "$ref": "#/definitions/actionRef" },
       "minItems": 1
     },
+    "settings": {
+      "description": "List of application-specific setting groups",
+      "type": "array",
+      "items": { "$ref": "#/definitions/settingsGroupRef" },
+      "minItems": 1
+    },
     "features": {
       "description": "Application-specific features and extensions",
       "type": "object",
@@ -835,6 +780,12 @@
           "description": "Custom icons",
           "type": "array",
           "items": { "$ref": "#/definitions/iconRef" },
+          "minItems": 1
+        },
+        "userActions": {
+          "description": "User option menu extensions",
+          "type": "array",
+          "items": { "$ref": "#/definitions/contentActionRef" },
           "minItems": 1
         },
         "header": {
@@ -848,6 +799,11 @@
           "type": "array",
           "items": { "$ref": "#/definitions/contentActionRef" },
           "minItems": 1
+        },
+        "mainAction": {
+          "description": "Main actions displayed on every page",
+          "type": "object",
+          "$ref": "#/definitions/contentActionRef"
         },
         "viewer": {
           "description": "Viewer component extensions",
@@ -879,7 +835,7 @@
               "items": { "$ref": "#/definitions/contentActionRef" },
               "minItems": 1
             },
-            "extensions": {
+            "content": {
               "description": "Viewer content extensions",
               "type": "array",
               "items": { "$ref": "#/definitions/viewerExtensionRef" },
@@ -897,20 +853,6 @@
           "description": "Sidebar extensions",
           "type": "object",
           "properties": {
-            "rules": {
-              "description": "Element rules",
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "description": "Rule to evaluate the enabled state",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "minItems": 0
-                }
-              }
-            },
             "toolbar": {
               "description": "Toolbar entries",
               "type": "array",
@@ -932,12 +874,6 @@
         },
         "contextMenu": {
           "description": "Context menu entries",
-          "type": "array",
-          "items": { "$ref": "#/definitions/contentActionRef" },
-          "minItems": 1
-        },
-        "bulk-actions": {
-          "description": "Bulk actions entries",
           "type": "array",
           "items": { "$ref": "#/definitions/contentActionRef" },
           "minItems": 1
@@ -1012,26 +948,8 @@
               "type": "array",
               "items": { "$ref": "#/definitions/documentListPresetRef" },
               "minItems": 1
-            },
-            "search-results": {
-              "description": "Search results list preset",
-              "type": "array",
-              "items": { "$ref": "#/definitions/documentListPresetRef" },
-              "minItems": 1
             }
           }
-        },
-        "badges": {
-          "description": "List of badges to display in the name column",
-          "type": "array",
-          "items": { "$ref": "#/definitions/badge" },
-          "minItems": 1
-        },
-        "userProfileSections": {
-          "description": "List of custom sections to display in the user profile component",
-          "type": "array",
-          "items": { "$ref": "#/definitions/userProfileSection" },
-          "minItems": 1
         },
         "search": {
           "description": "aca search extension",

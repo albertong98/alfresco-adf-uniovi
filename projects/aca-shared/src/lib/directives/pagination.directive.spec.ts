@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,58 +16,58 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { PaginationDirective } from './pagination.directive';
-import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppConfigService, PaginationComponent, PaginationModel, UserPreferencesService } from '@alfresco/adf-core';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { UserPreferencesService, AppConfigService, PaginationComponent, PaginationModel, CoreTestingModule } from '@alfresco/adf-core';
 import { initialState, LibTestingModule } from '../testing/lib-testing-module';
+import { SharedDirectivesModule } from './shared.directives.module';
+import { TranslateModule } from '@ngx-translate/core';
 import { provideMockStore } from '@ngrx/store/testing';
-
-@Component({
-  template: '<adf-pagination acaPagination></adf-pagination>',
-  imports: [PaginationComponent, PaginationDirective]
-})
-class TestComponent {
-  @ViewChild(PaginationComponent) pagination: PaginationComponent;
-}
 
 describe('PaginationDirective', () => {
   let preferences: UserPreferencesService;
   let config: AppConfigService;
-  let fixture: ComponentFixture<TestComponent>;
-  let component: TestComponent;
+  let pagination: PaginationComponent;
+  let fixture: ComponentFixture<PaginationComponent>;
+  let directive: PaginationDirective;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [LibTestingModule, TestComponent],
+      imports: [TranslateModule.forRoot(), LibTestingModule, SharedDirectivesModule, CoreTestingModule],
       providers: [provideMockStore({ initialState })]
     });
 
-    fixture = TestBed.createComponent(TestComponent);
-    component = fixture.componentInstance;
     preferences = TestBed.inject(UserPreferencesService);
     config = TestBed.inject(AppConfigService);
+    fixture = TestBed.createComponent(PaginationComponent);
+    pagination = fixture.componentInstance;
+    directive = new PaginationDirective(pagination, preferences, config);
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    directive.ngOnDestroy();
   });
 
   it('should setup supported page sizes from app config', () => {
     spyOn(config, 'get').and.returnValue([21, 31, 41]);
 
-    fixture.detectChanges();
+    directive.ngOnInit();
 
-    expect(component.pagination.supportedPageSizes).toEqual([21, 31, 41]);
+    expect(pagination.supportedPageSizes).toEqual([21, 31, 41]);
   });
 
   it('should update preferences on page size change', () => {
-    fixture.detectChanges();
+    directive.ngOnInit();
 
-    component.pagination.changePageSize.emit(
+    pagination.changePageSize.emit(
       new PaginationModel({
         maxItems: 100
       })

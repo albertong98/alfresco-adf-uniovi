@@ -14,7 +14,7 @@ The extension loader callbacks are invoked when hitting the `root logged-in rout
 export const APP_ROUTES: Routes = [
   {
     path: 'login',
-    component: AppLoginComponent,
+    component: LoginComponent,
     data: {
       title: 'APP.SIGN_IN'
     }
@@ -92,7 +92,9 @@ export const myExtensionLoader = (route: ActivatedRouteSnapshot) => {
             tap((status) => {
                 if (!status) {
                     // If the BE is down, let the user know what to expect
-                    notificationService.showError("Backend error. My Extension's features are disabled.");
+                    store.dispatch(
+                      new SnackbarErrorAction("Backend error. My Extension's features are disabled.")
+                    );
                 }
             })
         );

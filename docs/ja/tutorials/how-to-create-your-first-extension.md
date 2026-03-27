@@ -33,7 +33,7 @@ ACA プロジェクトのルートフォルダから、ターミナルで以下�
 
 作成を完了するには、次のコマンドを起動して拡張機能を構築します。
 
-    nx build my-extension
+    ng build my-extension
 
 # ACA 拡張機能の基礎知識を身につける
 
@@ -131,7 +131,7 @@ ACA アプリからパブリック URL を介して拡張機能が見えるよ�
     { ...
       "scripts": {
         ...,
-        "build:my-extension": "nx build my-extension && npx cpr projects/my-extension/assets dist/my-extension/assets --deleteFirst"
+        "build:my-extension": "ng build my-extension && npx cpr projects/my-extension/assets dist/my-extension/assets --deleteFirst"
       }, ...
     }
 

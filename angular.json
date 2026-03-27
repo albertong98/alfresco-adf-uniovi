@@ -1,0 +1,568 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "content-ce": {
+      "root": "app",
+      "sourceRoot": "app/src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/content-ce",
+            "index": "app/src/index.html",
+            "main": "app/src/main.ts",
+            "tsConfig": "app/tsconfig.app.json",
+            "polyfills": "app/src/polyfills.ts",
+            "allowedCommonJsDependencies": [
+              "moment-es6",
+              "minimatch",
+              "zen-observable",
+              "moment",
+              "@editorjs/code",
+              "@editorjs/editorjs",
+              "@editorjs/header",
+              "@editorjs/inline-code",
+              "@editorjs/list",
+              "@editorjs/marker",
+              "@editorjs/underline",
+              "@quanzo/change-font-size",
+              "cropperjs",
+              "editorjs-html",
+              "editorjs-text-color-plugin"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "app/src/app/ui",
+                "node_modules"
+              ]
+            },
+            "assets": [
+              {
+                "glob": "LICENSE",
+                "input": ".",
+                "output": "/"
+              },
+              "app/src/assets",
+              "app/src/favicon-96x96.png",
+              {
+                "input": "app/.tmp",
+                "output": "/",
+                "glob": "app.config.json"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@alfresco/adf-core/prebuilt-themes",
+                "output": "/assets/prebuilt-themes"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@alfresco/adf-core/bundles/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@alfresco/adf-content-services/bundles/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "pdf.worker.min.js",
+                "input": "node_modules/pdfjs-dist/build",
+                "output": "/"
+              },
+              {
+                "glob": "extension.schema.json",
+                "input": ".",
+                "output": "./assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@alfresco/adf-office-services-ext/assets",
+                "output": "./assets/adf-office-services-ext"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/adf-office-services-ext/assets",
+                "output": "./assets/adf-office-services-ext"
+              },
+              {
+                "glob": "aos.plugin.json",
+                "input": "projects/adf-office-services-ext/assets",
+                "output": "./assets/plugins"
+              },
+              {
+                "glob": "about.plugin.json",
+                "input": "projects/aca-about/assets",
+                "output": "./assets/plugins"
+              },
+              {
+                "glob": "settings.plugin.json",
+                "input": "projects/aca-settings/assets",
+                "output": "./assets/plugins"
+              },
+              {
+                "glob": "folder-rules.plugin.json",
+                "input": "projects/aca-folder-rules/assets",
+                "output": "./assets/plugins"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/aca-folder-rules/assets",
+                "output": "./assets/aca-folder-rules"
+              }
+            ],
+            "styles": [
+              "app/src/assets/fonts/material-icons/material-icons.css",
+              "app/src/assets/fonts/muli/muli.css",
+              "node_modules/cropperjs/dist/cropper.min.css",
+              "app/src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/pdfjs-dist/build/pdf.js",
+              "node_modules/pdfjs-dist/web/pdf_viewer.js",
+              "node_modules/moment/min/moment.min.js"
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "app/src/environments/environment.ts",
+                  "with": "app/src/environments/environment.prod.ts"
+                }
+              ],
+              "budgets": [
+                {
+                  "type": "bundle",
+                  "name": "main",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "vendor",
+                  "maximumWarning": "10mb",
+                  "maximumError": "15mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
+            },
+            "release": {
+              "fileReplacements": [
+                {
+                  "replace": "app/src/environments/environment.ts",
+                  "with": "app/src/environments/environment.release.ts"
+                }
+              ]
+            },
+            "e2e": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "app/src/environments/environment.ts",
+                  "with": "app/src/environments/environment.e2e.ts"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "content-ce:build",
+            "port": 4200,
+            "disableHostCheck": true,
+            "open": true,
+            "proxyConfig": "app/proxy.conf.js"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "content-ce:build:production"
+            },
+            "e2e": {
+              "browserTarget": "content-ce:build:e2e"
+            },
+            "release": {
+              "browserTarget": "content-ce:build:release"
+            }
+          }
+        },
+        "lite-serve": {
+          "builder": "@angular-custom-builders/lite-serve:dist-serve",
+          "options": {
+            "publicHost": "http://localhost:4200",
+            "browserTarget": "content-ce:build"
+          },
+          "configurations": {
+            "standalone": {
+              "watch": true
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "content-ce:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "app/src/test.ts",
+            "karmaConfig": "./karma.conf.js",
+            "sourceMap": true,
+            "polyfills": "app/src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "app/src/app/ui",
+                "node_modules"
+              ]
+            },
+            "tsConfig": "app/tsconfig.spec.json",
+            "scripts": [
+              "node_modules/pdfjs-dist/build/pdf.js",
+              "node_modules/pdfjs-dist/web/pdf_viewer.js",
+              "node_modules/moment/min/moment.min.js"
+            ],
+            "styles": [
+              "app/src/assets/fonts/material-icons/material-icons.css",
+              "app/src/assets/fonts/muli/muli.css",
+              "app/src/styles.scss"
+            ],
+            "assets": [
+              "app/src/assets",
+              "app/src/favicon-96x96.png",
+              {
+                "input": "app/.tmp",
+                "output": "/",
+                "glob": "app.config.json"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@alfresco/adf-core/prebuilt-themes",
+                "output": "/assets/prebuilt-themes"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@alfresco/adf-core/bundles/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@alfresco/adf-content-services/bundles/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "pdf.worker.min.js",
+                "input": "node_modules/pdfjs-dist/build",
+                "output": "/"
+              }
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "app/**/*.ts",
+              "app/**/*.html"
+            ],
+            "cache": true,
+            "cacheLocation": ".eslintcache",
+            "ignorePath": ".eslintignore"
+          }
+        }
+      }
+    },
+    "app-e2e": {
+      "root": "e2e",
+      "sourceRoot": "e2e",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "./protractor.conf.js",
+            "devServerTarget": "content-ce:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "content-ce:serve:production"
+            }
+          }
+        },
+        "e2elite": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "protractor.conf.js",
+            "webdriverUpdate": false,
+            "devServerTarget": "content-ce:lite-serve",
+            "invertGrep": true
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "e2e/**/*.ts",
+              "e2e/**/*.html"
+            ],
+            "cache": true,
+            "cacheLocation": ".eslintcache",
+            "ignorePath": ".eslintignore"
+          }
+        }
+      }
+    },
+    "adf-office-services-ext": {
+      "root": "projects/adf-office-services-ext",
+      "sourceRoot": "projects/adf-office-services-ext/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/adf-office-services-ext/tsconfig.lib.json",
+            "project": "projects/adf-office-services-ext/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/adf-office-services-ext/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/adf-office-services-ext/src/test.ts",
+            "tsConfig": "projects/adf-office-services-ext/tsconfig.spec.json",
+            "karmaConfig": "projects/adf-office-services-ext/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/adf-office-services-ext/**/*.ts",
+              "projects/adf-office-services-ext/**/*.html"
+            ],
+            "cache": true,
+            "cacheLocation": ".eslintcache",
+            "ignorePath": ".eslintignore"
+          }
+        }
+      }
+    },
+    "aca-shared": {
+      "root": "projects/aca-shared",
+      "sourceRoot": "projects/aca-shared/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/aca-shared/tsconfig.lib.json",
+            "project": "projects/aca-shared/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/aca-shared/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/aca-shared/test.ts",
+            "tsConfig": "projects/aca-shared/tsconfig.spec.json",
+            "karmaConfig": "projects/aca-shared/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/aca-shared/**/*.ts",
+              "projects/aca-shared/**/*.html"
+            ],
+            "cache": true,
+            "cacheLocation": ".eslintcache",
+            "ignorePath": ".eslintignore"
+          }
+        }
+      }
+    },
+    "aca-testing-shared": {
+      "root": "projects/aca-testing-shared",
+      "sourceRoot": "projects/aca-testing-shared/src",
+      "projectType": "library",
+      "prefix": "lib"
+    },
+    "aca-about": {
+      "projectType": "library",
+      "root": "projects/aca-about",
+      "sourceRoot": "projects/aca-about/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/aca-about/tsconfig.lib.json",
+            "project": "projects/aca-about/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/aca-about/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/aca-about/src/test.ts",
+            "tsConfig": "projects/aca-about/tsconfig.spec.json",
+            "karmaConfig": "projects/aca-about/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/aca-about/**/*.ts",
+              "projects/aca-about/**/*.html"
+            ],
+            "cache": true,
+            "cacheLocation": ".eslintcache",
+            "ignorePath": ".eslintignore"
+          }
+        }
+      }
+    },
+    "aca-settings": {
+      "projectType": "library",
+      "root": "projects/aca-settings",
+      "sourceRoot": "projects/aca-settings/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/aca-settings/tsconfig.lib.json",
+            "project": "projects/aca-settings/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/aca-settings/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/aca-settings/src/test.ts",
+            "tsConfig": "projects/aca-settings/tsconfig.spec.json",
+            "karmaConfig": "projects/aca-settings/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/aca-settings/**/*.ts",
+              "projects/aca-settings/**/*.html"
+            ],
+            "cache": true,
+            "cacheLocation": ".eslintcache",
+            "ignorePath": ".eslintignore"
+          }
+        }
+      }
+    },
+    "aca-folder-rules": {
+      "projectType": "library",
+      "root": "projects/aca-folder-rules",
+      "sourceRoot": "projects/aca-folder-rules/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/aca-folder-rules/tsconfig.lib.json",
+            "project": "projects/aca-folder-rules/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/aca-folder-rules/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/aca-folder-rules/src/test.ts",
+            "tsConfig": "projects/aca-folder-rules/tsconfig.spec.json",
+            "karmaConfig": "projects/aca-folder-rules/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/aca-folder-rules/**/*.ts",
+              "projects/aca-folder-rules/**/*.html"
+            ],
+            "cache": true,
+            "cacheLocation": ".eslintcache",
+            "ignorePath": ".eslintignore"
+          }
+        }
+      }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "prefix": "aca",
+      "style": "scss"
+    },
+    "@schematics/angular:directive": {
+      "prefix": "aca"
+    }
+  },
+  "cli": {
+    "packageManager": "npm",
+    "analytics": false
+  }
+}

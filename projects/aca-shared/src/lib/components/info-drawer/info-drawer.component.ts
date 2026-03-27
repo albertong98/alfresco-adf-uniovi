@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2005-2025 Hyland Software, Inc. and its affiliates. All rights reserved.
- *
+ * @license
  * Alfresco Example Content Application
+ *
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  *
  * This file is part of the Alfresco Example Content Application.
  * If the software was purchased under a paid Alfresco license, the terms of
- * the paid license agreement will prevail. Otherwise, the software is
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  *
  * The Alfresco Example Content Application is free software: you can redistribute it and/or modify
@@ -15,94 +16,68 @@
  *
  * The Alfresco Example Content Application is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * from Hyland Software. If not, see <http://www.gnu.org/licenses/>.
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, DestroyRef, HostListener, inject, Input, OnChanges, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Node, NodeEntry, SiteEntry } from '@alfresco/js-api';
-import { ContentActionRef, DynamicTabComponent, SidebarTabRef } from '@alfresco/adf-extensions';
+import { Component, HostListener, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { MinimalNodeEntity, MinimalNodeEntryEntity, SiteEntry } from '@alfresco/js-api';
+import { ContentActionRef, SidebarTabRef } from '@alfresco/adf-extensions';
 import { Store } from '@ngrx/store';
-import { infoDrawerPreview, SetInfoDrawerStateAction, ToggleInfoDrawerAction } from '@alfresco/aca-shared/store';
+import { SetInfoDrawerStateAction, ToggleInfoDrawerAction, infoDrawerPreview } from '@alfresco/aca-shared/store';
 import { AppExtensionService } from '../../services/app.extension.service';
 import { ContentApiService } from '../../services/content-api.service';
-import { CommonModule } from '@angular/common';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { InfoDrawerComponent as AdfInfoDrawerComponent, InfoDrawerTabComponent } from '@alfresco/adf-core';
-import { TranslatePipe } from '@ngx-translate/core';
-import { A11yModule } from '@angular/cdk/a11y';
-import { ToolbarComponent } from '../toolbar/toolbar.component';
-import { ContentService, NodesApiService } from '@alfresco/adf-content-services';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { ThemePalette } from '@angular/material/core';
 @Component({
-  imports: [
-    CommonModule,
-    TranslatePipe,
-    MatProgressBarModule,
-    AdfInfoDrawerComponent,
-    A11yModule,
-    ToolbarComponent,
-    DynamicTabComponent,
-    InfoDrawerTabComponent
-  ],
   selector: 'aca-info-drawer',
-  templateUrl: './info-drawer.component.html',
-  encapsulation: ViewEncapsulation.None
+  templateUrl: './info-drawer.component.html'
 })
 export class InfoDrawerComponent implements OnChanges, OnInit, OnDestroy {
-  private readonly store = inject<Store<any>>(Store);
-  private readonly contentApi = inject(ContentApiService);
-  private readonly extensions = inject(AppExtensionService);
-  private readonly nodesService = inject(NodesApiService);
-  private readonly contentService = inject(ContentService);
-
   @Input()
   nodeId: string;
 
-  @Input({ required: true })
-  node: NodeEntry;
+  @Input()
+  node: MinimalNodeEntity;
 
   isLoading = false;
-  displayNode: Node | SiteEntry;
+  displayNode: MinimalNodeEntryEntity | SiteEntry;
   tabs: Array<SidebarTabRef> = [];
   actions: Array<ContentActionRef> = [];
-
+  onDestroy$ = new Subject<boolean>();
   preventFromClosing = false;
-  icon: string = null;
 
   @HostListener('keydown.escape')
   onEscapeKeyboardEvent(): void {
     this.close();
   }
 
-  private readonly destroyRef = inject(DestroyRef);
+  constructor(private store: Store<any>, private contentApi: ContentApiService, private extensions: AppExtensionService) {}
 
   ngOnInit() {
     this.tabs = this.extensions.getSidebarTabs();
     this.extensions
       .getAllowedSidebarActions()
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe((actions) => {
         this.actions = actions;
       });
 
     this.store
       .select(infoDrawerPreview)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe((isInfoDrawerPreviewOpened) => {
         this.preventFromClosing = isInfoDrawerPreviewOpened;
       });
-
-    this.nodesService.nodeUpdated.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((node: any) => {
-      this.node.entry = node;
-    });
   }
 
   ngOnDestroy() {
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
     if (!this.preventFromClosing) {
       this.store.dispatch(new SetInfoDrawerStateAction(false));
     }
@@ -121,6 +96,14 @@ export class InfoDrawerComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
+  trackByActionId(_: number, action: ContentActionRef) {
+    return action.id;
+  }
+
+  getEntryColor(entry: any): ThemePalette {
+    return entry?.color;
+  }
+
   private close() {
     this.store.dispatch(new ToggleInfoDrawerAction());
   }
@@ -132,7 +115,6 @@ export class InfoDrawerComponent implements OnChanges, OnInit, OnDestroy {
       this.contentApi.getNodeInfo(nodeId).subscribe(
         (entity) => {
           this.setDisplayNode(entity);
-          this.node.entry = entity;
           this.isLoading = false;
         },
         () => (this.isLoading = false)
@@ -142,6 +124,5 @@ export class InfoDrawerComponent implements OnChanges, OnInit, OnDestroy {
 
   private setDisplayNode(node: any) {
     this.displayNode = node;
-    this.icon = this.contentService.getNodeIcon(node);
   }
 }

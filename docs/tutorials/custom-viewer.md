@@ -59,7 +59,7 @@ export class YourExtensionViewerComponent implements ViewerExtensionInterface {
   node: Node;
   
   
-  // ....YOUR CUSTOM LOGIC
+  ....YOUR CUSTOM LOGIC
 }
 ```
 
@@ -72,7 +72,7 @@ You also need to provide in your `app.extension.json` its details:
   "$description": "my viewer  plugin",
   "features": {
     "viewer": {
-      "extensions": [
+      "content": [
         {
           "id": "my.custom.viewer",
           "fileExtension": ["png", "jpg"],
@@ -93,7 +93,7 @@ You can also use the `*` wildcard symbol to make your custom viewer implementati
   "$description": "my viewer  plugin",
   "features": {
     "viewer": {
-      "extensions": [
+      "content": [
         {
           "id": "my.custom.viewer",
           "fileExtension": "*",

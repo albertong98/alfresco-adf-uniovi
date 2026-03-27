@@ -8,6 +8,7 @@ This section contains application-specific features that may vary depending on t
 
 The ACA supports the following set of extension points:
 
+- Create menu
 - Navigation Bar
 - Toolbar
 - Context Menu
@@ -33,44 +34,16 @@ All the customizations are stored in the `features` section of the configuration
     "viewer": {
       "toolbarActions:": [],
       "openWith": [],
-      "extensions": []
+      "content": []
     },
     "sidebar": [],
-    "content-metadata-presets": [],
-    "badges": []
+    "content-metadata-presets": []
   }
 }
 ```
 
 Other applications or external plugins can utilise different subsets of the configuration above.
 Also, extra entries can be added to the configuration schema.
-
-## Customizing list columns
-
-To modify default columns layout for lists in personal files, libraries, favorite libraries, shared, recent files, favorites and search results you can update the `app.extensions.json` file by modifying/inserting new entry to the corresponding section of `features.documentList`. For example modifying `search-results` section:
-
-```json
-{
-  "features": {
-    "documentList": {
-      "search-results": [
-        {
-          "id": "app.search.type",
-          "key": "nodeType",
-          "title": "APP.DOCUMENT_LIST.COLUMNS.TYPE",
-          "type": "text",
-          "class": "adf-ellipsis-cell",
-          "sortable": true,
-          "desktopOnly": false,
-          "order": 102
-        }
-      ]
-    }
-  }
-}
-```
-
-will result in new column being displayed in search results list. Any number of columns can be added, modified or removed from any section.
 
 ## Content Actions
 
@@ -105,7 +78,7 @@ You can define content actions in the `app.extensions.json` file using the struc
 
 ## Create Menu
 
-Provides extension endpoint for the contextual "Create" toolbar menus.
+Provides extension endpoint for the "NEW" menu options.
 
 You can populate the menu with an extra entries like in the example below:
 
@@ -147,6 +120,32 @@ You can populate the menu with an extra entries like in the example below:
 Please refer to the [Content Actions](#content-actions) section for more details on supported properties.
 
 **Tip:** It is also possible to update or disable existing entries from within the external extension files. You will need to know the `id` of the target element to customize.
+
+## Main action
+
+Add possibility to show application `Main Action` button. The action is going to be shown above the `New` button, additionally `Main Action` will be highlighted as primary button, and `New` as secondary.
+
+```json
+{
+  "$schema": "../../../extension.schema.json",
+  "$version": "1.0.0",
+  "$name": "plugin1",
+
+  "features": {
+    "mainAction": {
+        "id": "plugin1.id",
+        "type": "button",
+        "title": "Create",
+        "actions": {
+          "click": "MAIN_ACTION_CALL"
+        },
+        "rules": {
+          "enabled": "app.navigation.canCall"
+        }
+      }
+  }
+}
+```
 
 ## Navigation Bar
 
@@ -399,7 +398,7 @@ declared in the `rules` section:
 
 Viewer component in ACA supports the following extension points:
 
-- Viewer extensions
+- Content Viewers
 - Toolbar actions
 - `More` toolbar actions
 - `Open With` actions
@@ -421,9 +420,9 @@ Viewer component in ACA supports the following extension points:
 }
 ```
 
-### Viewer extensions
+### Content View
 
-You can provide custom components that render a particular type of the content based on file extensions.
+You can provide custom components that render a particular type of the content based on extensions.
 
 ```json
 {
@@ -433,7 +432,7 @@ You can provide custom components that render a particular type of the content b
 
   "features": {
     "viewer": {
-      "extensions": [
+      "content": [
         {
           "id": "app.viewer.pdf",
           "fileExtension": "pdf",
@@ -728,36 +727,6 @@ Here is the initial setting from `app.extension.json`:
 
 **Tip:** In order to allow the content-metadata presets to be extended, the settings from `app.config.json` must be copied to the `app.extensions.json` file and its ids must be added to all the items.
 Having ids allows external plugins to extend the current setting.
-
-## Badges
-
-If you would like to display any additional status information for any node you can create a badge for it. Badge is an icon that will be displayed inside document list in the name column, next to a name of the file. For each badge you can provide a custom tooltip, custom icon, a click action that will be triggered by clicking the badge and a custom rule for badge's visibility. The different badges are configured in the `app.extensions.json` file, but they can also be set on runtime through extension files. Badge may be defined like this:
-
-```json
-{
-  "id": "app.my-extension.badge",
-  "icon": "adf:custom-icon",
-  "tooltip": "MY_EXTENSION.BADGE_TOOLTIP",
-  "actions": {
-      "click": "CUSTOM_BADGE_ACTION"
-  },
-  "rules": {
-      "visible": "app.my-extension.canDisplayCustomBadge"
-  }
-}
-```
-
-There is also another option to provide the badge, which is registering the custom component for it that will display the icon. It is particularly useful when status that you want to add the badge for require some asynchronous operations. In that case badge configuration would look like this:
-
-```json
-{
-  "id": "app.my-extension.badge",
-  "component": "my-extension.components.my-badge-icon",
-  "rules": {
-    "visible": "app.my-extension.canDisplayCustomBadge"
-  }
-}
-```
 
 ## Search
 
