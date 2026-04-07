@@ -28,7 +28,12 @@
       "@alfresco/aca-about": ["projects/aca-about/src/public-api.ts"],
       "@alfresco/aca-settings": ["projects/aca-settings/src/public-api.ts"],
       "@alfresco/aca-folder-rules": ["projects/aca-folder-rules/src/public-api.ts"],
-      "package.json": ["package.json"]
+      "package.json": [
+        "package.json"
+      ],
+      "uniovi-extension": [
+        "dist/uniovi-extension"
+      ]
     }
   },
   "exclude": ["node_modules"],
