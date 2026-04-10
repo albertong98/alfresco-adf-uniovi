@@ -1,0 +1,9 @@
+@use '@angular/material' as mat;
+@import '@alfresco/adf-core/theming';
+
+@import 'custom-theme';
+
+@include custom-theme($custom-theme);
+
+// soluciona bug con etiqueta [ACA-2069]
+$primary: map-get($custom-theme, primary);

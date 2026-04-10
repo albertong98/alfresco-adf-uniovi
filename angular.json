@@ -111,13 +111,24 @@
                 "glob": "**/*",
                 "input": "projects/aca-folder-rules/assets",
                 "output": "./assets/aca-folder-rules"
+              },
+              {
+                "glob": "uniovi.extension.json",
+                "input": "projects/uniovi-extension/assets",
+                "output": "./assets/plugins"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/uniovi-extension/assets",
+                "output": "./assets/uniovi-extension"
               }
             ],
             "styles": [
               "app/src/assets/fonts/material-icons/material-icons.css",
               "app/src/assets/fonts/muli/muli.css",
               "node_modules/cropperjs/dist/cropper.min.css",
-              "app/src/styles.scss"
+              "app/src/styles.scss",
+              "projects/uniovi-extension/src/uniovi.scss"
             ],
             "scripts": [
               "node_modules/pdfjs-dist/build/pdf.js",

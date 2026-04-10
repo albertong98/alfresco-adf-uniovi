@@ -29,13 +29,15 @@ import { AcaAboutModule } from '@alfresco/aca-about';
 import { AcaSettingsModule } from '@alfresco/aca-settings';
 import { AcaFolderRulesModule } from '@alfresco/aca-folder-rules';
 import { environment } from '../environments/environment';
+import { UnioviExtensionModule } from 'projects/uniovi-extension/src/public-api';
 
 @NgModule({
   imports: [
     AosExtensionModule,
     ...(environment.devTools ? [AcaSettingsModule] : []),
     AcaAboutModule.forRoot(environment.production),
-    AcaFolderRulesModule
+    AcaFolderRulesModule,
+    UnioviExtensionModule
   ]
 })
 export class AppExtensionsModule {}

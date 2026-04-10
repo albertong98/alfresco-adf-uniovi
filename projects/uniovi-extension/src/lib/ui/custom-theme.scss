@@ -1,0 +1,35 @@
+@use '@angular/material' as mat;
+@import '../../lib/ui/colors';
+@import './colors';
+
+$mat-primary-palette: mat.define-palette($uniovi-primary, 500);
+$mat-accent-palette: mat.define-palette($uniovi-accent, 500);
+$mat-warn-palette: mat.define-palette($uniovi-error,A100);
+
+$custom-theme: mat.define-light-theme(
+    $mat-primary-palette,
+    $mat-accent-palette,
+    $mat-warn-palette
+);
+
+@mixin custom-theme($theme){
+    @include mat.all-component-themes($theme);
+    @include adf-core-theme($theme);
+}
+
+.app-header img {
+    height: 56px !important;
+    width: auto;
+}
+
+.adf-toolbar {
+  background-image: none !important;
+  background-color: #e2ff60 !important;
+  color: white !important;
+}
+
+.adf-alfresco-logo img {
+    max-height: 200px !important;
+    width: auto;
+    content: url('../../../assets/images/login-logo.png');
+}
