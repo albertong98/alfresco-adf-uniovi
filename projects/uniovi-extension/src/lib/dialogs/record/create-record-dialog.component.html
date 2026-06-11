@@ -1,0 +1,60 @@
+<h2 mat-dialog-title>Crear expediente</h2>
+
+<form [formGroup]="recordForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Número de expediente</mat-label>
+            <input matInput formControlName="recordNumber">
+            <mat-error *ngIf="recordForm.get('recordNumber')?.hasError('required')">
+                El Número de expediente es obligatorio
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título de expediente</mat-label>
+            <input matInput formControlName="recordTitle">
+            <mat-error *ngIf="recordForm.get('recordTitle')?.hasError('required')">
+                El Título de expediente es obligatorio
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>ID de estudiante</mat-label>
+            <input matInput formControlName="studentUO">
+            <mat-error *ngIf="recordForm.get('studentUO')?.hasError('required')">
+                El UO de estudiante es obligatorio
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Responsable</mat-label>
+            <input  matInput formControlName="responsible">
+            <mat-error *ngIf="recordForm.get('responsible')?.hasError('required')">
+                El responsable es obligatorio
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Centro</mat-label>
+            <input matInput formControlName="center">
+            <mat-error *ngIf="recordForm.get('center')?.hasError('required')">
+                El centro es obligatorio
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Fecha</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="openingDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="expedienteForm.get('openingDate')?.hasError('required')">
+                La fecha es obligatoria
+            </mat-error>
+        </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+        <button mat-raised-button color="primary" type="submit"> Crear</button>
+    </mat-dialog-actions>
+</form>

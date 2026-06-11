@@ -2,17 +2,20 @@ import { NgModule } from '@angular/core';
 import { UnioviExtensionComponent } from './uniovi-extension.component';
 import { provideExtensionConfig } from '@alfresco/adf-extensions';
 import { TranslationService } from '@alfresco/adf-core';
+import { CustomListComponent } from './components/custom-list/custom-list.component';
 
 
 
 @NgModule({
   declarations: [
-    UnioviExtensionComponent
+    UnioviExtensionComponent,
+    CustomListComponent
   ],
   imports: [
   ],
   exports: [
-    UnioviExtensionComponent
+    UnioviExtensionComponent,
+    CustomListComponent
   ],
   providers:[
     provideExtensionConfig(['uniovi.extension.json'])

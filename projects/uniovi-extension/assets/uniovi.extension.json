@@ -11,5 +11,187 @@
             "login_logo" : "assets/uniovi-extension/images/logo.png",
             "name": "Expedientes Uniovi"
         }
+    },
+    "features": {
+        "task-list":{
+            "baseQuery":"+TYPE:'uniovi:task'",
+            "columns":[
+                {
+                    "id": "task-list.taskTitle",
+                    "key": "properties.uniovi:taskTitle",
+                    "type": "text",
+                    "order": 1,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                },
+                {
+                    "id": "task-list.subjectUUID",
+                    "key": "properties.uniovi:taskTitle",
+                    "type": "text",
+                    "order": 2,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                },
+                {
+                    "id": "task-list.description",
+                    "key": "properties.uniovi:description",
+                    "type": "text",
+                    "order": 3,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                },
+                {
+                    "id": "task-list.dueDate",
+                    "key": "properties.uniovi:dueDate",
+                    "type": "date",
+                    "order": 4,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                }
+            ]
+        },
+        "student-task-list":{
+            "baseQuery":"+TYPE:'uniovi:studentTask'",
+            "columns":[
+                {
+                    "id": "student-task-list.parentTaskUUID",
+                    "key": "properties.uniovi:parentTaskUUID",
+                    "type": "text",
+                    "order": 1,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                },
+                {
+                    "id": "student-task-list.status",
+                    "key": "properties.uniovi:status",
+                    "type": "text",
+                    "order": 2,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                },
+                {
+                    "id": "student-task-list.score",
+                    "key": "properties.uniovi:score",
+                    "type": "text",
+                    "order": 3,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                }
+            ]
+        },
+        "record-list":{
+            "baseQuery":"+TYPE:'uniovi:record'",
+            "columns":[
+                {
+                    "id": "student-list.recordNumber",
+                    "key": "properties.uniovi:recordNumber",
+                    "type": "text",
+                    "order": 1,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                },
+                {
+                    "id": "student-list.openingDate",
+                    "key": "properties.uniovi:openingDate",
+                    "type": "date",
+                    "order": 2,
+                    "sortable": true
+                },
+                {
+                    "id": "student-list.recordTitle",
+                    "key": "properties.uniovi:recordTitle",
+                    "type": "text",
+                    "order": 3,
+                    "sortable": true
+                },
+                {
+                    "id": "student-list.center",
+                    "key": "properties.uniovi:center",
+                    "type": "text",
+                    "order": 4,
+                    "sortable": true
+                },
+                {
+                    "id": "student-list.type",
+                    "key": "properties.uniovi:type",
+                    "type": "text",
+                    "order": 5,
+                    "sortable": true
+                },
+                {
+                    "id": "student-list.responsible",
+                    "key": "properties.uniovi:responsible",
+                    "type": "text",
+                    "order": 5,
+                    "sortable": true
+                }
+            ]
+        },
+        "student-list":{
+            "baseQuery":"+TYPE:'uniovi:student'",
+            "columns":[
+                {
+                    "id": "student-list.studentId",
+                    "key": "properties.uniovi:studentId",
+                    "type": "text",
+                    "order": 1,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                },
+                {
+                    "id": "student-list.studentUo",
+                    "key": "properties.uniovi:studentUo",
+                    "type": "text",
+                    "order": 2,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                },
+                {
+                    "id": "student-list.studentName",
+                    "key": "properties.uniovi:studentName",
+                    "type": "text",
+                    "order": 3,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                },
+                {
+                    "id": "student-list.studentSurname",
+                    "key": "properties.uniovi:studentSurname",
+                    "type": "text",
+                    "order": 4,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                },
+                {
+                    "id": "student-list.studentEmail",
+                    "key": "properties.uniovi:studentEmail",
+                    "type": "text",
+                    "order": 5,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                }
+            ]
+        },
+        "subject-list":{
+            "baseQuery":"+TYPE:'uniovi:subject'",
+            "columns":[
+                {
+                    "id": "student-list.schoolYear",
+                    "key": "properties.uniovi:schoolYear",
+                    "type": "text",
+                    "order": 1,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                },
+                {
+                    "id": "student-list.subjectName",
+                    "key": "properties.uniovi:subjectName",
+                    "type": "text",
+                    "order": 2,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true
+                }
+            ]
+        }
     }
 }

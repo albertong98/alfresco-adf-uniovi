@@ -1,0 +1,19 @@
+<adf-datatable #dataTable customList [display]="display" [loading]="isLoading" [allowFiltering]="allowFiltering"
+  [selectionMode]="selectionMode" [stickyHeader]="stickyHeader" [multiselect]="multiselect" [data]="data"
+  [showHeader]="showHeader" [showMainDatatableActions]="showMainDatatableActions" [actions]="false"
+  [rowMenuCacheEnabled]="true" (rowDblClick)="onRowDbClick($any($event).value?.node)"
+  (row-select)="onNodeSelect($any($event).detail)" (row-unselect)="onNodeUnselect($any($event).detail)"
+  (sorting-changed)="onSortingChanged($any($event))" (showRowActionsMenu)="onShowRowActionsMenu($event)"
+  (executeRowAction)="onExecuteRowAction($event)">
+    <data-columns>
+
+        <data-column
+            *ngFor="let column of columns"
+            [key]="column.key"
+            [title]="column.title"
+            [sortable]="column.sortable">
+        </data-column>
+
+    </data-columns>
+
+</adf-datatable>
