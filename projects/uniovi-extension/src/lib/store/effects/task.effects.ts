@@ -2,18 +2,18 @@ import { Injectable } from "@angular/core";
 import { Navigation, NavigationEnd, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { filter, map } from "rxjs/operators";
-import { CreateRecordAction, RecordActionTypes, ViewRecordAction, EditRecordAction } from "../actions/record-actions";
-import { RecordService } from "../../services/record.service";
+import { CreateTaskAction, TaskActionTypes, ViewTaskAction, EditTaskAction } from "../actions/task-actions";
+import { TaskService } from "../../services/task.service";
 
 @Injectable()
-export class RecordEffects {
+export class TaskEffects {
   navigation: Navigation | null = null;
 
   constructor(
   
     private actions$: Actions,
     private router: Router,
-    private recordService:RecordService
+    private taskService:TaskService
   ) { 
     // Escuchar cambios de navegación
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)
@@ -23,42 +23,42 @@ export class RecordEffects {
   }
 
 
-  createRecord$ = createEffect(
+  createTask$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType<CreateRecordAction>(RecordActionTypes.CreateRecord),
+        ofType<CreateTaskAction>(TaskActionTypes.CreateTask),
         map((_action) => {
-          this.recordService.openCreateRecordDialogComponent();
+          this.taskService.openCreateTaskDialogComponent();
         })
       ),
     { dispatch: false }
   );
 
-  viewRecord$ = createEffect(
+  viewTask$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType<ViewRecordAction>(RecordActionTypes.ViewRecord),
+        ofType<ViewTaskAction>(TaskActionTypes.ViewTask),
         map((action) => {
-          this.openRecordDialogComponent(action, RecordActionTypes.ViewRecord);
+          this.openTaskDialogComponent(action, TaskActionTypes.ViewTask);
         })
       ),
     { dispatch: false }
   );
 
-  editRecord$ = createEffect(
+  editTask$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType<EditRecordAction>(RecordActionTypes.EditRecord),
+        ofType<EditTaskAction>(TaskActionTypes.EditTask),
         map((action) => {
-          this.openRecordDialogComponent(action, RecordActionTypes.EditRecord);
+          this.openTaskDialogComponent(action, TaskActionTypes.EditTask);
         })
       ),
     { dispatch: false }
   );
 
-  private openRecordDialogComponent(action: any, recordActionType: RecordActionTypes) {
-    if (action && action.payload && action.payload.length > 0 && recordActionType)
-      this.recordService.openRecordDialogComponent();
+  private openTaskDialogComponent(action: any, taskActionType: TaskActionTypes) {
+    if (action && action.payload && action.payload.length > 0 && taskActionType)
+      this.taskService.openTaskDialogComponent();
     /*} else {
       this.store
         .select(getAppSelection)
@@ -66,7 +66,7 @@ export class RecordEffects {
         .subscribe((selection) => {
           if (selection && selection.count > 0) {
             const UUIDs = selection.nodes.map((nodeEntry) => nodeEntry.entry.id);
-            this.recordService.openRecordDialogComponent(UUIDs, recordActionType);
+            this.taskService.openTaskDialogComponent(UUIDs, taskActionType);
           }
         });
     }*/

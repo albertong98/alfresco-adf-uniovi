@@ -3,7 +3,6 @@ import {Component,Inject,OnInit} from '@angular/core';
 import {FormBuilder,FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { CreateRecord } from '../../models/record';
-import { Status } from '../../models/status';
 
 @Component({
     selector: 'app-create-record-dialog',
@@ -26,8 +25,9 @@ export class CreateRecordDialogComponent implements OnInit {
         this.recordForm = this.fb.group({
             recordNumber: ['',Validators.required],
             recordTitle: ['',Validators.required],
-            studentUO: ['', Validators.required],
+            studentUo: ['', Validators.required, Validators.pattern(/^UO[0-9]{6}/)],
             openingDate: ['',Validators.required],
+            type: ['',Validators.required],
             center: ['',Validators.required],
             responsible: ['', Validators.required]
         });
@@ -69,17 +69,18 @@ export class CreateRecordDialogComponent implements OnInit {
         this.alfrescoApiService
             .getInstance()
             .contentClient.callApi(
-            path,
-            httpMethod,
-            pathParams,
-            queryParams,
-            headerParams,
-            formParams,
-            bodyParam,
-            contentTypes,
-            accepts,
-            returnType,
-            url);
+                path,
+                httpMethod,
+                pathParams,
+                queryParams,
+                headerParams,
+                formParams,
+                bodyParam,
+                contentTypes,
+                accepts,
+                returnType,
+                url
+        ).then(res => console.log(res));
         this.dialogRef.close();
     }
 
@@ -89,9 +90,10 @@ export class CreateRecordDialogComponent implements OnInit {
         record.data.recordNumber = this.recordForm.get('recordNumber')?.value;
         record.data.recordTitle = this.recordForm.get('recordTitle')?.value;
         record.data.responsible = this.recordForm.get('responsible')?.value;
-        record.data.student.uo = this.recordForm.get('studentUO')?.value;
+        record.data.student.uo = this.recordForm.get('studentUo')?.value;
+        record.data.type = this.recordForm.get('type')?.value;
 
-        record.data.status = new Status('01');
+        record.data.status = '01';
 
         return record;
     }

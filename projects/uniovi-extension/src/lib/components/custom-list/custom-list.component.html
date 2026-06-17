@@ -6,14 +6,11 @@
   (sorting-changed)="onSortingChanged($any($event))" (showRowActionsMenu)="onShowRowActionsMenu($event)"
   (executeRowAction)="onExecuteRowAction($event)">
     <data-columns>
-
         <data-column
             *ngFor="let column of columns"
             [key]="column.key"
             [title]="column.title"
             [sortable]="column.sortable">
         </data-column>
-
     </data-columns>
-
 </adf-datatable>

@@ -2,18 +2,18 @@ import { Injectable } from "@angular/core";
 import { Navigation, NavigationEnd, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { filter, map } from "rxjs/operators";
-import { CreateRecordAction, RecordActionTypes, ViewRecordAction, EditRecordAction } from "../actions/record-actions";
-import { RecordService } from "../../services/record.service";
+import { SubjectService } from "../../services/subject.service";
+import { CreateSubjectAction, SubjectActionTypes, ViewSubjectAction, EditSubjectAction } from "../actions/subject-actions";
 
 @Injectable()
-export class RecordEffects {
+export class SubjectEffects {
   navigation: Navigation | null = null;
 
   constructor(
   
     private actions$: Actions,
     private router: Router,
-    private recordService:RecordService
+    private subjectService:SubjectService
   ) { 
     // Escuchar cambios de navegación
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)
@@ -23,42 +23,42 @@ export class RecordEffects {
   }
 
 
-  createRecord$ = createEffect(
+  createSubject$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType<CreateRecordAction>(RecordActionTypes.CreateRecord),
+        ofType<CreateSubjectAction>(SubjectActionTypes.CreateSubject),
         map((_action) => {
-          this.recordService.openCreateRecordDialogComponent();
+          this.subjectService.openCreateSubjectDialogComponent();
         })
       ),
     { dispatch: false }
   );
 
-  viewRecord$ = createEffect(
+  viewSubject$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType<ViewRecordAction>(RecordActionTypes.ViewRecord),
+        ofType<ViewSubjectAction>(SubjectActionTypes.ViewSubject),
         map((action) => {
-          this.openRecordDialogComponent(action, RecordActionTypes.ViewRecord);
+          this.openSubjectDialogComponent(action, SubjectActionTypes.ViewSubject);
         })
       ),
     { dispatch: false }
   );
 
-  editRecord$ = createEffect(
+  editSubject$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType<EditRecordAction>(RecordActionTypes.EditRecord),
+        ofType<EditSubjectAction>(SubjectActionTypes.EditSubject),
         map((action) => {
-          this.openRecordDialogComponent(action, RecordActionTypes.EditRecord);
+          this.openSubjectDialogComponent(action, SubjectActionTypes.EditSubject);
         })
       ),
     { dispatch: false }
   );
 
-  private openRecordDialogComponent(action: any, recordActionType: RecordActionTypes) {
-    if (action && action.payload && action.payload.length > 0 && recordActionType)
-      this.recordService.openRecordDialogComponent();
+  private openSubjectDialogComponent(action: any, subjectActionType: SubjectActionTypes) {
+    if (action && action.payload && action.payload.length > 0 && subjectActionType)
+      this.subjectService.openSubjectDialogComponent();
     /*} else {
       this.store
         .select(getAppSelection)
@@ -66,7 +66,7 @@ export class RecordEffects {
         .subscribe((selection) => {
           if (selection && selection.count > 0) {
             const UUIDs = selection.nodes.map((nodeEntry) => nodeEntry.entry.id);
-            this.recordService.openRecordDialogComponent(UUIDs, recordActionType);
+            this.subjectService.openSubjectDialogComponent(UUIDs, subjectActionType);
           }
         });
     }*/

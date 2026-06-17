@@ -13,6 +13,47 @@
         }
     },
     "features": {
+        "create": [ 
+            {
+                "id": "create.record",
+                "order": 905,
+                "icon": "dvr",
+                "title": "UNIOVI.NEW_MENU.CREATE_RECORD",
+                "description": "UNIOVI.NEW_MENU.CREATE_RECORD",
+                "actions": {
+                    "click": "CREATE_RECORD"
+                },
+                "rules": {
+                    "visible": "uniovi.canCreateRecord"
+                }
+            },
+            {
+                "id": "create.student",
+                "order": 906,
+                "icon": "account_box",
+                "title": "UNIOVI.NEW_MENU.CREATE_STUDENT",
+                "description": "UNIOVI.NEW_MENU.CREATE_STUDENT",
+                "actions": {
+                    "click": "CREATE_STUDENT"
+                },
+                "rules": {
+                    "visible": "uniovi.canCreateStudent"
+                }
+            },
+            {
+                "id": "create.subject",
+                "order": 907,
+                "icon": "class",
+                "title": "UNIOVI.NEW_MENU.CREATE_SUBJECT",
+                "description": "UNIOVI.NEW_MENU.CREATE_SUBJECT",
+                "actions": {
+                    "click": "CREATE_SUBJECT"
+                },
+                "rules": {
+                    "visible": "uniovi.canCreateSubject"
+                }
+            }
+        ],
         "task-list":{
             "baseQuery":"+TYPE:'uniovi:task'",
             "columns":[

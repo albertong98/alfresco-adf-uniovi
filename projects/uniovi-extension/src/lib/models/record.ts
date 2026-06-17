@@ -1,5 +1,4 @@
 import { CreateFile } from "./file";
-import { Status } from "./status";
 import { Student } from "./student";
 
 export class CreateRecord {
@@ -15,5 +14,10 @@ export class Record{
     openingDate: Date= new Date();
     center: string= '';
     responsible: string= '';
-    status: Status= new Status('');
+    status: string = '';
+    type:string = '';
 }
+
+export const GROUP_RECORD_SITE_MANAGER: string = "GROUP_site_record_SiteManager";
+export const GROUP_RECORD_SITE_COLLABORATOR: string = "GROUP_site_record_SiteCollaborator";
+

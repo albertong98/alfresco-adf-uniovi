@@ -1,15 +1,15 @@
 import { MatDialog } from "@angular/material/dialog";
-import { CreateRecordDialogComponent } from "../dialogs/record/create-record-dialog.component";
 import { Injectable } from "@angular/core";
+import { CreateStudentDialogComponent } from "../dialogs/student/create-student-dialog.component";
 
 @Injectable({
   providedIn: 'root'
 })
-export class RecordService {
+export class StudentService {
     constructor(public dialog: MatDialog) { }
     
-    openRecordDialogComponent() {
-        return this.dialog.open(CreateRecordDialogComponent,
+    openStudentDialogComponent() {
+        return this.dialog.open(CreateStudentDialogComponent,
             {
                 disableClose: true,
                 autoFocus: true,
@@ -20,8 +20,8 @@ export class RecordService {
         );
     }
     
-    openCreateRecordDialogComponent() {
-        return this.dialog.open(CreateRecordDialogComponent,
+    openCreateStudentDialogComponent() {
+        return this.dialog.open(CreateStudentDialogComponent,
             {
                 disableClose: true,
                 autoFocus: true,

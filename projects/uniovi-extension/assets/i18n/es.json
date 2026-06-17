@@ -1,0 +1,98 @@
+{
+    "UNIOVI": {
+        "NEW_MENU": {
+            "CREATE_RECORD": "Nuevo expediente",
+            "CREATE_STUDENT": "Nuevo estudiante",
+            "CREATE_SUBJECT": "Nueva asignatura"
+        },
+        "FORMS": {
+            "SUCCESS_MSG":"El elemento ha sido creado satisfactoriamente",
+            "ERROR_MSG" : "No se ha podido crear el elemento",
+            "CREATE": "Crear",
+            "CANCEL": "Cancelar",
+            "RECORD": {
+                "RECORD_NUM": {
+                    "LABEL": "Número de expediente",
+                    "ERROR": "El Número de expediente es obligatorio"
+                },
+                "RECORD_TITLE": {
+                    "LABEL": "Título de expediente",
+                    "ERROR": "El Título de expediente es obligatorio"
+                },
+                "RECORD_STUDENTUO": {
+                    "LABEL": "UO de estudiante",
+                    "ERROR": "El UO de estudiante es obligatorio",
+                    "PATTERN": "El UO debe tener el formato UOXXXXXX"
+                },
+                "RECORD_RESPONSIBLE": {
+                    "LABEL": "Responsable",
+                    "ERROR": "El responsable es obligatorio"
+                },
+                "RECORD_TYPE": {
+                    "LABEL": "Tipo",
+                    "ERROR": "El tipo es obligatorio"
+                },
+                "RECORD_CENTER": {
+                    "LABEL": "Centro",
+                    "ERROR": "El centro es obligatorio"
+                },
+                "RECORD_DATE": {
+                    "LABEL": "Fecha de apertura",
+                    "ERROR": "La fecha es obligatoria"
+                }
+            },
+            "STUDENT": {
+                "STUDENT_NAME": {
+                    "LABEL": "Nombre",
+                    "ERROR": "El nombre es obligatorio"
+                },
+                "STUDENT_SURNAME": {
+                    "LABEL": "Apellidos",
+                    "ERROR": "Los apellidos son obligatorios"
+                },
+                "STUDENT_ID": {
+                    "LABEL": "DNI",
+                    "ERROR": "El DNI es obligatorio",
+                    "PATTERN": "El DNI debe tener el formato XXXXXXXX[A-Z]"
+                },
+                "STUDENT_UO": {
+                    "LABEL": "UO",
+                    "ERROR": "El UO de estudiante es obligatorio",
+                    "PATTERN": "El UO debe tener el formato UOXXXXXX"
+                }
+            },
+            "SUBJECT": {
+                "SUBJECT_NAME": {
+                    "LABEL": "Nombre de la asignatura",
+                    "ERROR": "El nombre es obligatorio"
+                },
+                "SUBJECT_SCHOOLYEAR": {
+                    "LABEL": "Curso escolar",
+                    "ERROR": "El curso es obligatorio"
+                },
+                "SUBJECT_PROFESSORS": {
+                    "LABEL": "Profesores",
+                    "ERROR": "Es necesario indicar los profesores"
+                }
+            },
+            "TASK": {
+                "TASK_TITLE": {
+                    "LABEL": "Título de la tarea",
+                    "ERROR": "El Título de la tarea es obligatorio"
+                },
+                "TASK_DESCRIPTION": {
+                    "LABEL": "Descripción de la tarea",
+                    "ERROR": "La descripción es obligatoria"
+                },
+                "TASK_DUEDATE": {
+                    "LABEL": "Fecha de entrega",
+                    "ERROR": "Es necesario indicar la fecha de entrega"
+                },
+                "TASK_SUBJECT": {
+                    "LABEL": "Asignatura",
+                    "ERROR": "Es necesario indicar la asignatura"
+                }
+            }
+        }
+    }
+}

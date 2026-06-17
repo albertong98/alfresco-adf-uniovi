@@ -2,18 +2,18 @@ import { Injectable } from "@angular/core";
 import { Navigation, NavigationEnd, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { filter, map } from "rxjs/operators";
-import { CreateRecordAction, RecordActionTypes, ViewRecordAction, EditRecordAction } from "../actions/record-actions";
-import { RecordService } from "../../services/record.service";
+import { StudentService } from "../../services/student.service";
+import { CreateStudentAction, StudentActionTypes, ViewStudentAction, EditStudentAction } from "../actions/student-actions";
 
 @Injectable()
-export class RecordEffects {
+export class StudentEffects {
   navigation: Navigation | null = null;
 
   constructor(
   
     private actions$: Actions,
     private router: Router,
-    private recordService:RecordService
+    private studentService:StudentService
   ) { 
     // Escuchar cambios de navegación
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)
@@ -23,42 +23,42 @@ export class RecordEffects {
   }
 
 
-  createRecord$ = createEffect(
+  createStudent$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType<CreateRecordAction>(RecordActionTypes.CreateRecord),
+        ofType<CreateStudentAction>(StudentActionTypes.CreateStudent),
         map((_action) => {
-          this.recordService.openCreateRecordDialogComponent();
+          this.studentService.openCreateStudentDialogComponent();
         })
       ),
     { dispatch: false }
   );
 
-  viewRecord$ = createEffect(
+  viewStudent$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType<ViewRecordAction>(RecordActionTypes.ViewRecord),
+        ofType<ViewStudentAction>(StudentActionTypes.ViewStudent),
         map((action) => {
-          this.openRecordDialogComponent(action, RecordActionTypes.ViewRecord);
+          this.openStudentDialogComponent(action, StudentActionTypes.ViewStudent);
         })
       ),
     { dispatch: false }
   );
 
-  editRecord$ = createEffect(
+  editStudent$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType<EditRecordAction>(RecordActionTypes.EditRecord),
+        ofType<EditStudentAction>(StudentActionTypes.EditStudent),
         map((action) => {
-          this.openRecordDialogComponent(action, RecordActionTypes.EditRecord);
+          this.openStudentDialogComponent(action, StudentActionTypes.EditStudent);
         })
       ),
     { dispatch: false }
   );
 
-  private openRecordDialogComponent(action: any, recordActionType: RecordActionTypes) {
-    if (action && action.payload && action.payload.length > 0 && recordActionType)
-      this.recordService.openRecordDialogComponent();
+  private openStudentDialogComponent(action: any, studentActionType: StudentActionTypes) {
+    if (action && action.payload && action.payload.length > 0 && studentActionType)
+      this.studentService.openStudentDialogComponent();
     /*} else {
       this.store
         .select(getAppSelection)
@@ -66,7 +66,7 @@ export class RecordEffects {
         .subscribe((selection) => {
           if (selection && selection.count > 0) {
             const UUIDs = selection.nodes.map((nodeEntry) => nodeEntry.entry.id);
-            this.recordService.openRecordDialogComponent(UUIDs, recordActionType);
+            this.studentService.openStudentDialogComponent(UUIDs, studentActionType);
           }
         });
     }*/

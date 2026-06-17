@@ -2,7 +2,6 @@ import {
     Component,
     EventEmitter,
     Input,
-    NgZone,
     OnInit,
     Output,
     ViewChild
@@ -16,12 +15,12 @@ import {
     DataTableComponent,
     PaginatedComponent,
     PaginationModel,
-    RequestPaginationModel
+    RequestPaginationModel,
+    ShowHeaderMode
 } from '@alfresco/adf-core';
 
-import { NodeEntry } from '@alfresco/js-api';
+import { NodeEntry, SearchApi } from '@alfresco/js-api';
 import { ExtensionService } from '@alfresco/adf-extensions';
-import { SearchApi } from 'projects/aca-testing-shared/src';
 import { BehaviorSubject } from 'rxjs';
 
 
@@ -69,7 +68,7 @@ export class CustomListComponent implements PaginatedComponent, OnInit{
     data: any;
 
     @Input()
-    showHeader = true;
+    showHeader: ShowHeaderMode = ShowHeaderMode.Always;
 
     @Input()
     showMainDatatableActions = true;
@@ -92,9 +91,13 @@ export class CustomListComponent implements PaginatedComponent, OnInit{
     @Output()
     executeRowAction = new EventEmitter<any>();
 
-    constructor(private ngZone: NgZone,private alfrescoApiService: AlfrescoApiService,private extensionService: ExtensionService) {}
+    constructor(private alfrescoApiService: AlfrescoApiService,private extensionService: ExtensionService) {
+        this._searchApi = new SearchApi(this.alfrescoApiService.getInstance());
+    }
     
     updatePagination(requestPaginationModel: RequestPaginationModel) {
+        if(requestPaginationModel)
+
         throw new Error('Method not implemented.');
     }
 
@@ -106,7 +109,7 @@ export class CustomListComponent implements PaginatedComponent, OnInit{
         if (!this.listId) {
             return;
         }
-        const config = this.extensionService.getFeature(this.listId);
+        const config = this.extensionService.getFeature(this.listId)[0];
         this.columns = config?.columns || [];
         this.query = config?.baseQuery || '';
     }
@@ -127,7 +130,7 @@ export class CustomListComponent implements PaginatedComponent, OnInit{
         this.sortingChanged.emit(event);
     }
 
-    onShowRowActionsMenu(event: Event): void {
+    onShowRowActionsMenu(event: any): void {
         this.showRowActionsMenu.emit(event);
     }
 
@@ -136,7 +139,7 @@ export class CustomListComponent implements PaginatedComponent, OnInit{
     }
 
     clearSelection(): void {
-        this.dataTable?.clearSelection();
+       // this.dataTable?.clearSelection();
     }
 
     selectRow(row: DataRow): void {

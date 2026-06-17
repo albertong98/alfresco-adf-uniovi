@@ -1,0 +1,98 @@
+{
+    "UNIOVI": {
+        "NEW_MENU": {
+            "CREATE_RECORD": "New record",
+            "CREATE_STUDENT": "New student",
+            "CREATE_SUBJECT": "New subject"
+        },
+        "FORMS": {
+            "SUCCESS_MSG":"El elemento ha sido creado satisfactoriamente",
+            "ERROR_MSG" : "No se ha podido crear el elemento",
+            "CREATE": "Create",
+            "CANCEL": "Cancel",
+            "RECORD": {
+                "RECORD_NUM": {
+                    "LABEL": "Record number",
+                    "ERROR": "Record number is required"
+                },
+                "RECORD_TITLE": {
+                    "LABEL": "Record title",
+                    "ERROR": "Record title is required"
+                },
+                "RECORD_STUDENTUO": {
+                    "LABEL": "Student UO",
+                    "ERROR": "Student UO is required",
+                    "PATTERN": "UO must follow the format UOXXXXXX"
+                },
+                "RECORD_RESPONSIBLE": {
+                    "LABEL": "Responsible person",
+                    "ERROR": "Responsible person is required"
+                },
+                "RECORD_TYPE": {
+                    "LABEL": "Type",
+                    "ERROR": "Type is required"
+                },
+                "RECORD_CENTER": {
+                    "LABEL": "Center",
+                    "ERROR": "Center is required"
+                },
+                "RECORD_DATE": {
+                    "LABEL": "Opening date",
+                    "ERROR": "Date is required"
+                }
+            },
+            "STUDENT": {
+                "STUDENT_NAME": {
+                    "LABEL": "First name",
+                    "ERROR": "First name is required"
+                },
+                "STUDENT_SURNAME": {
+                    "LABEL": "Last name",
+                    "ERROR": "Last name is required"
+                },
+                "STUDENT_ID": {
+                    "LABEL": "National ID",
+                    "ERROR": "National ID is required",
+                    "PATTERN": "National ID must follow the format XXXXXXXX[A-Z]"
+                },
+                "STUDENT_UO": {
+                    "LABEL": "UO",
+                    "ERROR": "Student UO is required",
+                    "PATTERN": "UO must follow the format UOXXXXXX"
+                }
+            },
+            "SUBJECT": {
+                "SUBJECT_NAME": {
+                    "LABEL": "Nombre de la asignatura",
+                    "ERROR": "El nombre es obligatorio"
+                },
+                "SUBJECT_SCHOOLYEAR": {
+                    "LABEL": "Curso escolar",
+                    "ERROR": "El curso es obligatorio"
+                },
+                "SUBJECT_PROFESSORS": {
+                    "LABEL": "Profesores",
+                    "ERROR": "Es necesario indicar los profesores"
+                }
+            },
+            "TASK": {
+                "TASK_TITLE": {
+                    "LABEL": "Título de la tarea",
+                    "ERROR": "El Título de la tarea es obligatorio"
+                },
+                "TASK_DESCRIPTION": {
+                    "LABEL": "Descripción de la tarea",
+                    "ERROR": "La descripción es obligatoria"
+                },
+                "TASK_DUEDATE": {
+                    "LABEL": "Fecha de entrega",
+                    "ERROR": "Es necesario indicar la fecha de entrega"
+                },
+                "TASK_SUBJECT": {
+                    "LABEL": "Asignatura",
+                    "ERROR": "Es necesario indicar la asignatura"
+                }
+            }
+        }
+    }
+}

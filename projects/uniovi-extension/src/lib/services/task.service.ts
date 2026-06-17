@@ -1,15 +1,15 @@
 import { MatDialog } from "@angular/material/dialog";
-import { CreateRecordDialogComponent } from "../dialogs/record/create-record-dialog.component";
 import { Injectable } from "@angular/core";
+import { CreateTaskDialogComponent } from "../dialogs/task/create-task-dialog.component";
 
 @Injectable({
   providedIn: 'root'
 })
-export class RecordService {
+export class TaskService {
     constructor(public dialog: MatDialog) { }
     
-    openRecordDialogComponent() {
-        return this.dialog.open(CreateRecordDialogComponent,
+    openTaskDialogComponent() {
+        return this.dialog.open(CreateTaskDialogComponent,
             {
                 disableClose: true,
                 autoFocus: true,
@@ -20,8 +20,8 @@ export class RecordService {
         );
     }
     
-    openCreateRecordDialogComponent() {
-        return this.dialog.open(CreateRecordDialogComponent,
+    openCreateTaskDialogComponent() {
+        return this.dialog.open(CreateTaskDialogComponent,
             {
                 disableClose: true,
                 autoFocus: true,

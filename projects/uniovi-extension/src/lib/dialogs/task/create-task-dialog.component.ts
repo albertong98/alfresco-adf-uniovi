@@ -2,31 +2,30 @@ import { AlfrescoApiService } from '@alfresco/adf-core';
 import {Component,Inject,OnInit} from '@angular/core';
 import {FormBuilder,FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import { Student } from '../../models/student';
+import { CreateTask } from '../../models/task';
 
 @Component({
-    selector: 'app-create-student-dialog',
-    templateUrl: './create-student-dialog.component.html',
-    styleUrls: ['./create-student-dialog.component.scss']
+    selector: 'app-create-task-dialog',
+    templateUrl: './create-task-dialog.component.html',
+    styleUrls: ['./create-task-dialog.component.scss']
 })
-export class CreateStudentDialogComponent implements OnInit {
+export class CreateTaskDialogComponent implements OnInit {
 
-    studentForm!: FormGroup;
+    taskForm!: FormGroup;
 
     constructor(
         private alfrescoApiService: AlfrescoApiService,
         private fb: FormBuilder,
-        private dialogRef: MatDialogRef<CreateStudentDialogComponent>,
+        private dialogRef: MatDialogRef<CreateTaskDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
     }
 
     ngOnInit(): void {
-        this.studentForm = this.fb.group({
+        this.taskForm = this.fb.group({
             name: ['',Validators.required],
-            surname: ['',Validators.required],
-            id: ['', Validators.required,Validators.pattern(/^[0-9]{8}[A-Z]$/)],
-            uo: ['', Validators.required, Validators.pattern(/^UO[0-9]{6}/)]
+            schoolYear: ['',Validators.required,Validators.pattern(/[0-9]{4}\-[0-9]{4}/)],
+            professors: [this.fb.array([])],
         });
     }
 
@@ -35,18 +34,18 @@ export class CreateStudentDialogComponent implements OnInit {
     }
 
     onSubmit(): void {
-        if (this.studentForm.invalid) {
-            this.studentForm.markAllAsTouched();
+        if (this.taskForm.invalid) {
+            this.taskForm.markAllAsTouched();
             return;
         }
 
-        const student: Student = this.getStudentValues();
+        const task: CreateTask = this.getTaskValues();
         
         const formParam: any = {
-            data: JSON.stringify(student)
+            data: JSON.stringify(task)
         };
 
-        const path = 'uniovi/student';
+        const path = 'uniovi/task';
         const httpMethod = 'POST';
         const pathParams = {};
         const queryParams = {};
@@ -76,13 +75,13 @@ export class CreateStudentDialogComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    private getStudentValues(): Student{
-        let student: Student = new Student();
-        student.name = this.studentForm.get('name')?.value;
-        student.surname = this.studentForm.get('surname')?.value;
-        student.id = this.studentForm.get('id')?.value;
-        student.uo = this.studentForm.get('uo')?.value;
+    private getTaskValues(): CreateTask{
+        let task: CreateTask = new CreateTask();
+        task.data.subjectUUID = this.taskForm.get('subjectUUID')?.value;
+        task.data.title = this.taskForm.get('title')?.value;
+        task.data.description = this.taskForm.get('description')?.value;
+        task.data.dueDate = this.taskForm.get('dueDate')?.value;
 
-        return student;
+        return task;
     }
 }

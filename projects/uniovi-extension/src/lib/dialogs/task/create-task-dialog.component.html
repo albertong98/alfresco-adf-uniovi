@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>Crear expediente</h2>
+
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>'UNIOVI.FORMS.TASK.TASK_TITLE.LABEL' | translate</mat-label>
+            <input matInput formControlName="title">
+            <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
+                'UNIOVI.FORMS.TASK.TASK_TITLE.ERROR' | translate
+            </mat-error>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>'UNIOVI.FORMS.TASK.TASK_DESCRIPTION.LABEL' | translate</mat-label>
+            <input matInput formControlName="description">
+            <mat-error *ngIf="taskForm.get('description')?.hasError('required')">
+                'UNIOVI.FORMS.TASK.TASK_DESCRIPTION.ERROR' | translate
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>'UNIOVI.FORMS.TASK.TASK_DUEDATE.LABEL' | translate</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dueDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="taskForm.get('dueDate')?.hasError('required')">
+                'UNIOVI.FORMS.TASK.TASK_DUEDATE.ERROR' | translate
+            </mat-error>
+        </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button mat-button type="button" (click)="onCancel()">'UNIOVI.FORMS.CANCEL' | translate</button>
+        <button mat-raised-button color="primary" type="submit">'UNIOVI.FORMS.CREATE' | translate</button>
+    </mat-dialog-actions>
+
+</form>
