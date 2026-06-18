@@ -3,47 +3,47 @@
 <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
     <mat-dialog-content>
         <mat-form-field appearance="outline" class="full-width">
-            <mat-label>'UNIOVI.FORMS.STUDENT.STUDENT_NAME.LABEL' | translate</mat-label>
+            <mat-label>{{ 'UNIOVI.FORMS.STUDENT.STUDENT_NAME.LABEL' | translate}}</mat-label>
             <input matInput formControlName="name">
-            <mat-error *ngIf="studentForm.get('name')?.hasError('required')">
-                'UNIOVI.FORMS.STUDENT.STUDENT_NAME.ERROR' | translate
+            <mat-error *ngIf="studentForm.get('name')?.hasError('required') && studentForm.get('name')?.touched">
+                {{ 'UNIOVI.FORMS.STUDENT.STUDENT_NAME.ERROR' | translate }}
             </mat-error>
         </mat-form-field>
         
         <mat-form-field appearance="outline" class="full-width">
-            <mat-label>'UNIOVI.FORMS.STUDENT.STUDENT_SURNAME.LABEL' | translate</mat-label>
+            <mat-label>{{ 'UNIOVI.FORMS.STUDENT.STUDENT_SURNAME.LABEL' | translate}}</mat-label>
             <input matInput formControlName="surname">
-            <mat-error *ngIf="studentForm.get('surname')?.hasError('required')">
-                'UNIOVI.FORMS.STUDENT.STUDENT_SURNAME.ERROR' | translate
+            <mat-error *ngIf="studentForm.get('surname')?.hasError('required') && studentForm.get('surname')?.touched">
+                {{ 'UNIOVI.FORMS.STUDENT.STUDENT_SURNAME.ERROR' | translate}}
             </mat-error>
         </mat-form-field>
         
         <mat-form-field appearance="outline" class="full-width">
-            <mat-label>'UNIOVI.FORMS.STUDENT.STUDENT_ID.LABEL' | translate</mat-label>
-            <input matInput formControlName="dni">
-            <mat-error *ngIf="studentForm.get('dni')?.hasError('required')">
-                'UNIOVI.FORMS.STUDENT.STUDENT_ID.ERROR' | translate
+            <mat-label>{{ 'UNIOVI.FORMS.STUDENT.STUDENT_ID.LABEL' | translate}}</mat-label>
+            <input matInput formControlName="id">
+            <mat-error *ngIf="studentForm.get('id')?.hasError('required') && studentForm.get('id')?.touched">
+                {{ 'UNIOVI.FORMS.STUDENT.STUDENT_ID.ERROR' | translate}}
             </mat-error>
-            <mat-error *ngIf="studentForm.get('dni')?.hasError('pattern')">
-                'UNIOVI.FORMS.STUDENT.STUDENT_ID.PATTERN' | translate
+            <mat-error *ngIf="studentForm.get('id')?.hasError('pattern') && studentForm.get('id')?.touched">
+                {{ 'UNIOVI.FORMS.STUDENT.STUDENT_ID.PATTERN' | translate}}
             </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-            <mat-label>'UNIOVI.FORMS.STUDENT.STUDENT_UO.LABEL' | translate</mat-label>
+            <mat-label>{{ 'UNIOVI.FORMS.STUDENT.STUDENT_UO.LABEL' | translate}}</mat-label>
             <input matInput formControlName="uo">
-            <mat-error *ngIf="studentForm.get('uo')?.hasError('required')">
-                'UNIOVI.FORMS.STUDENT.STUDENT_UO.ERROR' | translate
+            <mat-error *ngIf="studentForm.get('uo')?.hasError('required') && studentForm.get('uo')?.touched">
+                {{ 'UNIOVI.FORMS.STUDENT.STUDENT_UO.ERROR' | translate}}
             </mat-error>
-            <mat-error *ngIf="studentForm.get('dni')?.hasError('pattern')">
-                'UNIOVI.FORMS.STUDENT.STUDENT_UO.PATTERN' | translate
+            <mat-error *ngIf="studentForm.get('uo')?.hasError('pattern') && studentForm.get('uo')?.touched">
+                {{ 'UNIOVI.FORMS.STUDENT.STUDENT_UO.PATTERN' | translate}}
             </mat-error>
         </mat-form-field>
     </mat-dialog-content>
 
     <mat-dialog-actions>
-        <button mat-button type="button" (click)="onCancel()">'UNIOVI.FORMS.CANCEL' | translate</button>
-        <button mat-raised-button color="primary" type="submit">'UNIOVI.FORMS.CREATE' | translate</button>
+        <button mat-button type="button" (click)="onCancel()">{{ 'UNIOVI.FORMS.CANCEL' | translate}}</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="studentForm.invalid">{{ 'UNIOVI.FORMS.CREATE' | translate}}</button>
     </mat-dialog-actions>
 
 </form>

@@ -3,13 +3,16 @@
         "NEW_MENU": {
             "CREATE_RECORD": "Nuevo expediente",
             "CREATE_STUDENT": "Nuevo estudiante",
-            "CREATE_SUBJECT": "Nueva asignatura"
+            "CREATE_SUBJECT": "Nueva asignatura",
+            "CREATE_TASK": "Nueva tarea"
         },
         "FORMS": {
-            "SUCCESS_MSG":"El elemento ha sido creado satisfactoriamente",
-            "ERROR_MSG" : "No se ha podido crear el elemento",
-            "CREATE": "Crear",
-            "CANCEL": "Cancelar",
+            "CREATE_SUCCESS_MSG":"El elemento ha sido creado satisfactoriamente",
+            "CREATE_ERROR_MSG" : "No se ha podido crear el elemento",
+            "UPDATE_SUCCESS_MSG":"Elemento actualizado satisfactoriamente",
+            "UPDATE_ERROR_MSG" : "No se ha podido actualizar el elemento",
+            "CREATE": "Guardar",
+            "CANCEL": "Cerrar",
             "RECORD": {
                 "RECORD_NUM": {
                     "LABEL": "Número de expediente",

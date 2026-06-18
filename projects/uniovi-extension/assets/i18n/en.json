@@ -3,13 +3,16 @@
         "NEW_MENU": {
             "CREATE_RECORD": "New record",
             "CREATE_STUDENT": "New student",
-            "CREATE_SUBJECT": "New subject"
+            "CREATE_SUBJECT": "New subject",
+            "CREATE_TASK": "New task"
         },
         "FORMS": {
-            "SUCCESS_MSG":"El elemento ha sido creado satisfactoriamente",
-            "ERROR_MSG" : "No se ha podido crear el elemento",
-            "CREATE": "Create",
-            "CANCEL": "Cancel",
+            "CREATE_SUCCESS_MSG":"El elemento ha sido creado satisfactoriamente",
+            "CREATE_ERROR_MSG" : "No se ha podido crear el elemento",
+            "UPDATE_SUCCESS_MSG":"Elemento actualizado satisfactoriamente",
+            "UPDATE_ERROR_MSG" : "No se ha podido actualizar el elemento",
+            "CREATE": "Save",
+            "CANCEL": "Close",
             "RECORD": {
                 "RECORD_NUM": {
                     "LABEL": "Record number",

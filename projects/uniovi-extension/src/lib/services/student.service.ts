@@ -12,7 +12,7 @@ export class StudentService {
         return this.dialog.open(CreateStudentDialogComponent,
             {
                 disableClose: true,
-                autoFocus: true,
+                autoFocus: false,
                 width: '40%',
                 maxHeight: '90%', 
                 data:  { }
@@ -24,7 +24,7 @@ export class StudentService {
         return this.dialog.open(CreateStudentDialogComponent,
             {
                 disableClose: true,
-                autoFocus: true,
+                autoFocus: false,
                 width: '40%',
                 maxHeight: '90%', 
                 data:  { }

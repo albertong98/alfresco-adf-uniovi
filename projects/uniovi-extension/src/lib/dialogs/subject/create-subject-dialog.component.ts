@@ -24,7 +24,7 @@ export class CreateSubjectDialogComponent implements OnInit {
     ngOnInit(): void {
         this.subjectForm = this.fb.group({
             name: ['',Validators.required],
-            schoolYear: ['',Validators.required,Validators.pattern(/[0-9]{4}\-[0-9]{4}/)],
+            schoolYear: ['',[Validators.required,Validators.pattern(/[0-9]{4}\-[0-9]{4}/)]],
             professors: [this.fb.array([])],
         });
     }

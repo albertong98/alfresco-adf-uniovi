@@ -3,28 +3,28 @@
 <form [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
     <mat-dialog-content>
         <mat-form-field appearance="outline" class="full-width">
-            <mat-label>'UNIOVI.FORMS.SUBJECT.SUBJECT_NAME.LABEL' | translate</mat-label>
+            <mat-label>{{ 'UNIOVI.FORMS.SUBJECT.SUBJECT_NAME.LABEL' | translate}}</mat-label>
             <input matInput formControlName="name">
-            <mat-error *ngIf="subjectForm.get('name')?.hasError('required')">
-                'UNIOVI.FORMS.SUBJECT.SUBJECT_NAME.ERROR' | translate
+            <mat-error *ngIf="subjectForm.get('name')?.hasError('required') && subjectForm.get('name')?.touched">
+                {{ 'UNIOVI.FORMS.SUBJECT.SUBJECT_NAME.ERROR' | translate}}
             </mat-error>
         </mat-form-field>
         
         <mat-form-field appearance="outline" class="full-width">
-            <mat-label>'UNIOVI.FORMS.SUBJECT.SUBJECT_SCHOOLYEAR.LABEL' | translate</mat-label>
+            <mat-label>{{ 'UNIOVI.FORMS.SUBJECT.SUBJECT_SCHOOLYEAR.LABEL' | translate}}</mat-label>
             <input matInput formControlName="schoolYear">
-            <mat-error *ngIf="subjectForm.get('schoolYear')?.hasError('required')">
-                'UNIOVI.FORMS.SUBJECT.SUBJECT_SCHOOLYEAR.ERROR' | translate
+            <mat-error *ngIf="subjectForm.get('schoolYear')?.hasError('required') && subjectForm.get('schoolYear')?.touched">
+                {{ 'UNIOVI.FORMS.SUBJECT.SUBJECT_SCHOOLYEAR.ERROR' | translate}}
             </mat-error>
-            <mat-error *ngIf="subjectForm.get('schoolYear')?.hasError('pattern')">
-                'UNIOVI.FORMS.SUBJECT.SUBJECT_SCHOOLYEAR.PATTERN' | translate
+            <mat-error *ngIf="subjectForm.get('schoolYear')?.hasError('pattern') && subjectForm.get('schoolYear')?.touched">
+                {{ 'UNIOVI.FORMS.SUBJECT.SUBJECT_SCHOOLYEAR.PATTERN' | translate}}
             </mat-error>
         </mat-form-field>
     </mat-dialog-content>
 
     <mat-dialog-actions>
-        <button mat-button type="button" (click)="onCancel()">'UNIOVI.FORMS.CANCEL' | translate</button>
-        <button mat-raised-button color="primary" type="submit">'UNIOVI.FORMS.CREATE' | translate</button>
+        <button mat-button type="button" (click)="onCancel()">{{ 'UNIOVI.FORMS.CANCEL' | translate}}</button>
+        <button mat-raised-button color="primary" type="submit">{{ 'UNIOVI.FORMS.CREATE' | translate}}</button>
     </mat-dialog-actions>
 
 </form>

@@ -12,7 +12,7 @@ export class TaskService {
         return this.dialog.open(CreateTaskDialogComponent,
             {
                 disableClose: true,
-                autoFocus: true,
+                autoFocus: false,
                 width: '40%',
                 maxHeight: '90%', 
                 data:  { }
@@ -24,7 +24,7 @@ export class TaskService {
         return this.dialog.open(CreateTaskDialogComponent,
             {
                 disableClose: true,
-                autoFocus: true,
+                autoFocus: false,
                 width: '40%',
                 maxHeight: '90%', 
                 data:  { }

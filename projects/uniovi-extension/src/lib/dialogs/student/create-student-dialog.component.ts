@@ -1,8 +1,8 @@
-import { AlfrescoApiService } from '@alfresco/adf-core';
 import {Component,Inject,OnInit} from '@angular/core';
 import {FormBuilder,FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { Student } from '../../models/student';
+import { ApiService } from '../../services/api.service';
 
 @Component({
     selector: 'app-create-student-dialog',
@@ -14,7 +14,7 @@ export class CreateStudentDialogComponent implements OnInit {
     studentForm!: FormGroup;
 
     constructor(
-        private alfrescoApiService: AlfrescoApiService,
+        private apiService: ApiService,
         private fb: FormBuilder,
         private dialogRef: MatDialogRef<CreateStudentDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
@@ -25,8 +25,11 @@ export class CreateStudentDialogComponent implements OnInit {
         this.studentForm = this.fb.group({
             name: ['',Validators.required],
             surname: ['',Validators.required],
-            id: ['', Validators.required,Validators.pattern(/^[0-9]{8}[A-Z]$/)],
-            uo: ['', Validators.required, Validators.pattern(/^UO[0-9]{6}/)]
+            id: ['', [Validators.required,Validators.pattern(/^[0-9]{8}[A-Z]$/)]],
+            uo: ['',[Validators.required, Validators.pattern(/^UO[0-9]{6}/)]]
+        });
+        Object.values(this.studentForm.controls).forEach(control => {
+            control.markAsUntouched();
         });
     }
 
@@ -46,33 +49,8 @@ export class CreateStudentDialogComponent implements OnInit {
             data: JSON.stringify(student)
         };
 
-        const path = 'uniovi/student';
-        const httpMethod = 'POST';
-        const pathParams = {};
-        const queryParams = {};
-        const headerParams = {};
-        const formParams = formParam;
-        const bodyParam = {};
-        const contentTypes = ['multipart/form-data'];
-        const accepts = ['text/plain'];
-        const returnType = '';
-        const url = 'alfresco/service';
+        this.apiService.createNewItem(formParam,'uniovi/student');
 
-        this.alfrescoApiService
-            .getInstance()
-            .contentClient.callApi(
-                path,
-                httpMethod,
-                pathParams,
-                queryParams,
-                headerParams,
-                formParams,
-                bodyParam,
-                contentTypes,
-                accepts,
-                returnType,
-                url
-        ).then(res => console.log(res));
         this.dialogRef.close();
     }
 

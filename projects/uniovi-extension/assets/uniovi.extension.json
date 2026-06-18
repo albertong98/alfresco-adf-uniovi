@@ -52,6 +52,19 @@
                 "rules": {
                     "visible": "uniovi.canCreateSubject"
                 }
+            },
+            {
+                "id": "create.task",
+                "order": 907,
+                "icon": "assignment",
+                "title": "UNIOVI.NEW_MENU.CREATE_TASK",
+                "description": "UNIOVI.NEW_MENU.CREATE_TASK",
+                "actions": {
+                    "click": "CREATE_TASK"
+                },
+                "rules": {
+                    "visible": "uniovi.canCreateTask"
+                }
             }
         ],
         "task-list":{

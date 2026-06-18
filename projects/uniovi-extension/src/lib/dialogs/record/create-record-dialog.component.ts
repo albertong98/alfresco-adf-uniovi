@@ -1,8 +1,8 @@
-import { AlfrescoApiService } from '@alfresco/adf-core';
 import {Component,Inject,OnInit} from '@angular/core';
 import {FormBuilder,FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { CreateRecord } from '../../models/record';
+import { ApiService } from '../../services/api.service';
 
 @Component({
     selector: 'app-create-record-dialog',
@@ -14,7 +14,7 @@ export class CreateRecordDialogComponent implements OnInit {
     recordForm!: FormGroup;
 
     constructor(
-        private alfrescoApiService: AlfrescoApiService,
+        private apiService: ApiService,
         private fb: FormBuilder,
         private dialogRef: MatDialogRef<CreateRecordDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
@@ -25,7 +25,7 @@ export class CreateRecordDialogComponent implements OnInit {
         this.recordForm = this.fb.group({
             recordNumber: ['',Validators.required],
             recordTitle: ['',Validators.required],
-            studentUo: ['', Validators.required, Validators.pattern(/^UO[0-9]{6}/)],
+            studentUo: ['', [Validators.required, Validators.pattern(/^UO[0-9]{6}/)]],
             openingDate: ['',Validators.required],
             type: ['',Validators.required],
             center: ['',Validators.required],
@@ -54,33 +54,8 @@ export class CreateRecordDialogComponent implements OnInit {
             formParam[fileId] = file.file;
         });
 
-        const path = 'uniovi/record';
-        const httpMethod = 'POST';
-        const pathParams = {};
-        const queryParams = {};
-        const headerParams = {};
-        const formParams = formParam;
-        const bodyParam = {};
-        const contentTypes = ['multipart/form-data'];
-        const accepts = ['text/plain'];
-        const returnType = '';
-        const url = 'alfresco/service';
-
-        this.alfrescoApiService
-            .getInstance()
-            .contentClient.callApi(
-                path,
-                httpMethod,
-                pathParams,
-                queryParams,
-                headerParams,
-                formParams,
-                bodyParam,
-                contentTypes,
-                accepts,
-                returnType,
-                url
-        ).then(res => console.log(res));
+        this.apiService.createNewItem(formParam,'uniovi/record');
+        
         this.dialogRef.close();
     }
 
