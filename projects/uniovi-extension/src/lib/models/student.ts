@@ -6,5 +6,6 @@ export class Student{
     email: string = '';
 }
 
-export const GROUP_STUDENT_SITE_MANAGER: string = "GROUP_site_student_SiteManager";
-export const GROUP_STUDENT_SITE_COLLABORATOR: string = 'GROUP_site_student_SiteCollaborator';
+export const GROUP_STUDENT_SITE: string = "GROUP_site_students";
+export const GROUP_STUDENT_SITE_MANAGER: string = "GROUP_site_students_SiteManager";
+export const GROUP_STUDENT_SITE_COLLABORATOR: string = 'GROUP_site_students_SiteCollaborator';

@@ -33,6 +33,11 @@ import { CreateTaskDialogComponent } from './dialogs/task/create-task-dialog.com
 import { StudentEffects } from './store/effects/student.effects';
 import { SubjectEffects } from './store/effects/subject.effects';
 import { TaskEffects } from './store/effects/task.effects';
+import { RouterModule } from '@angular/router';
+import { routes } from '../uniovi.routes';
+import { TaskListComponent } from './components/custom-list/task-list/task-list.component';
+import { RecordListComponent } from './components/custom-list/record-list/record-list.component';
+import { StudentListComponent } from './components/custom-list/student-list/student-list.component';
 
 @NgModule({
   declarations: [
@@ -41,9 +46,13 @@ import { TaskEffects } from './store/effects/task.effects';
     CreateRecordDialogComponent,
     CreateStudentDialogComponent,
     CreateSubjectDialogComponent,
-    CreateTaskDialogComponent
+    CreateTaskDialogComponent,
+    TaskListComponent,
+    RecordListComponent,
+    StudentListComponent
   ],
   imports: [
+    RouterModule.forChild(routes),
     EffectsModule.forFeature([RecordEffects,StudentEffects,SubjectEffects,TaskEffects]),
     DataTableModule,
     CommonModule,
@@ -86,9 +95,12 @@ export class UnioviExtensionModule {
     this.translation.addTranslationFolder('uniovi-extension','assets/uniovi-extension');
      this.extensions.setEvaluators({
       'uniovi.canCreateRecord': rules.canCreateRecord,
+      'uniovi.canViewRecords': rules.canCreateRecord,
       'uniovi.canCreateStudent': rules.canCreateStudent,
+      'uniovi.canViewStudents': rules.canCreateStudent,
       'uniovi.canCreateSubject': rules.canCreateSubject,
-      'uniovi.canCreateTask':rules.canCreateTask
+      'uniovi.canCreateTask':rules.canCreateTask,
+      'uniovi.canViewTasks':rules.canViewTasks
      });
   }
 }

@@ -18,6 +18,7 @@ export class Record{
     type:string = '';
 }
 
-export const GROUP_RECORD_SITE_MANAGER: string = "GROUP_site_record_SiteManager";
-export const GROUP_RECORD_SITE_COLLABORATOR: string = "GROUP_site_record_SiteCollaborator";
+export const GROUP_RECORD_SITE: string = "GROUP_site_records";
+export const GROUP_RECORD_SITE_MANAGER: string = "GROUP_site_records_SiteManager";
+export const GROUP_RECORD_SITE_COLLABORATOR: string = "GROUP_site_records_SiteCollaborator";
 

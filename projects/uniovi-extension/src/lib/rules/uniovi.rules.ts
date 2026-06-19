@@ -1,7 +1,8 @@
 import { ProfileState, RuleContext } from "@alfresco/adf-extensions";
 import { GROUP_RECORD_SITE_COLLABORATOR, GROUP_RECORD_SITE_MANAGER } from "../models/record";
 import { GROUP_STUDENT_SITE_COLLABORATOR, GROUP_STUDENT_SITE_MANAGER } from "../models/student";
-import { GROUP_TASK_SITE_COLLABORATOR, GROUP_TASK_SITE_MANAGER } from "../models/task";
+import { GROUP_TASK_SITE_COLLABORATOR, GROUP_TASK_SITE_CONSUMER, GROUP_TASK_SITE_MANAGER } from "../models/task";
+import { GROUP_SUBJECT_SITE_COLLABORATOR, GROUP_SUBJECT_SITE_MANAGER } from "../models/subject";
 
 
 /**
@@ -27,10 +28,15 @@ export function canCreateStudent(context: RuleContext): boolean {
 
 export function canCreateSubject(context: RuleContext): boolean {
   const profile = context.profile;
-  return isInGroup(profile, GROUP_STUDENT_SITE_MANAGER) || isInGroup(profile, GROUP_STUDENT_SITE_COLLABORATOR);
+  return isInGroup(profile, GROUP_SUBJECT_SITE_MANAGER) || isInGroup(profile, GROUP_SUBJECT_SITE_COLLABORATOR);
 }
 
 export function canCreateTask(context: RuleContext): boolean {
   const profile = context.profile;
   return isInGroup(profile, GROUP_TASK_SITE_MANAGER) || isInGroup(profile, GROUP_TASK_SITE_COLLABORATOR);
+}
+
+export function canViewTasks(context: RuleContext): boolean {
+  const profile = context.profile;
+  return isInGroup(profile, GROUP_TASK_SITE_CONSUMER);
 }

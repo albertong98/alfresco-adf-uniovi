@@ -1,7 +1,9 @@
 import {
     Component,
+    ContentChild,
     EventEmitter,
     Input,
+    NgZone,
     OnInit,
     Output,
     ViewChild
@@ -9,6 +11,10 @@ import {
 
 import {
     AlfrescoApiService,
+    ContentService,
+    CustomEmptyContentTemplateDirective,
+    CustomLoadingContentTemplateDirective,
+    CustomNoPermissionTemplateDirective,
     DataColumn,
     DataRow,
     DataSorting,
@@ -16,12 +22,17 @@ import {
     PaginatedComponent,
     PaginationModel,
     RequestPaginationModel,
-    ShowHeaderMode
+    ShowHeaderMode,
+    ThumbnailService
 } from '@alfresco/adf-core';
 
-import { NodeEntry, SearchApi } from '@alfresco/js-api';
+import { NodeEntry, NodePaging, Pagination, RequestSortDefinition, SearchApi, SearchRequest } from '@alfresco/js-api';
 import { ExtensionService } from '@alfresco/adf-extensions';
 import { BehaviorSubject } from 'rxjs';
+import { ShareDataTableAdapter } from '@alfresco/adf-content-services';
+import { CustomListQueryBuilderService } from '../../services/query-builder.service';
+import { Store } from '@ngrx/store';
+import { AppStore, SnackbarErrorAction } from '@alfresco/aca-shared/store';
 
 
 @Component({
@@ -29,11 +40,17 @@ import { BehaviorSubject } from 'rxjs';
     templateUrl: './custom-list.component.html',
     styleUrls: ['./custom-list.component.scss']
 })
-export class CustomListComponent implements PaginatedComponent, OnInit{
-    listId!: string;
+export class CustomListComponent implements PaginatedComponent, OnInit {
     query: string = '';
-    
-    pagination: BehaviorSubject<PaginationModel>;
+
+    @ContentChild(CustomEmptyContentTemplateDirective)
+    customNoContentTemplate!: CustomEmptyContentTemplateDirective;
+
+    @ContentChild(CustomLoadingContentTemplateDirective)
+    customLoadingContent!: CustomLoadingContentTemplateDirective;
+
+    @ContentChild(CustomNoPermissionTemplateDirective)
+    customNoPermissionsTemplate!: CustomNoPermissionTemplateDirective
 
     _searchApi: SearchApi;
     get searchApi(): SearchApi {
@@ -41,10 +58,18 @@ export class CustomListComponent implements PaginatedComponent, OnInit{
         return this._searchApi;
     }
 
-    columns:  DataColumn[] = [];
+    columns: DataColumn[] = [];
+
+    nodes!: NodePaging;
+
+    @Input()
+    emptyFolderImageUrl = './assets/images/empty_doc_lib.svg';
 
     @ViewChild('dataTable', { static: false })
     dataTable!: DataTableComponent;
+
+    @Input()
+    listId!: keyof typeof this.extensionService.features | string;
 
     @Input()
     display: string = 'list';
@@ -64,8 +89,7 @@ export class CustomListComponent implements PaginatedComponent, OnInit{
     @Input()
     multiselect = false;
 
-    @Input()
-    data: any;
+    data!: ShareDataTableAdapter;
 
     @Input()
     showHeader: ShowHeaderMode = ShowHeaderMode.Always;
@@ -91,27 +115,65 @@ export class CustomListComponent implements PaginatedComponent, OnInit{
     @Output()
     executeRowAction = new EventEmitter<any>();
 
-    constructor(private alfrescoApiService: AlfrescoApiService,private extensionService: ExtensionService) {
+    @Output()
+    ready: EventEmitter<NodePaging> = new EventEmitter<NodePaging>();
+
+    @Input()
+    sortingMode: 'server' | 'client' = 'client';
+
+    @Input()
+    sorting: DataSorting = new DataSorting();
+
+    orderBy: string[] | null = null;
+
+    DEFAULT_SORTING: DataSorting[] = [new DataSorting('name', 'asc'), new DataSorting('isFolder', 'desc')];
+
+
+    DEFAULT_PAGINATION: Pagination = new Pagination({
+        hasMoreItems: false,
+        skipCount: 0,
+        maItems: 25,
+        totalItems: 0
+    });
+
+    private _pagination: PaginationModel = this.DEFAULT_PAGINATION;
+    pagination: BehaviorSubject<PaginationModel> = new BehaviorSubject<PaginationModel>(this.DEFAULT_PAGINATION);
+    sortingSubject: BehaviorSubject<DataSorting[]> = new BehaviorSubject<DataSorting[]>(this.DEFAULT_SORTING);
+
+    constructor(
+        private alfrescoApiService: AlfrescoApiService,
+        private extensionService: ExtensionService,
+        private contentService: ContentService,
+        private thumbnailService: ThumbnailService,
+        private ngZone: NgZone,
+        private customListQueryBuilderService: CustomListQueryBuilderService,
+        private store: Store<AppStore>
+    ) {
         this._searchApi = new SearchApi(this.alfrescoApiService.getInstance());
     }
-    
-    updatePagination(requestPaginationModel: RequestPaginationModel) {
-        if(requestPaginationModel)
 
-        throw new Error('Method not implemented.');
+    updatePagination(requestPaginationModel: RequestPaginationModel) {
+        if (requestPaginationModel)
+
+            throw new Error('Method not implemented.');
     }
 
     ngOnInit(): void {
         this.loadConfig();
+        this.reloadList();
+        console.log(this.data)
     }
 
     private loadConfig(): void {
         if (!this.listId) {
             return;
         }
-        const config = this.extensionService.getFeature(this.listId)[0];
+        const config = this.extensionService.features[this.listId as keyof typeof this.extensionService.features];
         this.columns = config?.columns || [];
         this.query = config?.baseQuery || '';
+        this.customListQueryBuilderService.loadConfiguration(this.columns,this.query);
+        
+        this.data = new ShareDataTableAdapter(this.thumbnailService, this.contentService,undefined, this.sorting, this.sortingMode, false);
     }
 
     onRowDbClick(node: NodeEntry): void {
@@ -139,67 +201,75 @@ export class CustomListComponent implements PaginatedComponent, OnInit{
     }
 
     clearSelection(): void {
-       // this.dataTable?.clearSelection();
+        // this.dataTable?.clearSelection();
     }
 
     selectRow(row: DataRow): void {
         this.dataTable?.selectRow(row, true);
     }
 
-    reload(): void {
-        
+    refresh(): void {
+
     }
 
-    refresh(): void {
-       
+    private getSortRequest(): RequestSortDefinition[] | undefined {
+        const sortRequest: RequestSortDefinition[] | undefined = this.orderBy?.map((order) => new RequestSortDefinition({
+            type: 'FIELD',
+            field: order.split(' ')[0],
+            ascending: order.split(' ')[1] === 'asc'
+        }));
+        return sortRequest;
     }
-/*
+
     reload(skipCount?: number, notReset?: boolean) {
-        if(!notReset)
-        this.resetSelection();
-        this.ngZone.run(() => {
-        if (this.nodes) {
-            this.data.loadPage(this.nodes, false, null);
-            this.onDataReady(this.nodes);
-        } else {
-            this.reloadList(skipCount);
-        }
-        });
+        if (!notReset)
+            this.ngZone.run(() => {
+                if (this.nodes) {
+                    this.data.loadPage(this.nodes, false, undefined);
+                    this.onDataReady(this.nodes);
+                } else {
+                    this.reloadList(skipCount);
+                }
+            });
     }
 
     private reloadList(skipCount?: number) {
-        //console.debug("***********************RELOAD LIST***********************");
-        this.customListQueryBuilderService.setPagination(this._pagination.maxItems, skipCount ?? this._pagination.skipCount);
+        this.customListQueryBuilderService.setPagination(this._pagination.maxItems ?? 1000, skipCount ?? this._pagination.skipCount ?? 0);
         this.customListQueryBuilderService.buildQuery(this.getSortRequest());
-        const query: SearchRequest = this.customListQueryBuilderService.getCurrentQuery();
-        if(query){
-        this.isLoading = true;
-        this.ngZone.run(async () => {
-            this.searchApi.search(query).then(
-            (results: NodePaging) => {
-                this.data.loadPage(results, false, null);
-                this.pagination.next(results.list.pagination);
-                this.onDataReady(results);
+        const query: SearchRequest | null = this.customListQueryBuilderService.getCurrentQuery();
+        if (query) {
+            query.include = ['properties'];
+            this.isLoading = true;
+            this.ngZone.run(async () => {
+                this.searchApi.search(query).then(
+                    (results) => {
 
-                this.customListService.dataLength = results.list?.entries?.length ?? 0;
-                this.refreshToolbarActions.emit();
+                        const nodePaging: NodePaging = {
+                            list: {
+                                pagination: results.list?.pagination,
+                                entries: results.list?.entries?.map(row => ({
+                                    entry: row.entry as any
+                                }))
+                            }
+                        };
+                        this.data.setColumns(this.columns as any as DataColumn[]);
+                        this.data.loadPage(nodePaging, false, undefined);
+                        this.pagination.next(results.list?.pagination as PaginationModel);
+                        this.onDataReady(nodePaging);
 
-                this.isLoading = false;
-            },
-            (err) => {
-                this.logger.debug(err);
-
-                this.customListService.dataLength = 0;
-                this.refreshToolbarActions.emit();
-                this.isLoading = false;
-            }
-            );
-        });
+                        this.isLoading = false;
+                        console.log(this.data.getColumns());
+                    },
+                    () => {
+                       this.store.dispatch(new SnackbarErrorAction('UNIOVI.LISTS.LOADING_ERROR'));
+                    }
+                );
+            });
         }
     }
 
     private onDataReady(nodePaging: NodePaging) {
         this.ready.emit(nodePaging);
-        this.pagination.next(nodePaging.list.pagination);
-    }*/
+        this.pagination.next(nodePaging.list?.pagination ?? new PaginationModel());
+    }
 }

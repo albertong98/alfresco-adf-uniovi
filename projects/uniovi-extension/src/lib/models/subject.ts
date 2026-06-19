@@ -11,5 +11,5 @@ export class Subject{
     professors: string[] = [];
 }
 
-export const GROUP_SUBJECT_SITE_MANAGER: string = "GROUP_site_subject_SiteManager";
-export const GROUP_SUBJECT_SITE_COLLABORATOR: string = 'GROUP_site_subject_SiteCollaborator';
+export const GROUP_SUBJECT_SITE_MANAGER: string = "GROUP_site_subjects_SiteManager";
+export const GROUP_SUBJECT_SITE_COLLABORATOR: string = 'GROUP_site_subjects_SiteCollaborator';

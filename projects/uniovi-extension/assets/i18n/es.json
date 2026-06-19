@@ -1,5 +1,8 @@
 {
     "UNIOVI": {
+        "LISTS":{
+            "LOADING_ERROR" : "No se pudo cargar la lista de elementos"
+        },
         "NEW_MENU": {
             "CREATE_RECORD": "Nuevo expediente",
             "CREATE_STUDENT": "Nuevo estudiante",
@@ -96,6 +99,16 @@
                     "ERROR": "Es necesario indicar la asignatura"
                 }
             }
+        },
+        "STUDENTS":{
+            "TITLE": "Estudiantes",
+            "STUDENT_EMAIL": "Correo electrónico"
+        },
+        "RECORDS":{
+            "TITLE": "Expedientes"
+        },
+        "TASKS":{
+            "TITLE": "Tareas"
         }
     }
 }
