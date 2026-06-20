@@ -104,6 +104,17 @@
                         "rules": {
                             "visible": "uniovi.canViewTasks"
                         }
+                    },
+                    {
+                        "id": "app.navbar.tasks",
+                        "order": 4,
+                        "icon": "assignment",
+                        "title": "UNIOVI.STUDENT_TASKS.TITLE",
+                        "description": "UNIOVI.STUDENT_TASKS.TITLE",
+                        "route": "list/student-tasks",
+                        "rules": {
+                            "visible": "uniovi.canViewTasks"
+                        }
                     }
                 ]
             }
@@ -117,7 +128,10 @@
                     "type": "text",
                     "order": 1,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "task-list.subjectUUID",
@@ -125,7 +139,10 @@
                     "type": "text",
                     "order": 2,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "task-list.description",
@@ -133,7 +150,10 @@
                     "type": "text",
                     "order": 3,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "task-list.dueDate",
@@ -142,7 +162,10 @@
                     "type": "date",
                     "order": 4,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"date"
+                    }
                 }
             ]
         },
@@ -155,7 +178,10 @@
                     "type": "text",
                     "order": 1,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "student-task-list.status",
@@ -163,7 +189,17 @@
                     "type": "text",
                     "order": 2,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"select",
+                        "options":[
+                            {"key":"01","value":"Pendiente"},
+                            {"key":"02","value":"Entregado"},
+                            {"key":"03","value":"Suspenso"},
+                            {"key":"04","value":"Aprobado"},
+                            {"key":"05","value":"No entregado"}
+                        ]
+                    }
                 },
                 {
                     "id": "student-task-list.score",
@@ -171,7 +207,10 @@
                     "type": "text",
                     "order": 3,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"number"
+                    }
                 }
             ]
         },
@@ -185,7 +224,10 @@
                     "type": "text",
                     "order": 1,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "record-list.openingDate",
@@ -194,7 +236,10 @@
                     "format": "dd/MM/yyyy",
                     "type": "date",
                     "order": 2,
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"date"
+                    }
                 },
                 {
                     "id": "record-list.recordTitle",
@@ -202,7 +247,10 @@
                     "key": "properties.uo:recordTitle",
                     "type": "text",
                     "order": 3,
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "record-list.center",
@@ -210,7 +258,10 @@
                     "key": "properties.uo:center",
                     "type": "text",
                     "order": 4,
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "record-list.type",
@@ -218,7 +269,10 @@
                     "key": "properties.uo:type",
                     "type": "text",
                     "order": 5,
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "record-list.responsible",
@@ -226,7 +280,10 @@
                     "key": "properties.uo:responsible",
                     "type": "text",
                     "order": 6,
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 }
             ]
         },
@@ -240,7 +297,10 @@
                     "type": "text",
                     "order": 1,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "student-list.studentUo",
@@ -249,7 +309,10 @@
                     "type": "text",
                     "order": 2,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "student-list.studentName",
@@ -258,7 +321,10 @@
                     "type": "text",
                     "order": 3,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "student-list.studentSurname",
@@ -267,7 +333,10 @@
                     "type": "text",
                     "order": 4,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "student-list.studentEmail",
@@ -276,7 +345,10 @@
                     "type": "text",
                     "order": 5,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 }
             ]
         },
@@ -290,7 +362,10 @@
                     "type": "text",
                     "order": 1,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 },
                 {
                     "id": "student-list.subjectName",
@@ -299,7 +374,10 @@
                     "type": "text",
                     "order": 2,
                     "cssClass": "ellipsis-cell",
-                    "sortable": true
+                    "sortable": true,
+                    "search":{
+                        "type":"text"
+                    }
                 }
             ]
         }

@@ -7,6 +7,7 @@ import { TaskListComponent } from "./lib/components/custom-list/task-list/task-l
 import { RecordListComponent } from "./lib/components/custom-list/record-list/record-list.component";
 import { GROUP_TASK_SITE } from "./lib/models/task";
 import { GROUP_RECORD_SITE } from "./lib/models/record";
+import { StudentTaskListComponent } from "./lib/components/custom-list/student-task-list/student-task-list.component";
 
 export const routes: Routes = [
   {
@@ -39,7 +40,16 @@ export const routes: Routes = [
           title: "UNIOVI.STUDENTS.TITLE",
           groupId: GROUP_RECORD_SITE
         }
-      }
+      },
+      {
+        path: "student-tasks",
+        component: StudentTaskListComponent,
+        canActivate: [UnioviGuard],
+        data: {
+          title: "UNIOVI.STUDENT_TASKS.TITLE",
+          groupId: GROUP_TASK_SITE
+        }
+      },
     ]
   }
 ];

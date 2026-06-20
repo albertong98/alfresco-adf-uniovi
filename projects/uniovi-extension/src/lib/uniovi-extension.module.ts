@@ -38,6 +38,7 @@ import { routes } from '../uniovi.routes';
 import { TaskListComponent } from './components/custom-list/task-list/task-list.component';
 import { RecordListComponent } from './components/custom-list/record-list/record-list.component';
 import { StudentListComponent } from './components/custom-list/student-list/student-list.component';
+import { StudentTaskListComponent } from './components/custom-list/student-task-list/student-task-list.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { StudentListComponent } from './components/custom-list/student-list/stud
     CreateTaskDialogComponent,
     TaskListComponent,
     RecordListComponent,
-    StudentListComponent
+    StudentListComponent,
+    StudentTaskListComponent
   ],
   imports: [
     RouterModule.forChild(routes),

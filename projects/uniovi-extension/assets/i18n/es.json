@@ -109,6 +109,9 @@
         },
         "TASKS":{
             "TITLE": "Tareas"
+        },
+        "STUDENT_TASKS":{
+            "TITLE": "Entregas"
         }
     }
 }

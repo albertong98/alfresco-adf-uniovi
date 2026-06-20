@@ -1,0 +1,13 @@
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; 
+  margin-top: 16px;
+  margin-left: 16px;
+}
+input{
+  min-height: 40px;
+}
+.date-input{
+  width: 75% !important;
+}

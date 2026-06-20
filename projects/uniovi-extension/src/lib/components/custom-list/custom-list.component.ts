@@ -33,6 +33,10 @@ import { ShareDataTableAdapter } from '@alfresco/adf-content-services';
 import { CustomListQueryBuilderService } from '../../services/query-builder.service';
 import { Store } from '@ngrx/store';
 import { AppStore, SnackbarErrorAction } from '@alfresco/aca-shared/store';
+import { PageComponent } from 'app/src/app/components/page.component';
+import { ContentManagementService } from 'app/src/app/services/content-management.service';
+import { AppExtensionService } from 'projects/aca-shared/src/lib/services/app.extension.service';
+import { CustomDataColumn } from '../../models/custom-data-column';
 
 
 @Component({
@@ -40,7 +44,7 @@ import { AppStore, SnackbarErrorAction } from '@alfresco/aca-shared/store';
     templateUrl: './custom-list.component.html',
     styleUrls: ['./custom-list.component.scss']
 })
-export class CustomListComponent implements PaginatedComponent, OnInit {
+export class CustomListComponent extends PageComponent implements PaginatedComponent, OnInit {
     query: string = '';
 
     @ContentChild(CustomEmptyContentTemplateDirective)
@@ -58,7 +62,7 @@ export class CustomListComponent implements PaginatedComponent, OnInit {
         return this._searchApi;
     }
 
-    columns: DataColumn[] = [];
+    columns: CustomDataColumn[] = [];
 
     nodes!: NodePaging;
 
@@ -88,6 +92,9 @@ export class CustomListComponent implements PaginatedComponent, OnInit {
 
     @Input()
     multiselect = false;
+
+    @Input()
+    title: string = '';
 
     data!: ShareDataTableAdapter;
 
@@ -142,20 +149,24 @@ export class CustomListComponent implements PaginatedComponent, OnInit {
 
     constructor(
         private alfrescoApiService: AlfrescoApiService,
+        content: ContentManagementService,
+        extensions: AppExtensionService,
         private extensionService: ExtensionService,
         private contentService: ContentService,
         private thumbnailService: ThumbnailService,
         private ngZone: NgZone,
         private customListQueryBuilderService: CustomListQueryBuilderService,
-        private store: Store<AppStore>
+        store: Store<AppStore>
     ) {
+        super(store, extensions, content);
         this._searchApi = new SearchApi(this.alfrescoApiService.getInstance());
     }
 
     updatePagination(requestPaginationModel: RequestPaginationModel) {
-        if (requestPaginationModel)
-
-            throw new Error('Method not implemented.');
+        this._pagination.maxItems = requestPaginationModel.maxItems;
+        this._pagination.merge = requestPaginationModel.merge;
+        this._pagination.skipCount = requestPaginationModel.skipCount;
+        this.reloadData();
     }
 
     ngOnInit(): void {
@@ -221,7 +232,7 @@ export class CustomListComponent implements PaginatedComponent, OnInit {
         return sortRequest;
     }
 
-    reload(skipCount?: number, notReset?: boolean) {
+    reloadData(skipCount?: number, notReset?: boolean) {
         if (!notReset)
             this.ngZone.run(() => {
                 if (this.nodes) {
