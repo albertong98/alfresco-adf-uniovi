@@ -6,7 +6,6 @@ import { DataColumn, UserPreferencesService, UserPreferenceValues } from '@alfre
 import { DateAdapter } from '@angular/material/core';
 import { Moment } from 'moment';
 import { ExtensionService } from '@alfresco/adf-extensions';
-import { CustomFilterQuery } from '../models/custom-filter-query';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,7 @@ export class CustomListQueryBuilderService {
   paging: RequestPagination | undefined = undefined;
   currentQuery: SearchRequest | null = null;
 
-  private filterQueriesSubject = new BehaviorSubject<CustomFilterQuery[]>([]);
+  private filterQueriesSubject = new BehaviorSubject<FilterQuery[]>([]);
   filterQueries$ = this.filterQueriesSubject.asObservable();
 
   defaultFilterQueries: FilterQuery[] = [];
@@ -69,33 +68,28 @@ export class CustomListQueryBuilderService {
   getBasicFilterQueries(): FilterQuery[] {
     const filterQueries: FilterQuery[] = [];
     this.getFilterQueries().forEach(filterQuery => {
-      filterQueries.push(filterQuery.query);
+      filterQueries.push(filterQuery);
     });
     return filterQueries;
   }
 
-  getFilterQueries(): CustomFilterQuery[] {
+  getFilterQueries(): FilterQuery[] {
     return this.filterQueriesSubject.value;
   }
 
   setDefaultFilterQueries() {
     this.defaultFilterQueries?.forEach(filterQuery => {
-      this.addFilterQuery({ id: 'customDefault', query: filterQuery });
+      this.addFilterQuery(filterQuery );
     });
   }
 
-  setFilterQueries(filterQueries: CustomFilterQuery[]) {
+  setFilterQueries(filterQueries: FilterQuery[]) {
     this.filterQueriesSubject.next(filterQueries);
   }
 
-  addFilterQuery(filterQuery: CustomFilterQuery) {
+  addFilterQuery(filterQuery: FilterQuery) {
     const currentQueries = this.getFilterQueries();
     this.setFilterQueries([...currentQueries, filterQuery]);
-  }
-
-  removeFilterQuery(filterQueryId: any) {
-    const currentQueries = this.getFilterQueries();
-    this.setFilterQueries(currentQueries.filter(filterQuery => filterQuery.id !== filterQueryId));
   }
 
   clearAndSetDefaultFilterQueries() {

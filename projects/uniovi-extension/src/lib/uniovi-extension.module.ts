@@ -39,6 +39,11 @@ import { TaskListComponent } from './components/custom-list/task-list/task-list.
 import { RecordListComponent } from './components/custom-list/record-list/record-list.component';
 import { StudentListComponent } from './components/custom-list/student-list/student-list.component';
 import { StudentTaskListComponent } from './components/custom-list/student-task-list/student-task-list.component';
+import { FileDropComponent } from './components/form/file-drop/file-drop.component';
+import { SubmitTaskComponent } from './dialogs/task/submit-task/submit-task.component';
+//import { ScoreTaskComponent } from './dialogs/task/score-task/score-task.component';
+import { EnrollComponent } from './dialogs/subject/enroll/enroll.component';
+import { DocumentListDialogComponent } from './dialogs/document-list-dialog/document-list-dialog.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +56,12 @@ import { StudentTaskListComponent } from './components/custom-list/student-task-
     TaskListComponent,
     RecordListComponent,
     StudentListComponent,
-    StudentTaskListComponent
+    StudentTaskListComponent,
+    FileDropComponent,
+    SubmitTaskComponent,
+    //ScoreTaskComponent,
+    EnrollComponent,
+    DocumentListDialogComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -102,7 +112,11 @@ export class UnioviExtensionModule {
       'uniovi.canViewStudents': rules.canCreateStudent,
       'uniovi.canCreateSubject': rules.canCreateSubject,
       'uniovi.canCreateTask':rules.canCreateTask,
-      'uniovi.canViewTasks':rules.canViewTasks
+      'uniovi.canViewTasks':rules.canViewTasks,
+      'uniovi.canSubmit': rules.canSubmit,
+      'uniovi.canEnroll': rules.canEnroll,
+      'uniovi.canViewDocumentList': rules.canViewDocumentList,
+      'uniovi.canViewParentDocumentList': rules.canViewParentDocumentList
      });
   }
 }

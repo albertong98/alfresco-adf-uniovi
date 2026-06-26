@@ -1,0 +1,9 @@
+<form (ngSubmit)="onSubmit()">
+<app-file-drop
+    (filesChanged)="onFilesChanged($event)">
+</app-file-drop>
+<mat-dialog-actions>
+        <button mat-button type="button" (click)="onCancel()">{{ 'UNIOVI.FORMS.CANCEL' | translate}}</button>
+        <button mat-raised-button color="primary" [disabled]="selectedFiles.length === 0" type="submit"> {{ 'UNIOVI.FORMS.CREATE' | translate}}</button>
+    </mat-dialog-actions>
+</form>

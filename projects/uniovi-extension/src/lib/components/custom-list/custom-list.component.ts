@@ -4,8 +4,10 @@ import {
     EventEmitter,
     Input,
     NgZone,
+    OnChanges,
     OnInit,
     Output,
+    SimpleChanges,
     ViewChild
 } from '@angular/core';
 
@@ -15,8 +17,10 @@ import {
     CustomEmptyContentTemplateDirective,
     CustomLoadingContentTemplateDirective,
     CustomNoPermissionTemplateDirective,
+    DataCellEvent,
     DataColumn,
     DataRow,
+    DataRowActionEvent,
     DataSorting,
     DataTableComponent,
     PaginatedComponent,
@@ -37,6 +41,7 @@ import { PageComponent } from 'app/src/app/components/page.component';
 import { ContentManagementService } from 'app/src/app/services/content-management.service';
 import { AppExtensionService } from 'projects/aca-shared/src/lib/services/app.extension.service';
 import { CustomDataColumn } from '../../models/custom-data-column';
+import { takeUntil } from 'rxjs/operators';
 
 
 @Component({
@@ -44,7 +49,7 @@ import { CustomDataColumn } from '../../models/custom-data-column';
     templateUrl: './custom-list.component.html',
     styleUrls: ['./custom-list.component.scss']
 })
-export class CustomListComponent extends PageComponent implements PaginatedComponent, OnInit {
+export class CustomListComponent extends PageComponent implements PaginatedComponent, OnInit, OnChanges {
     query: string = '';
 
     @ContentChild(CustomEmptyContentTemplateDirective)
@@ -61,10 +66,14 @@ export class CustomListComponent extends PageComponent implements PaginatedCompo
         this._searchApi = this._searchApi ?? new SearchApi(this.alfrescoApiService.getInstance());
         return this._searchApi;
     }
-
+     
     columns: CustomDataColumn[] = [];
+    filters: any[] = [];
 
     nodes!: NodePaging;
+
+    @Input()
+    imageResolver: any | null = null;
 
     @Input()
     emptyFolderImageUrl = './assets/images/empty_doc_lib.svg';
@@ -172,7 +181,15 @@ export class CustomListComponent extends PageComponent implements PaginatedCompo
     ngOnInit(): void {
         this.loadConfig();
         this.reloadList();
-        console.log(this.data)
+        this.getToolbarActions();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (this.data) {
+            if (changes.imageResolver) {
+                this.data.setImageResolver(changes.imageResolver.currentValue);
+            }
+        }
     }
 
     private loadConfig(): void {
@@ -181,10 +198,14 @@ export class CustomListComponent extends PageComponent implements PaginatedCompo
         }
         const config = this.extensionService.features[this.listId as keyof typeof this.extensionService.features];
         this.columns = config?.columns || [];
+        console.log(this.columns);
+        this.filters = this.columns.filter(col => col.search && !col.search.disabled);
         this.query = config?.baseQuery || '';
         this.customListQueryBuilderService.loadConfiguration(this.columns,this.query);
-        
+        this.customListQueryBuilderService.clearAndSetDefaultFilterQueries();
         this.data = new ShareDataTableAdapter(this.thumbnailService, this.contentService,undefined, this.sorting, this.sortingMode, false);
+        if(this.imageResolver)
+            this.data.setImageResolver(this.imageResolver);
     }
 
     onRowDbClick(node: NodeEntry): void {
@@ -203,16 +224,12 @@ export class CustomListComponent extends PageComponent implements PaginatedCompo
         this.sortingChanged.emit(event);
     }
 
-    onShowRowActionsMenu(event: any): void {
-        this.showRowActionsMenu.emit(event);
+    async onShowRowActionsMenu(event: DataCellEvent) {
+        console.log(event)
+        event.value.actions = this.actions;
     }
 
-    onExecuteRowAction(event: any): void {
-        this.executeRowAction.emit(event);
-    }
-
-    clearSelection(): void {
-        // this.dataTable?.clearSelection();
+    onExecuteRowAction(_event: DataRowActionEvent) {
     }
 
     selectRow(row: DataRow): void {
@@ -254,22 +271,23 @@ export class CustomListComponent extends PageComponent implements PaginatedCompo
             this.ngZone.run(async () => {
                 this.searchApi.search(query).then(
                     (results) => {
+                        if (results) {
+                            const nodePaging: NodePaging = {
+                                list: {
+                                    pagination: results.list?.pagination,
+                                    entries: (results.list?.entries || []).map(row => ({
+                                        entry: row.entry as any
+                                    }))
+                                }
+                            };
+                            this.data.setColumns(this.columns as any as DataColumn[]);
+                            this.data.loadPage(nodePaging, false, undefined);
+                    
+                            this.pagination.next(results.list?.pagination as PaginationModel);
+                            this.onDataReady(nodePaging);
 
-                        const nodePaging: NodePaging = {
-                            list: {
-                                pagination: results.list?.pagination,
-                                entries: results.list?.entries?.map(row => ({
-                                    entry: row.entry as any
-                                }))
-                            }
-                        };
-                        this.data.setColumns(this.columns as any as DataColumn[]);
-                        this.data.loadPage(nodePaging, false, undefined);
-                        this.pagination.next(results.list?.pagination as PaginationModel);
-                        this.onDataReady(nodePaging);
-
-                        this.isLoading = false;
-                        console.log(this.data.getColumns());
+                            this.isLoading = false;
+                        }
                     },
                     () => {
                        this.store.dispatch(new SnackbarErrorAction('UNIOVI.LISTS.LOADING_ERROR'));
@@ -282,5 +300,34 @@ export class CustomListComponent extends PageComponent implements PaginatedCompo
     private onDataReady(nodePaging: NodePaging) {
         this.ready.emit(nodePaging);
         this.pagination.next(nodePaging.list?.pagination ?? new PaginationModel());
+    }
+
+    submitFilters(){
+        this.customListQueryBuilderService.clearAndSetDefaultFilterQueries();
+        this.columns.map(col => col.search).forEach(col => {
+            if(col.value)
+                this.customListQueryBuilderService.addFilterQuery({query: `@${col.field}:'*${col.value}*'`});
+        });
+        this.reloadList();
+    }
+
+    clearFilters(){
+        this.customListQueryBuilderService.clearAndSetDefaultFilterQueries();
+        this.columns.forEach(col => {
+            if (col.search) {
+                col.search.value = null;
+            }
+        });
+        this.reloadList();
+    }
+
+    getToolbarActions() {
+    // Comprobamos de nuevo la visibilidad de las acciones. Volverá a ejecutarse ngDoCheck
+        this.extensions
+        .getAllowedToolbarActions()
+        .pipe(takeUntil(this.onDestroy$))
+        .subscribe((actions) => {
+            this.actions = actions;
+        });
     }
 }

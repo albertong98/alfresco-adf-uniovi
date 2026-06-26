@@ -7,7 +7,8 @@
             "CREATE_RECORD": "New record",
             "CREATE_STUDENT": "New student",
             "CREATE_SUBJECT": "New subject",
-            "CREATE_TASK": "New task"
+            "CREATE_TASK": "New task",
+            "ENROLL":"Enroll"
         },
         "FORMS": {
             "CREATE_SUCCESS_MSG":"El elemento ha sido creado satisfactoriamente",
@@ -108,7 +109,16 @@
             "TITLE": "Records"
         },
         "TASKS":{
-            "TITLE": "Tasks"
+            "TITLE": "Tareas",
+            "VIEW_DOCUMENTS": "Ver documentos entregados",
+            "VIEW_PARENT_DOCUMENTS": "Ver enunciados"
+        },
+        "STUDENT_TASKS":{
+            "TITLE": "Entregas"
+        },
+        "FILTERS":{
+            "APPLY":"Apply",
+            "CLEAR":"Clear"
         }
     }
 }

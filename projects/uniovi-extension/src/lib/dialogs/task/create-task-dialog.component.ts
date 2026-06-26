@@ -1,8 +1,10 @@
 import {Component,Inject,OnInit} from '@angular/core';
 import {FormBuilder,FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import { CreateTask } from '../../models/task';
+import { CreateTask, TYPE_SUBJECT } from '../../models/task';
 import { ApiService } from '../../services/api.service';
+import { KeyValue } from '@angular/common';
+import { CreateFile } from '../../models/file';
 
 @Component({
     selector: 'app-create-task-dialog',
@@ -12,6 +14,9 @@ import { ApiService } from '../../services/api.service';
 export class CreateTaskDialogComponent implements OnInit {
 
     taskForm!: FormGroup;
+    subjects!: KeyValue<string,string>[];
+    selectedSubject!: string;
+    selectedFiles: File[] = [];
 
     constructor(
         private apiService: ApiService,
@@ -22,10 +27,11 @@ export class CreateTaskDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loadSubjects();
         this.taskForm = this.fb.group({
-            name: ['',Validators.required],
-            schoolYear: ['',[Validators.required,Validators.pattern(/[0-9]{4}\-[0-9]{4}/)]],
-            professors: [this.fb.array([])],
+            title: ['',Validators.required],
+            description: ['',Validators.required],
+            dueDate: [null,Validators.required]
         });
     }
 
@@ -42,7 +48,7 @@ export class CreateTaskDialogComponent implements OnInit {
         const task: CreateTask = this.getTaskValues();
         
         const formParam: any = {
-            data: JSON.stringify(task)
+            data: JSON.stringify(task.data)
         };
 
         this.apiService.createNewItem(formParam,"uniovi/task");
@@ -52,11 +58,29 @@ export class CreateTaskDialogComponent implements OnInit {
 
     private getTaskValues(): CreateTask{
         let task: CreateTask = new CreateTask();
-        task.data.subjectUUID = this.taskForm.get('subjectUUID')?.value;
+        task.data.subjectUUID = this.selectedSubject;
         task.data.title = this.taskForm.get('title')?.value;
         task.data.description = this.taskForm.get('description')?.value;
         task.data.dueDate = this.taskForm.get('dueDate')?.value;
-
+        task.fileData = this.selectedFiles.map(file => new CreateFile(crypto.randomUUID(),file));
+        
         return task;
+    }
+
+    private loadSubjects(){
+        this.apiService.getNodesByType(TYPE_SUBJECT)
+                .subscribe(result => 
+                    this.subjects = result.list?.entries?.map(e => 
+                        ({key: e.entry.id, value: `${e.entry.properties['uo:subjectName']} - ${e.entry.properties['uo:schoolYear']}` })
+                    ) || []);
+    }
+
+    onSubjectChange(event: any){
+        this.selectedSubject = event.value;
+        console.log(this.selectedSubject);
+    }
+
+    onFilesChanged(files: File[]): void {
+        this.selectedFiles = files;
     }
 }

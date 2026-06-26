@@ -62,6 +62,9 @@
                 {{ 'UNIOVI.FORMS.RECORD.RECORD_DATE.ERROR' | translate}}
             </mat-error>
         </mat-form-field>
+        <app-file-drop
+            (filesChanged)="onFilesChanged($event)">
+        </app-file-drop>
     </mat-dialog-content>
 
     <mat-dialog-actions>

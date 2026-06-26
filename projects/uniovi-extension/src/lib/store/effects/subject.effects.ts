@@ -3,7 +3,7 @@ import { Navigation, NavigationEnd, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { filter, map } from "rxjs/operators";
 import { SubjectService } from "../../services/subject.service";
-import { CreateSubjectAction, SubjectActionTypes, ViewSubjectAction, EditSubjectAction } from "../actions/subject-actions";
+import { CreateSubjectAction, SubjectActionTypes,EnrollAction } from "../actions/subject-actions";
 
 @Injectable()
 export class SubjectEffects {
@@ -15,13 +15,11 @@ export class SubjectEffects {
     private router: Router,
     private subjectService:SubjectService
   ) { 
-    // Escuchar cambios de navegación
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)
     ).subscribe((_event: NavigationEnd) => {
       this.navigation = this.router.getCurrentNavigation();
     });
   }
-
 
   createSubject$ = createEffect(
     () =>
@@ -34,41 +32,19 @@ export class SubjectEffects {
     { dispatch: false }
   );
 
-  viewSubject$ = createEffect(
+
+  enroll$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType<ViewSubjectAction>(SubjectActionTypes.ViewSubject),
-        map((action) => {
-          this.openSubjectDialogComponent(action, SubjectActionTypes.ViewSubject);
+        ofType<EnrollAction>(SubjectActionTypes.Enroll),
+        map(() => {
+          this.openEnrollDialogComponent();
         })
       ),
     { dispatch: false }
   );
 
-  editSubject$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType<EditSubjectAction>(SubjectActionTypes.EditSubject),
-        map((action) => {
-          this.openSubjectDialogComponent(action, SubjectActionTypes.EditSubject);
-        })
-      ),
-    { dispatch: false }
-  );
-
-  private openSubjectDialogComponent(action: any, subjectActionType: SubjectActionTypes) {
-    if (action && action.payload && action.payload.length > 0 && subjectActionType)
-      this.subjectService.openSubjectDialogComponent();
-    /*} else {
-      this.store
-        .select(getAppSelection)
-        .pipe(take(1))
-        .subscribe((selection) => {
-          if (selection && selection.count > 0) {
-            const UUIDs = selection.nodes.map((nodeEntry) => nodeEntry.entry.id);
-            this.subjectService.openSubjectDialogComponent(UUIDs, subjectActionType);
-          }
-        });
-    }*/
+  private openEnrollDialogComponent(){
+    this.subjectService.openEnrollmentDialogComponent();
   }
 }

@@ -2,7 +2,7 @@ import { CreateFile } from "./file";
 
 export class CreateSubject{
     data: Subject = new Subject();
-    files: CreateFile[] = [];
+    fileData: CreateFile[] = [];
 }
 
 export class Subject{

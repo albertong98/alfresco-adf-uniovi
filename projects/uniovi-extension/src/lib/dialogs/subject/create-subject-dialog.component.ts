@@ -41,7 +41,7 @@ export class CreateSubjectDialogComponent implements OnInit {
 
         const subject: CreateSubject = this.getSubjectValues();
                 
-        subject.files?.forEach((file) => { 
+        subject.fileData?.forEach((file) => { 
             const fileId = file.id;
             formParam[fileId] = file.file;
         });

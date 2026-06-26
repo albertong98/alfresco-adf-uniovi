@@ -13,28 +13,35 @@
     <div class="main-content">
       <div class="filters-container">
         
-        <mat-form-field appearance="outline" *ngFor="let column of columns">
+        <mat-form-field appearance="outline" *ngFor="let column of filters">
             <mat-label>{{column.title | translate}}</mat-label>
-            <input *ngIf="column.search.type === 'text'" matInput>
-            <input *ngIf="column.search.type === 'number'" type="number" matInput>
-            <mat-select  *ngIf="column.search.type === 'select'" >
+            <input *ngIf="column.search.type === 'text'" matInput [(ngModel)]="column.search.value">
+            <input *ngIf="column.search.type === 'number'" type="number" matInput  [(ngModel)]="column.search.value">
+            <mat-select  *ngIf="column.search.type === 'select'" [(ngModel)]="column.search.value">
               <mat-option
                 *ngFor="let option of column.search.options"
-                [value]="option.key">
-                {{option.value}}
+                [value]="option" >
+                {{option}}
               </mat-option>
             </mat-select>
             <ng-container *ngIf="column.search.type === 'date'">
-                <input class="date-input" matInput [matDatepicker]="picker">
+                <input class="date-input" matInput [matDatepicker]="picker" [(ngModel)]="column.search.value">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </ng-container>
         </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="submitFilters()">
+          {{'UNIOVI.FILTERS.APPLY' | translate}}
+        </button>
+        <button mat-raised-button color="primary" (click)="clearFilters()">
+          {{'UNIOVI.FILTERS.CLEAR' | translate}}
+        </button>
       </div>
 
-      <adf-datatable #dataTable customList [display]="display" [loading]="isLoading" [allowFiltering]="allowFiltering"
+      <adf-datatable #dataTable customList [display]="display" [loading]="isLoading" [allowFiltering]="allowFiltering" [contextMenu]="true"
         [selectionMode]="selectionMode" [stickyHeader]="stickyHeader" [multiselect]="multiselect" [data]="data"
-        [showHeader]="showHeader" [showMainDatatableActions]="showMainDatatableActions" [actions]="false"
+        [showHeader]="showHeader" [showMainDatatableActions]="showMainDatatableActions" [actions]="true"
         [rowMenuCacheEnabled]="true" (rowDblClick)="onRowDbClick($any($event).value?.node)"
         (row-select)="onNodeSelect($any($event).detail)" (row-unselect)="onNodeUnselect($any($event).detail)"
         (sorting-changed)="onSortingChanged($any($event))" (showRowActionsMenu)="onShowRowActionsMenu($event)"

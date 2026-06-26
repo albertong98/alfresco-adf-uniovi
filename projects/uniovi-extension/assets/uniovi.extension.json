@@ -65,8 +65,66 @@
                 "rules": {
                     "visible": "uniovi.canCreateTask"
                 }
+            },
+            {
+                "id": "create.enrollment",
+                "order": 908,
+                "icon": "book",
+                "title": "UNIOVI.NEW_MENU.ENROLL",
+                "description": "UNIOVI.NEW_MENU.ENROLL",
+                "actions": {
+                    "click": "ENROLL"
+                },
+                "rules": {
+                    "visible": "uniovi.canEnroll"
+                }
             }
         ],
+        "viewer": {
+            "toolbarActions": [
+                {
+          "id": "app.viewer.toolbar.more",
+          "children": [
+            {
+                "id": "uniovi.task.submit",
+                "order": 1,
+                "title": "UNIOVI.TASKS.SUBMIT",
+                "icon": "assignment_returned",
+                "actions": {
+                    "click": "SUBMIT_TASK"
+                },
+                "rules": {
+                    "visible": "uniovi.canSubmit"
+                }
+            },
+            {
+                "id": "uniovi.task.view.docs",
+                "order": 2,
+                "title": "UNIOVI.TASKS.VIEW_DOCUMENTS",
+                "icon": "book",
+                "actions": {
+                    "click": "VIEW_TASK_DOCUMENTS"
+                },
+                "rules": {
+                    "visible": "uniovi.canViewDocumentList"
+                }
+            },
+            {
+                "id": "uniovi.task.view.parent.docs",
+                "order": 3,
+                "title": "UNIOVI.TASKS.VIEW_PARENT_DOCUMENTS",
+                "icon": "book",
+                "actions": {
+                    "click": "VIEW_PARENT_TASK_DOCUMENT"
+                },
+                "rules": {
+                    "visible": "uniovi.canViewParentDocumentList"
+                }
+            }
+          ]
+        }
+            ]
+        },
         "navbar": [
             {
                 "id": "app.navbar.uniovi",
@@ -119,52 +177,136 @@
                 ]
             }
         ],
+        "contextMenu": [
+            {
+                "id": "uniovi.task.submit",
+                "order": 1,
+                "title": "UNIOVI.TASKS.SUBMIT",
+                "icon": "assignment_returned",
+                "actions": {
+                    "click": "SUBMIT_TASK"
+                },
+                "rules": {
+                    "visible": "uniovi.canSubmit"
+                }
+            },
+            {
+                "id": "uniovi.task.view.docs",
+                "order": 2,
+                "title": "UNIOVI.TASKS.VIEW_DOCUMENTS",
+                "icon": "book",
+                "actions": {
+                    "click": "VIEW_TASK_DOCUMENTS"
+                },
+                "rules": {
+                    "visible": "uniovi.canViewDocumentList"
+                }
+            },
+            {
+                "id": "uniovi.task.view.parent.docs",
+                "order": 3,
+                "title": "UNIOVI.TASKS.VIEW_PARENT_DOCUMENTS",
+                "icon": "book",
+                "actions": {
+                    "click": "VIEW_PARENT_TASK_DOCUMENT"
+                },
+                "rules": {
+                    "visible": "uniovi.canViewParentDocumentList"
+                }
+            }
+        ],
+         "toolbar": [
+            {
+                "id": "uniovi.task.submit",
+                "order": 1,
+                "title": "UNIOVI.TASKS.SUBMIT",
+                "icon": "assignment_returned",
+                "actions": {
+                    "click": "SUBMIT_TASK"
+                },
+                "rules": {
+                    "visible": "uniovi.canSubmit"
+                }
+            },
+            {
+                "id": "uniovi.task.view.docs",
+                "order": 2,
+                "title": "UNIOVI.TASKS.VIEW_DOCUMENTS",
+                "icon": "book",
+                "actions": {
+                    "click": "VIEW_TASK_DOCUMENTS"
+                },
+                "rules": {
+                    "visible": "uniovi.canViewDocumentList"
+                }
+            },
+            {
+                "id": "uniovi.task.view.parent.docs",
+                "order": 3,
+                "title": "UNIOVI.TASKS.VIEW_PARENT_DOCUMENTS",
+                "icon": "book",
+                "actions": {
+                    "click": "VIEW_PARENT_TASK_DOCUMENT"
+                },
+                "rules": {
+                    "visible": "uniovi.canViewParentDocumentList"
+                }
+            }
+        ],
         "task-list":{
             "baseQuery":"+TYPE:'uo:task'",
             "columns":[
                 {
                     "id": "task-list.taskTitle",
                     "key": "properties.uo:taskTitle",
+                    "title" : "UNIOVI.FORMS.TASK.TASK_TITLE.LABEL",
                     "type": "text",
                     "order": 1,
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:taskTitle"
                     }
                 },
                 {
                     "id": "task-list.subjectUUID",
-                    "key": "properties.uo:taskTitle",
+                    "key": "properties.uo:subjectUUID",
+                    "title" : "UNIOVI.FORMS.TASK.TASK_SUBJECT.LABEL",
                     "type": "text",
                     "order": 2,
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:subjectUUID"
                     }
                 },
                 {
                     "id": "task-list.description",
                     "key": "properties.uo:description",
+                    "title" : "UNIOVI.FORMS.TASK.TASK_DESCRIPTION.LABEL",
                     "type": "text",
                     "order": 3,
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:description"
                     }
                 },
                 {
                     "id": "task-list.dueDate",
                     "key": "properties.uo:dueDate",
+                    "title" : "UNIOVI.FORMS.TASK.TASK_DUEDATE.LABEL",
                     "format": "dd/MM/yyyy",
                     "type": "date",
                     "order": 4,
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"date"
+                        "type":"date",
+                        "field":"uo:dueDate"
                     }
                 }
             ]
@@ -173,19 +315,20 @@
             "baseQuery":"+TYPE:'uo:studentTask'",
             "columns":[
                 {
-                    "id": "student-task-list.parentTaskUUID",
-                    "key": "properties.uo:parentTaskUUID",
-                    "type": "text",
+                    "id": "student-task-list.status-img",
+                    "key": "propertiesImage.uo:status",
+                    "type": "image",
                     "order": 1,
-                    "cssClass": "ellipsis-cell",
+                    "cssClass": "uniovi-datatable-image",
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "disabled": true
                     }
                 },
                 {
                     "id": "student-task-list.status",
                     "key": "properties.uo:status",
+                    "title" : "UNIOVI.STUDENT_TASKS.FIELDS.STATUS",
                     "type": "text",
                     "order": 2,
                     "cssClass": "ellipsis-cell",
@@ -193,23 +336,53 @@
                     "search":{
                         "type":"select",
                         "options":[
-                            {"key":"01","value":"Pendiente"},
-                            {"key":"02","value":"Entregado"},
-                            {"key":"03","value":"Suspenso"},
-                            {"key":"04","value":"Aprobado"},
-                            {"key":"05","value":"No entregado"}
-                        ]
+                            "Pendiente",
+                            "Entregado",
+                            "Aprobado",
+                            "No entregado",
+                            "Suspenso"
+                        ],
+                        "field":"uo:status"
                     }
                 },
                 {
-                    "id": "student-task-list.score",
-                    "key": "properties.uo:score",
+                    "id": "student-task-list.title",
+                    "key": "properties.uo:studentTaskTitle",
+                    "title" : "UNIOVI.STUDENT_TASKS.FIELDS.TITLE",
                     "type": "text",
                     "order": 3,
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"number"
+                        "type":"text",
+                        "field":"uo:parentTaskUUID"
+                    }
+                },
+                {
+                    "id": "student-task-list.dueDate",
+                    "key": "properties.uo:studentTaskDueDate",
+                    "title" : "UNIOVI.STUDENT_TASKS.FIELDS.DATE",
+                    "type": "date",
+                    "format": "dd/MM/yyyy",
+                    "order": 3,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true,
+                    "search":{
+                        "type":"date",
+                        "field":"uo:studentDueDate"
+                    }
+                },
+                {
+                    "id": "student-task-list.score",
+                    "key": "properties.uo:score",
+                    "title" : "UNIOVI.STUDENT_TASKS.FIELDS.SCORE",
+                    "type": "text",
+                    "order": 4,
+                    "cssClass": "ellipsis-cell",
+                    "sortable": true,
+                    "search":{
+                        "type":"number",
+                        "field":"uo:score"
                     }
                 }
             ]
@@ -226,7 +399,8 @@
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:recordNumber"
                     }
                 },
                 {
@@ -238,7 +412,8 @@
                     "order": 2,
                     "sortable": true,
                     "search":{
-                        "type":"date"
+                        "type":"date",
+                        "field":"uo:openingDate"
                     }
                 },
                 {
@@ -249,7 +424,8 @@
                     "order": 3,
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:recordTitle"
                     }
                 },
                 {
@@ -260,7 +436,8 @@
                     "order": 4,
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:center"
                     }
                 },
                 {
@@ -271,7 +448,8 @@
                     "order": 5,
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:type"
                     }
                 },
                 {
@@ -282,7 +460,8 @@
                     "order": 6,
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:responsible"
                     }
                 }
             ]
@@ -299,7 +478,8 @@
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:studentId"
                     }
                 },
                 {
@@ -311,7 +491,8 @@
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:studentUo"
                     }
                 },
                 {
@@ -323,7 +504,8 @@
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:studentName"
                     }
                 },
                 {
@@ -335,7 +517,8 @@
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:studentSurname"
                     }
                 },
                 {
@@ -347,7 +530,8 @@
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:studentEmail"
                     }
                 }
             ]
@@ -364,7 +548,8 @@
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:schoolYear"
                     }
                 },
                 {
@@ -376,7 +561,8 @@
                     "cssClass": "ellipsis-cell",
                     "sortable": true,
                     "search":{
-                        "type":"text"
+                        "type":"text",
+                        "field":"uo:subjectName"
                     }
                 }
             ]

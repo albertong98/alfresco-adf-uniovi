@@ -7,7 +7,8 @@
             "CREATE_RECORD": "Nuevo expediente",
             "CREATE_STUDENT": "Nuevo estudiante",
             "CREATE_SUBJECT": "Nueva asignatura",
-            "CREATE_TASK": "Nueva tarea"
+            "CREATE_TASK": "Nueva tarea",
+            "ENROLL":"Matricularse"
         },
         "FORMS": {
             "CREATE_SUCCESS_MSG":"El elemento ha sido creado satisfactoriamente",
@@ -108,10 +109,31 @@
             "TITLE": "Expedientes"
         },
         "TASKS":{
-            "TITLE": "Tareas"
+            "TITLE": "Tareas",
+            "VIEW_DOCUMENTS": "Ver documentos entregados",
+            "VIEW_PARENT_DOCUMENTS": "Ver enunciados",
+            "SUBMIT":"Adjuntar entrega"
         },
         "STUDENT_TASKS":{
-            "TITLE": "Entregas"
+            "TITLE": "Entregas",
+            "FIELDS":{
+                "STATUS":"Estado",
+                "SCORE": "Score",
+                "TITLE":"Título",
+                "DATE":"Fecha de entrega"
+            }
+        },
+        "FILTERS":{
+            "APPLY":"Aplicar",
+            "CLEAR":"Borrar"
+        },
+        "DOCUMENTS":{
+            "DOWNLOAD":"Descargar",
+            "VIEW":"Ver",
+            "CLOSE":"Cerrar",
+            "TITLE":"Documentos",
+            "CREATED": "Fecha de creación",
+            "DESCRIPTION" :"Descripción"
         }
     }
 }

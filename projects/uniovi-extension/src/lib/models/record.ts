@@ -3,7 +3,7 @@ import { Student } from "./student";
 
 export class CreateRecord {
     data: Record = new Record();
-    files: CreateFile[] = [];
+    fileData: CreateFile[] = [];
 }
 
 export class Record{

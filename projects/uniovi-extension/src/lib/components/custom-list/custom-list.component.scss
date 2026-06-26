@@ -5,9 +5,17 @@
   margin-top: 16px;
   margin-left: 16px;
 }
-input{
-  min-height: 40px;
+
+input, mat-select{
+  min-height: 40px !important;
 }
+
 .date-input{
   width: 75% !important;
+}
+
+.filters-container > button {
+  height: 40%;
+  width: 6%;
+  align-self: anchor-center;
 }

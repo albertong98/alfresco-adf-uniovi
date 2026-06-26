@@ -18,6 +18,17 @@
             </mat-error>
         </mat-form-field>
 
+        <mat-form-field appearance="outline">
+            <mat-label>{{ 'UNIOVI.FORMS.TASK.TASK_SUBJECT.LABEL' | translate}}</mat-label>
+            <mat-select [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedSubject" (selectionChange)="onSubjectChange($event)">
+              <mat-option
+                *ngFor="let subject of subjects"
+                [value]="subject.key" >
+                {{subject.value}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>{{ 'UNIOVI.FORMS.TASK.TASK_DUEDATE.LABEL' | translate}}</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="dueDate">
@@ -27,6 +38,9 @@
                 {{ 'UNIOVI.FORMS.TASK.TASK_DUEDATE.ERROR' | translate}}
             </mat-error>
         </mat-form-field>
+        <app-file-drop
+            (filesChanged)="onFilesChanged($event)">
+        </app-file-drop>
     </mat-dialog-content>
 
     <mat-dialog-actions>

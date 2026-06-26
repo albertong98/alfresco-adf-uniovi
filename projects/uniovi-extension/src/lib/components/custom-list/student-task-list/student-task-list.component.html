@@ -1,3 +1,12 @@
 <app-custom-list
-    [listId]="listId" [title]="'UNIOVI.TASKS.TITLE'">
+    [listId]="listId" [title]="'UNIOVI.TASKS.TITLE'" [imageResolver]="customImageResolver">
+        <adf-custom-empty-content-template>
+          <ng-container>
+            <div class="empty-search__block">
+              <p class="empty-search__text">
+                {{ 'APP.BROWSE.SEARCH.NO_FILTER_RESULTS' | translate }}
+              </p>
+            </div>
+          </ng-container>
+    </adf-custom-empty-content-template>
 </app-custom-list>

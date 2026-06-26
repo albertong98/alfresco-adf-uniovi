@@ -3,6 +3,7 @@ import {FormBuilder,FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { CreateRecord } from '../../models/record';
 import { ApiService } from '../../services/api.service';
+import { CreateFile } from '../../models/file';
 
 @Component({
     selector: 'app-create-record-dialog',
@@ -12,7 +13,7 @@ import { ApiService } from '../../services/api.service';
 export class CreateRecordDialogComponent implements OnInit {
 
     recordForm!: FormGroup;
-
+    selectedFiles: File[] = [];
     constructor(
         private apiService: ApiService,
         private fb: FormBuilder,
@@ -49,7 +50,7 @@ export class CreateRecordDialogComponent implements OnInit {
             data: JSON.stringify(record.data)
         };
 
-        record.files?.forEach((file) => { 
+        record.fileData?.forEach((file) => { 
             const fileId = file.id;
             formParam[fileId] = file.file;
         });
@@ -67,9 +68,14 @@ export class CreateRecordDialogComponent implements OnInit {
         record.data.responsible = this.recordForm.get('responsible')?.value;
         record.data.student.uo = this.recordForm.get('studentUo')?.value;
         record.data.type = this.recordForm.get('type')?.value;
-
+        record.fileData = this.selectedFiles.map(file => new CreateFile(crypto.randomUUID(),file));
         record.data.status = '01';
 
         return record;
+    }
+
+
+    onFilesChanged(files: File[]): void {
+        this.selectedFiles = files;
     }
 }

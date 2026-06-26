@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Seleccionar elementos</h2>
+
+<form [formGroup]="enrollForm" (ngSubmit)="onSubmit()">
+<mat-dialog-content>
+    <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'UNIOVI.FORMS.RECORD.RECORD_STUDENTUO.LABEL' | translate}}</mat-label>
+        <input matInput formControlName="studentUo">
+        <mat-error *ngIf="enrollForm.get('studentUo')?.hasError('required') && enrollForm.get('studentUo')?.touched">
+            {{ 'UNIOVI.FORMS.RECORD.RECORD_STUDENTUO.ERROR' | translate}}
+        </mat-error>
+        <mat-error *ngIf="enrollForm.get('studentUo')?.hasError('pattern') && enrollForm.get('studentUo')?.touched">
+            {{ 'UNIOVI.FORMS.RECORD.RECORD_STUDENTUO.PATTERN' | translate}}
+        </mat-error>
+    </mat-form-field>
+
+  <mat-selection-list>
+    <mat-list-option
+      *ngFor="let node of nodes"
+      [selected]="isSelected(node)"
+      (click)="toggleSelection(node)">
+      {{ node.properties['uo:subjectName'] }} - {{ node.properties['uo:schoolYear'] }}
+    </mat-list-option>
+  </mat-selection-list>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button mat-raised-button color="primary" type="submit">Aceptar</button>
+</mat-dialog-actions>
+</form>

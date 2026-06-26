@@ -4,9 +4,9 @@ import { Action } from "@ngrx/store";
 
 export enum TaskActionTypes {
     CreateTask = 'CREATE_TASK',
-    ViewTask = 'VIEW_TASK',
-    EditTask = 'EDIT_TASK',
-    DeleteTask = 'DELETE_TASK',
+    SubmitTask = 'SUBMIT_TASK',
+    ViewTaskDocuments = "VIEW_TASK_DOCUMENTS",
+    ViewParentTaskDocuments = "VIEW_PARENT_TASK_DOCUMENTS",
 }
 
 export class CreateTaskAction implements Action {
@@ -15,20 +15,20 @@ export class CreateTaskAction implements Action {
   constructor(public payload?: SelectionState) {}
 }
 
-export class ViewTaskAction implements Action {
-  readonly type = TaskActionTypes.ViewTask;
-
+export class SubmitTaskAction implements Action{
+  readonly type = TaskActionTypes.SubmitTask;
+  
   constructor(public payload: MinimalNodeEntity[] = []) {}
 }
 
-export class EditTaskAction implements Action {
-  readonly type = TaskActionTypes.EditTask;
-
+export class ViewTaskDocuments implements Action{
+  readonly type = TaskActionTypes.ViewTaskDocuments;
+  
   constructor(public payload: MinimalNodeEntity[] = []) {}
 }
 
-export class DeleteTaskAction implements Action {
-  readonly type = TaskActionTypes.DeleteTask;
-
+export class ViewParentTaskDocuments implements Action{
+  readonly type = TaskActionTypes.ViewParentTaskDocuments;
+  
   constructor(public payload: MinimalNodeEntity[] = []) {}
 }
