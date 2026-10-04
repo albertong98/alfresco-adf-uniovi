@@ -19,3 +19,30 @@ input, mat-select{
   width: 6%;
   align-self: anchor-center;
 }
+
+.uo-custom-list-layout-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.uo-custom-list-header {
+  flex: 1;
+}
+
+.uo-custom-list-layout-header adf-toolbar {
+  margin-left: auto;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .uo-custom-list-layout-header aca-toolbar-action {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .uo-custom-list-layout-header aca-toolbar-action button {
+  background: transparent !important;
+  box-shadow: none !important;
+}

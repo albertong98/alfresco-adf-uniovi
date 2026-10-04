@@ -83,46 +83,46 @@
         "viewer": {
             "toolbarActions": [
                 {
-          "id": "app.viewer.toolbar.more",
-          "children": [
-            {
-                "id": "uniovi.task.submit",
-                "order": 1,
-                "title": "UNIOVI.TASKS.SUBMIT",
-                "icon": "assignment_returned",
-                "actions": {
-                    "click": "SUBMIT_TASK"
-                },
-                "rules": {
-                    "visible": "uniovi.canSubmit"
+                    "id": "app.viewer.toolbar.more",
+                    "children": [
+                        {
+                            "id": "uniovi.more.task.submit",
+                            "order": 1,
+                            "title": "UNIOVI.TASKS.SUBMIT",
+                            "icon": "assignment_returned",
+                            "actions": {
+                                "click": "SUBMIT_TASK"
+                            },
+                            "rules": {
+                                "visible": "uniovi.canSubmit"
+                            }
+                        },
+                        {
+                            "id": "uniovi.task.view.docs",
+                            "order": 2,
+                            "title": "UNIOVI.TASKS.VIEW_DOCUMENTS",
+                            "icon": "book",
+                            "actions": {
+                                "click": "VIEW_TASK_DOCUMENTS"
+                            },
+                            "rules": {
+                                "visible": "uniovi.canViewDocumentList"
+                            }
+                        },
+                        {
+                            "id": "uniovi.task.view.parent.docs",
+                            "order": 3,
+                            "title": "UNIOVI.TASKS.VIEW_PARENT_DOCUMENTS",
+                            "icon": "book",
+                            "actions": {
+                                "click": "VIEW_PARENT_TASK_DOCUMENT"
+                            },
+                            "rules": {
+                                "visible": "uniovi.canViewParentDocumentList"
+                            }
+                        }
+                    ]
                 }
-            },
-            {
-                "id": "uniovi.task.view.docs",
-                "order": 2,
-                "title": "UNIOVI.TASKS.VIEW_DOCUMENTS",
-                "icon": "book",
-                "actions": {
-                    "click": "VIEW_TASK_DOCUMENTS"
-                },
-                "rules": {
-                    "visible": "uniovi.canViewDocumentList"
-                }
-            },
-            {
-                "id": "uniovi.task.view.parent.docs",
-                "order": 3,
-                "title": "UNIOVI.TASKS.VIEW_PARENT_DOCUMENTS",
-                "icon": "book",
-                "actions": {
-                    "click": "VIEW_PARENT_TASK_DOCUMENT"
-                },
-                "rules": {
-                    "visible": "uniovi.canViewParentDocumentList"
-                }
-            }
-          ]
-        }
             ]
         },
         "navbar": [

@@ -44,7 +44,7 @@ export function canViewTasks(context: RuleContext): boolean {
 }
 
 export function canSubmit(context: RuleContext): boolean{
-  return context !== null;
+  return isInGroup(context.profile, GROUP_STUDENTS) && context.selection.count == 1 && isNodeType(context.selection.nodes[0].entry,TYPE_STUDENT_TASK);
 }
 
 export function canEnroll(context: RuleContext): boolean{

@@ -33,15 +33,16 @@ import {
 import { NodeEntry, NodePaging, Pagination, RequestSortDefinition, SearchApi, SearchRequest } from '@alfresco/js-api';
 import { ExtensionService } from '@alfresco/adf-extensions';
 import { BehaviorSubject } from 'rxjs';
-import { ShareDataTableAdapter } from '@alfresco/adf-content-services';
+import { ShareDataRow, ShareDataTableAdapter } from '@alfresco/adf-content-services';
 import { CustomListQueryBuilderService } from '../../services/query-builder.service';
 import { Store } from '@ngrx/store';
-import { AppStore, SnackbarErrorAction } from '@alfresco/aca-shared/store';
+import { AppStore, SetSelectedNodesAction, SnackbarErrorAction } from '@alfresco/aca-shared/store';
 import { PageComponent } from 'app/src/app/components/page.component';
 import { ContentManagementService } from 'app/src/app/services/content-management.service';
 import { AppExtensionService } from 'projects/aca-shared/src/lib/services/app.extension.service';
 import { CustomDataColumn } from '../../models/custom-data-column';
 import { takeUntil } from 'rxjs/operators';
+import { UnioviService } from '../../services/uniovi.service';
 
 
 @Component({
@@ -51,6 +52,11 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class CustomListComponent extends PageComponent implements PaginatedComponent, OnInit, OnChanges {
     query: string = '';
+    
+    @Output()
+    nodeSelected: EventEmitter<NodeEntry[]> = new EventEmitter<NodeEntry[]>();
+    
+    selectedNodes = new Array<NodeEntry>();
 
     @ContentChild(CustomEmptyContentTemplateDirective)
     customNoContentTemplate!: CustomEmptyContentTemplateDirective;
@@ -116,11 +122,11 @@ export class CustomListComponent extends PageComponent implements PaginatedCompo
     @Output()
     rowDoubleClick = new EventEmitter<NodeEntry>();
 
-    @Output()
+  /*  @Output()
     nodeSelect = new EventEmitter<DataRow>();
 
     @Output()
-    nodeUnselect = new EventEmitter<DataRow>();
+    nodeUnselect = new EventEmitter<DataRow>();*/
 
     @Output()
     sortingChanged = new EventEmitter<DataSorting>();
@@ -165,6 +171,7 @@ export class CustomListComponent extends PageComponent implements PaginatedCompo
         private thumbnailService: ThumbnailService,
         private ngZone: NgZone,
         private customListQueryBuilderService: CustomListQueryBuilderService,
+        private unioviService: UnioviService,
         store: Store<AppStore>
     ) {
         super(store, extensions, content);
@@ -212,21 +219,8 @@ export class CustomListComponent extends PageComponent implements PaginatedCompo
         this.rowDoubleClick.emit(node);
     }
 
-    onNodeSelect(row: DataRow): void {
-        this.nodeSelect.emit(row);
-    }
-
-    onNodeUnselect(row: DataRow): void {
-        this.nodeUnselect.emit(row);
-    }
-
     onSortingChanged(event: DataSorting): void {
         this.sortingChanged.emit(event);
-    }
-
-    async onShowRowActionsMenu(event: DataCellEvent) {
-        console.log(event)
-        event.value.actions = this.actions;
     }
 
     onExecuteRowAction(_event: DataRowActionEvent) {
@@ -322,12 +316,33 @@ export class CustomListComponent extends PageComponent implements PaginatedCompo
     }
 
     getToolbarActions() {
-    // Comprobamos de nuevo la visibilidad de las acciones. Volverá a ejecutarse ngDoCheck
         this.extensions
         .getAllowedToolbarActions()
         .pipe(takeUntil(this.onDestroy$))
         .subscribe((actions) => {
             this.actions = actions;
         });
+    }
+
+    onNodeSelect(event: { row: ShareDataRow; selection: Array<ShareDataRow> }) {
+        this.selectedNodes = event.selection.map((entry) => entry.node);
+        this.nodeSelected.emit(this.selectedNodes);
+        if (this.selectedNodes) {
+            this.store.dispatch(new SetSelectedNodesAction(this.selectedNodes));
+        }
+    }
+
+    onNodeUnselect(event: { row: ShareDataRow; selection: Array<ShareDataRow> }) {
+        this.selectedNodes = event.selection.map((entry) => entry.node);
+        this.nodeSelected.emit(this.selectedNodes);
+        this.store.dispatch(new SetSelectedNodesAction(this.selectedNodes));
+    }
+
+    async onShowRowActionsMenu(event: DataCellEvent) {
+        event.value.actions = await this.unioviService.getContextActions(event.value as any);
+    }
+
+    async onShowRowContextMenu(event: DataCellEvent) {
+        event.value.actions = await this.unioviService.getContextActions(event.value as any);
     }
 }

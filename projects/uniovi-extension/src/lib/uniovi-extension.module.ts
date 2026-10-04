@@ -44,6 +44,7 @@ import { SubmitTaskComponent } from './dialogs/task/submit-task/submit-task.comp
 //import { ScoreTaskComponent } from './dialogs/task/score-task/score-task.component';
 import { EnrollComponent } from './dialogs/subject/enroll/enroll.component';
 import { DocumentListDialogComponent } from './dialogs/document-list-dialog/document-list-dialog.component';
+import { UnioviService } from './services/uniovi.service';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { DocumentListDialogComponent } from './dialogs/document-list-dialog/docu
     RecordService,
     StudentService,
     SubjectService,
-    TaskService
+    TaskService,
+    UnioviService
   ]
 })
 export class UnioviExtensionModule {
