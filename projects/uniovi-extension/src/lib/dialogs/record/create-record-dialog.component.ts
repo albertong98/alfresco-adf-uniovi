@@ -51,7 +51,7 @@ export class CreateRecordDialogComponent implements OnInit {
         };
 
         record.fileData?.forEach((file) => { 
-            const fileId = file.id;
+            const fileId = file.fileId;
             formParam[fileId] = file.file;
         });
 
@@ -68,7 +68,7 @@ export class CreateRecordDialogComponent implements OnInit {
         record.data.responsible = this.recordForm.get('responsible')?.value;
         record.data.student.uo = this.recordForm.get('studentUo')?.value;
         record.data.type = this.recordForm.get('type')?.value;
-        record.fileData = this.selectedFiles.map(file => new CreateFile(crypto.randomUUID(),file));
+        record.fileData = this.selectedFiles.map(file => new CreateFile(crypto.randomUUID(),file,file.type,file.name));
         record.data.status = '01';
 
         return record;

@@ -1,7 +1,7 @@
 import {Component,Inject,OnInit} from '@angular/core';
 import {FormBuilder,FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import { CreateTask, TYPE_SUBJECT } from '../../models/task';
+import { Task, TYPE_SUBJECT } from '../../models/task';
 import { ApiService } from '../../services/api.service';
 import { KeyValue } from '@angular/common';
 import { CreateFile } from '../../models/file';
@@ -45,24 +45,29 @@ export class CreateTaskDialogComponent implements OnInit {
             return;
         }
 
-        const task: CreateTask = this.getTaskValues();
+        const task: Task = this.getTaskValues();
         
         const formParam: any = {
-            data: JSON.stringify(task.data)
+            data: JSON.stringify(task)
         };
+
+        task.fileData?.forEach((file) => { 
+            const fileId = file.fileId;
+            formParam[fileId] = file.file;
+        });
 
         this.apiService.createNewItem(formParam,"uniovi/task");
         
         this.dialogRef.close();
     }
 
-    private getTaskValues(): CreateTask{
-        let task: CreateTask = new CreateTask();
-        task.data.subjectUUID = this.selectedSubject;
-        task.data.title = this.taskForm.get('title')?.value;
-        task.data.description = this.taskForm.get('description')?.value;
-        task.data.dueDate = this.taskForm.get('dueDate')?.value;
-        task.fileData = this.selectedFiles.map(file => new CreateFile(crypto.randomUUID(),file));
+    private getTaskValues(): Task{
+        let task: Task = new Task();
+        task.subjectUUID = this.selectedSubject;
+        task.title = this.taskForm.get('title')?.value;
+        task.description = this.taskForm.get('description')?.value;
+        task.dueDate = this.taskForm.get('dueDate')?.value;
+        task.fileData = this.selectedFiles.map(file => new CreateFile(crypto.randomUUID(),file,file.type,file.name));
         
         return task;
     }
@@ -82,5 +87,6 @@ export class CreateTaskDialogComponent implements OnInit {
 
     onFilesChanged(files: File[]): void {
         this.selectedFiles = files;
+        console.log(this.selectedFiles);
     }
 }

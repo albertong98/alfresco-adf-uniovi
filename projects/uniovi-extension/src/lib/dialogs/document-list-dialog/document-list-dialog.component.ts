@@ -42,6 +42,8 @@ export class DocumentListDialogComponent implements OnInit {
       maxItems: 1000
     }).subscribe(result => {
       this.documents = result?.list?.entries?.map(item => item.entry).filter(node => node.isFile);
+      console.log(result)
+      console.log(this.documents)
     });
   }
 }

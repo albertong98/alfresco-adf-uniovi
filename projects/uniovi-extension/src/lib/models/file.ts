@@ -1,9 +1,13 @@
 export class CreateFile {
-    id: string;
+    fileId: string;
     file: File;
+    mimetype: string;
+    name: string;
 
-    constructor(id:string,file: File){
-        this.id = id;
+    constructor(id:string,file: File,mimetype:string,name:string){
+        this.fileId = id;
         this.file = file;
+        this.mimetype = mimetype;
+        this.name = name;
     }
 }

@@ -25,8 +25,10 @@ export class SubmitTaskComponent {
   
   onSubmit(){
     let task: StudentTask = new StudentTask();
-    task.submissionData = this.selectedFiles.map(file => new CreateFile(crypto.randomUUID(),file));
-    this.taskService.submitTask(task,this.data.nodeId);
+    task.submissionData = this.selectedFiles.map(file => new CreateFile(crypto.randomUUID(),file,file.type,file.name));
+    task.uuid = this.data.nodeId;
+    this.taskService.submitTask(task);
+    this.dialogRef.close();
   }
 
   onCancel(): void {

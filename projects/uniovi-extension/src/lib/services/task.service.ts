@@ -50,17 +50,17 @@ export class TaskService {
         );
     }
 
-    submitTask(task:StudentTask,id:string){
+    submitTask(task:StudentTask){
         const formParam: any = {
             data: JSON.stringify(task)
         };
 
         task.submissionData?.forEach((file) => { 
-            const fileId = file.id;
+            const fileId = file.fileId;
             formParam[fileId] = file.file;
         });
         
-        this.apiService.updateItem(formParam,'uniovi/submit',id);
+        this.apiService.updateItem(formParam,'uniovi/submit',task.uuid );
     }
 
     openDocumentDialog(nodeId:string){

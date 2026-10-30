@@ -1,23 +1,6 @@
-.filters-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px; 
-  margin-top: 16px;
-  margin-left: 16px;
-}
-
-input, mat-select{
-  min-height: 40px !important;
-}
-
-.date-input{
-  width: 75% !important;
-}
-
-.filters-container > button {
-  height: 40%;
-  width: 6%;
-  align-self: anchor-center;
+.action-buttons > button {
+  width: 10%;
+  align-self: end;
 }
 
 .uo-custom-list-layout-header {
@@ -45,4 +28,64 @@ input, mat-select{
 ::ng-deep .uo-custom-list-layout-header aca-toolbar-action button {
   background: transparent !important;
   box-shadow: none !important;
+}
+
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding: 6.5px 0 6.5px 6.5px !important;
+}
+
+.filters mat-form-field {
+  flex: 0 1 250px;
+  min-width: 200px;
+  max-width: 100%;
+  
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex-direction: row;
+  margin-right: 1% !important;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .filter-field {
+    flex: 1 1 220px; 
+    min-width: 180px; max-width: 280px;
+  }
+}
+//Para ajustar filtros de fecha al tamaño del resto
+:host {
+  width: 100%;
+
+  ::ng-deep {
+    input-suffix {
+      vertical-align: middle;
+      color: darkgray;
+    }
+
+    .mat-form-field-infix {
+      display: flex;
+      align-items: center;
+    
+      .mat-datepicker-toggle {
+          text-align-last: end;
+          margin-right: 4px;
+      }
+    
+      .mat-icon-button {
+          line-height: 0;
+          height: 0;
+      }
+    }
+  }
 }

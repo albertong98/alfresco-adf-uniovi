@@ -1,15 +1,12 @@
 import { CreateFile } from "./file";
 
-export class CreateTask{
-    data: Task = new Task();
-    fileData: CreateFile[] = [];
-}
-
 export class Task{
     subjectUUID: string= '';
     title: string = '';
     description:string = '';
     dueDate: Date = new Date();
+    fileData: CreateFile[] = [];
+    subjectName: string = '';
 }
 
 export const GROUP_TASK_SITE: string = "GROUP_site_tasks";

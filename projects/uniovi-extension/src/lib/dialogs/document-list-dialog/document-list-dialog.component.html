@@ -6,23 +6,23 @@
   <mat-accordion>
     <mat-expansion-panel *ngFor="let doc of documents">
         <mat-expansion-panel-header>
-        <mat-panel-title>{{ doc.entry.name }} </mat-panel-title>
+        <mat-panel-title>{{ doc.name }} </mat-panel-title>
       </mat-expansion-panel-header>
 
       <div class="document-details">
         <p *ngIf="doc.createdAt">
           <strong>{{ 'UNIOVI.DOCUMENTS.CREATED' | translate }}:</strong>
-          {{ doc.entry.createdAt | date:'dd/MM/yyyy' }}
+          {{ doc.createdAt | date:'dd/MM/yyyy' }}
         </p>
 
         <p *ngIf="doc.description">
           <strong>{{ 'UNIOVI.DOCUMENTS.DESCRIPTION' | translate }}:</strong>
-          {{ doc.entry.properties['description'] }}
+          {{ doc.properties['description'] }}
         </p>
       </div>
       <div class="actions">
-        <button mat-raised-button color="primary" (click)="viewDocument(doc.entry.id)">{{ 'UNIOVI.DOCUMENTS.VIEW' | translate }}</button>
-        <button mat-raised-button color="accent" (click)="downloadDocument(doc.entry.id)">{{ 'UNIOVI.DOCUMENTS.DOWNLOAD' | translate }}</button>
+        <button mat-raised-button color="primary" (click)="viewDocument(doc.id)">{{ 'UNIOVI.DOCUMENTS.VIEW' | translate }}</button>
+        <button mat-raised-button color="accent" (click)="downloadDocument(doc.id)">{{ 'UNIOVI.DOCUMENTS.DOWNLOAD' | translate }}</button>
       </div>
 
     </mat-expansion-panel>

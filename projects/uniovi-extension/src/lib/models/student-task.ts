@@ -1,12 +1,13 @@
 import { CreateFile } from "./file";
 
 export class StudentTask{
+    uuid: string = "";
     submissionData: CreateFile[] = [];
 }
 
-export const statusMap = new Map<string, string>();
-statusMap.set("01","Pendiente");
-statusMap.set("02","Entregado");
-statusMap.set("03","Suspenso");
-statusMap.set("04","Aprobado");
-statusMap.set("05","No entregado");
+export const STATUS_MAP = new Map<string, string>();
+STATUS_MAP.set("Pendiente","01");
+STATUS_MAP.set("Entregado","02");
+STATUS_MAP.set("Suspenso","03");
+STATUS_MAP.set("Aprobado","04");
+STATUS_MAP.set("No entregado","05");
